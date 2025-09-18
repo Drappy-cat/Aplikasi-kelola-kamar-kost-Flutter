@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tes/shared/models/dosen.dart';
-import 'package:tes/shared/models/mahasiswa.dart';
-import 'package:tes/shared/models/person.dart';
+import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/dummy_service.dart';
 
 class AddEditScreen extends StatefulWidget {
-  final Person? person; // Jika null, berarti mode Tambah. Jika tidak, mode Edit.
+  final Room? room; // Jika null, mode Tambah. Jika tidak, mode Edit.
 
-  const AddEditScreen({super.key, this.person});
+  const AddEditScreen({super.key, this.room});
 
   @override
   State<AddEditScreen> createState() => _AddEditScreenState();
@@ -15,57 +13,61 @@ class AddEditScreen extends StatefulWidget {
 
 class _AddEditScreenState extends State<AddEditScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _namaCtrl;
-  late TextEditingController _emailCtrl;
-  late TextEditingController _nimNidnCtrl;
+  late TextEditingController _codeCtrl;
+  late TextEditingController _baseRentCtrl;
+  late TextEditingController _wifiCtrl;
+  late TextEditingController _waterCtrl;
+  late TextEditingController _electricityCtrl;
 
-  String _selectedRole = 'Mahasiswa';
-  bool get _isEditMode => widget.person != null;
+  late String _selectedStatus;
+  late bool _isPackageFull;
+
+  bool get _isEditMode => widget.room != null;
 
   @override
   void initState() {
     super.initState();
-    _namaCtrl = TextEditingController(text: widget.person?.nama ?? '');
-    _emailCtrl = TextEditingController(text: widget.person?.email ?? '');
-
-    String nimNidn = '';
-    if (widget.person is Mahasiswa) {
-      nimNidn = (widget.person as Mahasiswa).nim;
-      _selectedRole = 'Mahasiswa';
-    } else if (widget.person is Dosen) {
-      nimNidn = (widget.person as Dosen).nidn;
-      _selectedRole = 'Dosen';
-    }
-    _nimNidnCtrl = TextEditingController(text: nimNidn);
+    _codeCtrl = TextEditingController(text: widget.room?.code ?? '');
+    _baseRentCtrl = TextEditingController(text: widget.room?.baseRent.toString() ?? '0');
+    _wifiCtrl = TextEditingController(text: widget.room?.wifi.toString() ?? '0');
+    _waterCtrl = TextEditingController(text: widget.room?.water.toString() ?? '0');
+    _electricityCtrl = TextEditingController(text: widget.room?.electricity.toString() ?? '0');
+    _selectedStatus = widget.room?.status ?? 'Kosong';
+    _isPackageFull = widget.room?.packageFull ?? false;
   }
 
   @override
   void dispose() {
-    _namaCtrl.dispose();
-    _emailCtrl.dispose();
-    _nimNidnCtrl.dispose();
+    _codeCtrl.dispose();
+    _baseRentCtrl.dispose();
+    _wifiCtrl.dispose();
+    _waterCtrl.dispose();
+    _electricityCtrl.dispose();
     super.dispose();
   }
 
   void _saveForm() {
     if (!_formKey.currentState!.validate()) return;
 
-    final id = _isEditMode ? widget.person!.id : 'new_${DateTime.now().millisecondsSinceEpoch}';
-    final nama = _namaCtrl.text;
-    final email = _emailCtrl.text;
-    final nimNidn = _nimNidnCtrl.text;
-
-    Person newPerson;
-    if (_selectedRole == 'Mahasiswa') {
-      newPerson = Mahasiswa(id: id, nama: nama, email: email, nim: nimNidn);
-    } else {
-      newPerson = Dosen(id: id, nama: nama, email: email, nidn: nimNidn);
-    }
+    final newRoom = Room(
+      code: _codeCtrl.text,
+      status: _selectedStatus,
+      baseRent: int.tryParse(_baseRentCtrl.text) ?? 0,
+      wifi: int.tryParse(_wifiCtrl.text) ?? 0,
+      water: int.tryParse(_waterCtrl.text) ?? 0,
+      electricity: int.tryParse(_electricityCtrl.text) ?? 0,
+      packageFull: _isPackageFull,
+      // Data penghuni tidak diubah dari form ini, hanya bisa diubah dari detail kamar
+      tenantName: widget.room?.tenantName,
+      tenantAddress: widget.room?.tenantAddress,
+      tenantPhone: widget.room?.tenantPhone,
+      rentStartDate: widget.room?.rentStartDate,
+    );
 
     if (_isEditMode) {
-      // TODO: Tambahkan logika edit di DummyService
+      DummyService.updateRoom(newRoom);
     } else {
-      DummyService.addPerson(newPerson);
+      DummyService.addRoom(newRoom);
     }
 
     Navigator.of(context).pop();
@@ -75,7 +77,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditMode ? 'Edit Data' : 'Tambah Data'),
+        title: Text(_isEditMode ? 'Edit Kamar' : 'Tambah Kamar'),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -94,42 +96,65 @@ class _AddEditScreenState extends State<AddEditScreen> {
           child: Column(
             children: [
               TextFormField(
-                controller: _namaCtrl,
-                decoration: const InputDecoration(labelText: 'Nama Lengkap'),
+                controller: _codeCtrl,
+                decoration: const InputDecoration(labelText: 'Kode Kamar (cth: A-101)'),
+                readOnly: _isEditMode, // Kode kamar tidak bisa diubah saat edit
                 validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _emailCtrl,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (v) => (v == null || !v.contains('@')) ? 'Email tidak valid' : null,
-              ),
-              const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedRole,
-                decoration: const InputDecoration(labelText: 'Peran'),
+                value: _selectedStatus,
+                decoration: const InputDecoration(labelText: 'Status Kamar'),
                 items: const [
-                  DropdownMenuItem(value: 'Mahasiswa', child: Text('Mahasiswa')),
-                  DropdownMenuItem(value: 'Dosen', child: Text('Dosen')),
+                  DropdownMenuItem(value: 'Kosong', child: Text('Kosong')),
+                  DropdownMenuItem(value: 'Dihuni', child: Text('Dihuni')),
+                  DropdownMenuItem(value: 'Maintenance', child: Text('Maintenance')),
                 ],
-                onChanged: _isEditMode ? null : (value) {
+                onChanged: (value) {
                   if (value != null) {
-                    setState(() => _selectedRole = value);
+                    setState(() => _selectedStatus = value);
                   }
                 },
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _nimNidnCtrl,
-                decoration: InputDecoration(labelText: _selectedRole == 'Mahasiswa' ? 'NIM' : 'NIDN'),
+                controller: _baseRentCtrl,
+                decoration: const InputDecoration(labelText: 'Sewa Dasar', prefixText: 'Rp '),
+                keyboardType: TextInputType.number,
                 validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _wifiCtrl,
+                decoration: const InputDecoration(labelText: 'Biaya WiFi', prefixText: 'Rp '),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _waterCtrl,
+                decoration: const InputDecoration(labelText: 'Biaya Air', prefixText: 'Rp '),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _electricityCtrl,
+                decoration: const InputDecoration(labelText: 'Biaya Listrik', prefixText: 'Rp '),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 16),
+              SwitchListTile(
+                title: const Text('Paket Full (Termasuk Utilitas)'),
+                value: _isPackageFull,
+                onChanged: (value) {
+                  setState(() => _isPackageFull = value);
+                },
               ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: _saveForm,
-                  child: Text(_isEditMode ? 'Simpan Perubahan' : 'Tambah Data'),
+                  child: Text(_isEditMode ? 'Simpan Perubahan' : 'Tambah Kamar'),
                 ),
               ),
             ],

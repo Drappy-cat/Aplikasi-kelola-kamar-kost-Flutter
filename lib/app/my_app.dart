@@ -4,6 +4,7 @@ import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
 import 'package:tes/features/home/home_screen.dart';
 import 'package:tes/features/profile/profile_screen.dart';
+import 'package:tes/features/settings/settings_screen.dart'; // Impor SettingsScreen
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -54,7 +55,7 @@ class MyAppState extends State<MyApp> {
         '/register': (context) => const RegisterScreen(),
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const ProfileScreen(),
-        // Rute '/admin' telah dihapus karena tidak lagi diperlukan
+        '/settings': (context) => const SettingsScreen(), // DIUBAH: Tambah rute settings
       },
     );
   }

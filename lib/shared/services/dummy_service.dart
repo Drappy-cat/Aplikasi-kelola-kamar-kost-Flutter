@@ -6,7 +6,6 @@ class DummyService {
   static String? userRoomCode;
   static String? userName;
 
-  // DIUBAH: Menambahkan 14 kamar dengan variasi harga dan status
   static List<Room> rooms = [
     Room(
       code: "A-101", status: "Dihuni", baseRent: 750000, wifi: 100000, water: 50000, electricity: 150000,
@@ -57,19 +56,10 @@ class DummyService {
     ),
   ];
 
-  // ---------- BILLS ----------
   static List<Bill> bills = [
     Bill(
       id: "b0", roomCode: "A-101", month: "Juli 2024", dueDate: "2024-07-10",
       total: 750000 + 100000 + 50000 + 150000, status: "Belum Dibayar",
-    ),
-    Bill(
-      id: "b1", roomCode: "A-101", month: "September 2025", dueDate: "2025-09-10",
-      total: 750000 + 100000 + 50000 + 150000, status: "Lunas", method: "Transfer", channel: "QRIS",
-    ),
-    Bill(
-      id: "b2", roomCode: "A-101", month: "Agustus 2025", dueDate: "2025-08-10",
-      total: 750000 + 100000 + 50000 + 150000, status: "Lunas", method: "Cash",
     ),
     Bill(
       id: "b3", roomCode: "A-103", month: "Juli 2024", dueDate: "2024-07-10",
@@ -77,7 +67,6 @@ class DummyService {
     ),
   ];
 
-  // ---------- REQUESTS ----------
   static List<Request> requests = [
     Request(
       type: "Kunjungan Ortu", date: "2025-09-10", note: "Ayah Ibu datang jam 10 pagi",
@@ -85,7 +74,22 @@ class DummyService {
     ),
   ];
 
-  // ---------- UTIL ----------
+  // DIUBAH: Menambahkan fungsi CRUD untuk Kamar
+  static void addRoom(Room room) {
+    rooms.add(room);
+  }
+
+  static void updateRoom(Room updatedRoom) {
+    final index = rooms.indexWhere((room) => room.code == updatedRoom.code);
+    if (index != -1) {
+      rooms[index] = updatedRoom;
+    }
+  }
+
+  static void deleteRoom(String roomCode) {
+    rooms.removeWhere((room) => room.code == roomCode);
+  }
+
   static int computeTotalForRoom(Room r) {
     if (r.packageFull) return r.baseRent;
     return r.baseRent + r.wifi + r.water + r.electricity;

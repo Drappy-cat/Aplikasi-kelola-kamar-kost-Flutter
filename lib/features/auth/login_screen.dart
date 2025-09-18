@@ -15,6 +15,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _p = TextEditingController();
   bool _hide = true;
   bool _loading = false;
+  // DIUBAH: Menambahkan state untuk switch pilihan peran
+  bool _loginAsAdmin = false;
 
   @override
   void dispose() {
@@ -28,11 +30,25 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
 
     try {
-      await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
+      final user = await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
       if (!mounted) return;
 
-      // DIUBAH: Selalu arahkan ke /home. HomeScreen yang akan menentukan tampilannya.
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      // DIUBAH: Logika navigasi berdasarkan pilihan peran
+      if (_loginAsAdmin) {
+        if (user.role == 'admin') {
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        } else {
+          // Jika mencoba login sebagai admin tapi bukan admin, tampilkan error dan logout
+          await AuthService.signOut();
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Anda tidak memiliki akses admin.'), backgroundColor: Colors.red),
+          );
+        }
+      } else {
+        // Login sebagai user biasa
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      }
 
     } catch (e) {
       if (!mounted) return;
@@ -90,7 +106,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 16),
+                      // DIUBAH: Menambahkan SwitchListTile untuk memilih peran
+                      SwitchListTile(
+                        title: const Text('Login sebagai Admin'),
+                        value: _loginAsAdmin,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _loginAsAdmin = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
                         height: 48,
