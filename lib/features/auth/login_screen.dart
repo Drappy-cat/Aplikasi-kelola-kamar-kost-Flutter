@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'auth_ui.dart';
+import 'package:tes/shared/widgets/auth_ui.dart';
+import 'package:tes/shared/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -12,23 +14,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _u = TextEditingController();
   final _p = TextEditingController();
   bool _hide = true;
-  bool _registeredToastShown = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_registeredToastShown) {
-      final args = ModalRoute.of(context)?.settings.arguments;
-      if (args is Map && args['registered'] == true) {
-        _registeredToastShown = true;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Registrasi berhasil. Silakan login.')),
-          );
-        });
-      }
-    }
-  }
+  bool _loading = false;
 
   @override
   void dispose() {
@@ -37,20 +23,47 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  Future<void> _handleLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _loading = true);
+
+    try {
+      await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
+      if (!mounted) return;
+
+      // DIUBAH: Selalu arahkan ke /home. HomeScreen yang akan menentukan tampilannya.
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isRegistered = ModalRoute.of(context)?.settings.arguments as Map<String, bool>?;
+    if (isRegistered?['registered'] == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registrasi berhasil! Silakan login.')),
+        );
+      });
+    }
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, c) {
             final wide = c.maxWidth >= 900;
             final card = AuthCard(
               wide: wide,
-              left: const AnimatedLeftPanel(bubbleCount: 220),
+              left: const AnimatedLeftPanel(),
               right: RightForm(
-                title: 'Sign In',
-                subtitle: 'Masuk untuk melanjutkan',
+                title: 'Welcome Back',
+                subtitle: 'Login untuk melanjutkan',
                 form: Form(
                   key: _formKey,
                   child: Column(
@@ -82,20 +95,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: double.infinity,
                         height: 48,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: gradEnd,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(cardRadius / 2),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              // TODO: validasi akun (API/DB)
-                              Navigator.pushReplacementNamed(context, '/home');
-                            }
-                          },
-                          child: const Text('CONTINUE'),
+                          onPressed: _loading ? null : _handleLogin,
+                          child: _loading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                )
+                              : const Text('LOGIN'),
                         ),
                       ),
                       const SizedBox(height: 16),

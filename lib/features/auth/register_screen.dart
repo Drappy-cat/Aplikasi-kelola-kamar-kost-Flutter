@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'auth_ui.dart';
+import 'package:tes/shared/widgets/auth_ui.dart';
+import 'package:tes/shared/services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -12,14 +13,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _u = TextEditingController();
   final _p = TextEditingController();
   final _cp = TextEditingController();
+  final _name = TextEditingController();
+  String _role = 'user';
   bool _hide1 = true, _hide2 = true;
+  bool _loading = false;
 
   @override
   void dispose() {
     _u.dispose();
     _p.dispose();
     _cp.dispose();
+    _name.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleRegister() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_p.text != _cp.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Konfirmasi password tidak cocok')),
+      );
+      return;
+    }
+    setState(() => _loading = true);
+    try {
+      await AuthService.register(
+        username: _u.text.trim(),
+        password: _p.text.trim(),
+        role: _role,
+        fullName: _name.text.trim().isEmpty ? null : _name.text.trim(),
+      );
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/login',
+        (route) => false,
+        arguments: const {'registered': true},
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   @override
@@ -41,12 +78,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     children: [
                       TextFormField(
+                        controller: _name,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.badge_outlined),
+                          labelText: 'Nama Lengkap (opsional)',
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
                         controller: _u,
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.person_outline),
                           labelText: 'Username',
                         ),
-                        validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
+                        validator: (v) =>
+                        (v == null || v.isEmpty) ? 'Wajib diisi' : null,
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
@@ -60,7 +106,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             icon: Icon(_hide1 ? Icons.visibility_off : Icons.visibility),
                           ),
                         ),
-                        validator: (v) => (v == null || v.length < 6) ? 'Min. 6 karakter' : null,
+                        validator: (v) =>
+                        (v == null || v.length < 6) ? 'Min. 6 karakter' : null,
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
@@ -76,30 +123,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         validator: (v) => (v != _p.text) ? 'Password tidak sama' : null,
                       ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<String>(
+                        value: _role,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.account_circle_outlined),
+                          labelText: 'Role',
+                        ),
+                        items: const [
+                          DropdownMenuItem(value: 'user', child: Text('User')),
+                          DropdownMenuItem(value: 'admin', child: Text('Admin')),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() => _role = value);
+                          }
+                        },
+                      ),
                       const SizedBox(height: 24),
                       SizedBox(
                         width: double.infinity,
                         height: 48,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: gradEnd,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(cardRadius / 2),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              // TODO: simpan akun (API/DB)
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                '/login',
-                                    (route) => false,
-                                arguments: const {'registered': true},
-                              );
-                            }
-                          },
-                          child: const Text('CREATE ACCOUNT'),
+                          onPressed: _loading ? null : _handleRegister,
+                          child: _loading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                )
+                              : const Text('CREATE ACCOUNT'),
                         ),
                       ),
                       const SizedBox(height: 16),

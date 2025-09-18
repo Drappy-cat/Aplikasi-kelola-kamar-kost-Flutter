@@ -1,16 +1,16 @@
 class Room {
   final String code;
-  String status; // Dihuni / Kosong / Booked / Maintenance
+  String status;
   final int baseRent;
   final int wifi;
   final int water;
   final int electricity;
-  final bool packageFull; // true = utilitas termasuk
+  final bool packageFull;
 
   String? tenantName;
   String? tenantAddress;
   String? tenantPhone;
-  String? rentStartDate; // DIUBAH: Tanggal mulai sewa
+  String? rentStartDate;
 
   Room({
     required this.code,
@@ -23,6 +23,6 @@ class Room {
     this.tenantName,
     this.tenantAddress,
     this.tenantPhone,
-    this.rentStartDate, // DIUBAH: Tambahkan di constructor
+    this.rentStartDate,
   });
 }
