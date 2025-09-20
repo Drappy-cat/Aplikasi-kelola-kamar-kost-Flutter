@@ -221,8 +221,8 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(req.type, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const Divider(),
-                _row('User', req.userName ?? '-'),
-                _row('Kamar', req.roomCode ?? '-'),
+                _row('User', req.userName ?? '–'),
+                _row('Kamar', req.roomCode ?? '–'),
                 _row('Tanggal', req.date),
                 _row('Catatan', req.note),
                 const SizedBox(height: 8),
@@ -366,7 +366,13 @@ class _HomeScreenState extends State<HomeScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () => _showRoomFacilitiesModal(context, room),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => RoomDetailScreen(room: room),
+            ),
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
@@ -601,8 +607,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 _row('No HP', room.tenantPhone ?? '–'),
                 _row('Mulai Sewa', room.rentStartDate ?? '–'),
                 const Divider(),
-                _row('Tagihan Terbaru', bill?.month ?? '-'),
-                _row('Status Tagihan', bill?.status ?? '-'),
+                _row('Tagihan Terbaru', bill?.month ?? '–'),
+                _row('Status Tagihan', bill?.status ?? '–'),
                 const Divider(),
                 const Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),

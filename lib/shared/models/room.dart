@@ -5,7 +5,10 @@ class Room {
   final int wifi;
   final int water;
   final int electricity;
+  final int acCost;
   final bool packageFull;
+  final String dimensions; // Dimensi kamar, cth: '3x4 m'
+  final List<String> imageUrls; // Daftar URL gambar
 
   String? tenantName;
   String? tenantAddress;
@@ -19,7 +22,10 @@ class Room {
     required this.wifi,
     required this.water,
     required this.electricity,
+    this.acCost = 0,
     this.packageFull = false,
+    this.dimensions = 'N/A',
+    this.imageUrls = const [],
     this.tenantName,
     this.tenantAddress,
     this.tenantPhone,

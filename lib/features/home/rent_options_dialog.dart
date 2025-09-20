@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:tes/shared/models/room.dart';
+import 'package:tes/shared/services/auth_service.dart';
+import 'package:tes/shared/services/dummy_service.dart';
 
 class RentOptionsDialog extends StatefulWidget {
   final Room room;
@@ -94,13 +96,31 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, false),
           child: const Text('Batal'),
         ),
         ElevatedButton(
           onPressed: () {
-            // TODO: Handle rental confirmation logic
-            Navigator.pop(context);
+            final user = AuthService.currentUser;
+            if (user == null) {
+              Navigator.pop(context, false);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Anda harus login untuk menyewa.')),
+              );
+              return;
+            }
+
+            final roomIndex = DummyService.rooms.indexWhere((r) => r.code == widget.room.code);
+            if (roomIndex != -1) {
+              final room = DummyService.rooms[roomIndex];
+              room.status = 'Isi';
+              room.tenantName = user.fullName ?? user.username;
+              room.packageFull = _isPackageFull;
+              DummyService.userRoomCode = room.code;
+              Navigator.pop(context, true); // Return true on success
+            } else {
+              Navigator.pop(context, false);
+            }
           },
           child: const Text('Sewa'),
         ),

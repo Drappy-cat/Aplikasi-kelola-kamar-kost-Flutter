@@ -11,6 +11,8 @@ class AuthService {
     AppUser(username: 'admin', password: 'admin123', role: 'admin', fullName: 'Pemilik Kost'),
   ];
 
+  static List<AppUser> get users => _users;
+
   static AppUser? currentUser;
 
   static Future<void> init() async {

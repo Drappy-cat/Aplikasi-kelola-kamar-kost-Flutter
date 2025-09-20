@@ -8,51 +8,40 @@ class DummyService {
 
   static List<Room> rooms = [
     Room(
-      code: "A-101", status: "Dihuni", baseRent: 750000, wifi: 100000, water: 50000, electricity: 150000,
+      code: "A-101", status: "Dihuni", baseRent: 750000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000,
+      dimensions: "3x4 m", imageUrls: ['https://placehold.co/600x400/F72585/FFFFFF/png', 'https://placehold.co/600x400/7209B7/FFFFFF/png'],
       tenantName: "Budi Santoso", tenantAddress: "Jl. Melati No. 5", tenantPhone: "081234567890", rentStartDate: "2024-07-01",
     ),
     Room(
-      code: "A-102", status: "Kosong", baseRent: 700000, wifi: 100000, water: 50000, electricity: 150000,
+      code: "A-102", status: "Kosong", baseRent: 700000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000,
+      dimensions: "3x3.5 m", imageUrls: ['https://placehold.co/600x400/560BAD/FFFFFF/png'],
     ),
     Room(
-      code: "A-103", status: "Dihuni", baseRent: 800000, wifi: 100000, water: 50000, electricity: 150000,
+      code: "A-103", status: "Dihuni", baseRent: 800000, wifi: 100000, water: 50000, electricity: 150000, acCost: 250000,
+      dimensions: "4x4 m", imageUrls: ['https://placehold.co/600x400/480CA8/FFFFFF/png', 'https://placehold.co/600x400/F72585/FFFFFF/png'],
       tenantName: "Siti Aminah", tenantAddress: "Jl. Kenanga No. 12", tenantPhone: "081212345678", rentStartDate: "2024-06-15",
     ),
     Room(
-      code: "A-104", status: "Kosong", baseRent: 725000, wifi: 100000, water: 50000, electricity: 150000,
+      code: "A-104", status: "Kosong", baseRent: 725000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000,
+      dimensions: "3.5x4 m", imageUrls: [],
     ),
     Room(
-      code: "B-201", status: "Dihuni", baseRent: 900000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true,
+      code: "B-201", status: "Dihuni", baseRent: 900000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
+      dimensions: "4x5 m", imageUrls: ['https://placehold.co/600x400/5B2EBC/FFFFFF/png'],
       tenantName: "Joko Susilo", tenantAddress: "Jl. Mawar No. 3", tenantPhone: "081312345678", rentStartDate: "2024-08-01",
     ),
     Room(
-      code: "B-202", status: "Kosong", baseRent: 850000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true,
+      code: "B-202", status: "Kosong", baseRent: 850000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
+      dimensions: "4x4.5 m", imageUrls: ['https://placehold.co/600x400/7209B7/FFFFFF/png'],
     ),
     Room(
-      code: "B-203", status: "Dihuni", baseRent: 950000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true,
+      code: "B-203", status: "Dihuni", baseRent: 950000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
+      dimensions: "4.5x5 m", imageUrls: [],
       tenantName: "Dewi Sartika", tenantAddress: "Jl. Anggrek No. 7", tenantPhone: "081512345678", rentStartDate: "2024-07-20",
     ),
     Room(
-      code: "B-204", status: "Kosong", baseRent: 875000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true,
-    ),
-    Room(
-      code: "C-301", status: "Kosong", baseRent: 650000, wifi: 75000, water: 40000, electricity: 120000,
-    ),
-    Room(
-      code: "C-302", status: "Dihuni", baseRent: 680000, wifi: 75000, water: 40000, electricity: 120000,
-      tenantName: "Agus Salim", tenantAddress: "Jl. Dahlia No. 2", tenantPhone: "081712345678", rentStartDate: "2024-09-01",
-    ),
-    Room(
-      code: "C-303", status: "Kosong", baseRent: 670000, wifi: 75000, water: 40000, electricity: 120000,
-    ),
-    Room(
-      code: "C-304", status: "Kosong", baseRent: 690000, wifi: 75000, water: 40000, electricity: 120000,
-    ),
-    Room(
-      code: "D-401", status: "Kosong", baseRent: 1000000, wifi: 120000, water: 60000, electricity: 180000, packageFull: true,
-    ),
-    Room(
-      code: "D-402", status: "Kosong", baseRent: 1100000, wifi: 120000, water: 60000, electricity: 180000, packageFull: true,
+      code: "B-204", status: "Kosong", baseRent: 875000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
+      dimensions: "4x5 m", imageUrls: ['https://placehold.co/600x400/560BAD/FFFFFF/png'],
     ),
   ];
 
@@ -74,7 +63,6 @@ class DummyService {
     ),
   ];
 
-  // DIUBAH: Menambahkan kembali fungsi CRUD untuk Kamar
   static void addRoom(Room room) {
     rooms.add(room);
   }
