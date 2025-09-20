@@ -29,15 +29,10 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
 
     try {
-      final user = await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
+      // Setelah login berhasil, semua pengguna diarahkan ke /home
+      await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
       if (!mounted) return;
-
-      // Arahkan berdasarkan peran pengguna
-      if (user.role == 'admin') {
-        Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
-      } else {
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-      }
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
