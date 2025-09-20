@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tes/features/home/rent_options_dialog.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/auth_service.dart';
+import 'package:tes/shared/widgets/image_carousel.dart';
 
 class RoomDetailScreen extends StatefulWidget {
   final Room room;
@@ -13,15 +14,6 @@ class RoomDetailScreen extends StatefulWidget {
 }
 
 class _RoomDetailScreenState extends State<RoomDetailScreen> {
-  final _pageController = PageController();
-  int _currentPage = 0;
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
   void _showRentDialog(BuildContext context) async {
     final success = await showDialog<bool>(
       context: context,
@@ -56,50 +48,45 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image Slider
-            if (widget.room.imageUrls.isNotEmpty)
-              _buildImageSlider()
-            else
-              Container(
-                height: 250,
-                color: Colors.grey[300],
-                child: const Center(child: Text('Tidak ada gambar')),
-              ),
+            // Menggunakan ImageCarousel Widget yang baru
+            ImageCarousel(imageUrls: widget.room.imageUrls),
             const SizedBox(height: 16),
             // Room Info Card
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Informasi Kamar ${widget.room.code}',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const Divider(height: 24),
-                    _buildDetailRow('Dimensi', widget.room.dimensions),
-                    _buildDetailRow('Status', widget.room.status),
-                    if (widget.room.tenantName != null)
-                      _buildDetailRow('Penyewa', widget.room.tenantName!),
-                    const Divider(height: 24),
-                    Text(
-                      'Fasilitas & Biaya',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildDetailRow('Sewa Dasar', 'Rp ${widget.room.baseRent}'),
-                    _buildDetailRow('WiFi', '10 Mbps'),
-                    _buildDetailRow('Air', widget.room.packageFull ? 'Gratis' : 'Bayar sendiri (Rp ${widget.room.water})'),
-                    _buildDetailRow('Listrik', widget.room.packageFull ? 'Gratis' : 'Bayar sendiri (Rp ${widget.room.electricity})'),
-                    _buildDetailRow('AC', 'Tersedia (opsional)'),
-                  ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Informasi Kamar ${widget.room.code}',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const Divider(height: 24),
+                      _buildDetailRow('Dimensi', widget.room.dimensions),
+                      _buildDetailRow('Status', widget.room.status),
+                      if (widget.room.tenantName != null)
+                        _buildDetailRow('Penyewa', widget.room.tenantName!),
+                      const Divider(height: 24),
+                      Text(
+                        'Fasilitas & Biaya',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildDetailRow('Sewa Dasar', 'Rp ${widget.room.baseRent}'),
+                      _buildDetailRow('WiFi', '10 Mbps'),
+                      _buildDetailRow('Air', widget.room.packageFull ? 'Gratis' : 'Bayar sendiri (Rp ${widget.room.water})'),
+                      _buildDetailRow('Listrik', widget.room.packageFull ? 'Gratis' : 'Bayar sendiri (Rp ${widget.room.electricity})'),
+                      _buildDetailRow('AC', 'Tersedia (opsional)'),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -115,53 +102,6 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-
-  Widget _buildImageSlider() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 250,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: widget.room.imageUrls.length,
-            onPageChanged: (index) {
-              setState(() => _currentPage = index);
-            },
-            itemBuilder: (context, index) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  widget.room.imageUrls[index],
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, progress) {
-                    return progress == null ? child : const Center(child: CircularProgressIndicator());
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Center(child: Icon(Icons.broken_image, size: 50));
-                  },
-                ),
-              );
-            },
-          ),
-        ),
-        if (widget.room.imageUrls.length > 1)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(widget.room.imageUrls.length, (index) {
-              return Container(
-                width: 8.0,
-                height: 8.0,
-                margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _currentPage == index ? Theme.of(context).primaryColor : Colors.grey,
-                ),
-              );
-            }),
-          ),
-      ],
     );
   }
 

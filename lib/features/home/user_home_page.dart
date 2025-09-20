@@ -15,6 +15,9 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomePageState extends State<UserHomePage> {
+  // State untuk melacak filter yang dipilih
+  String _selectedStatus = 'Semua';
+
   @override
   Widget build(BuildContext context) {
     final userName = AuthService.currentUser?.fullName ?? AuthService.currentUser?.username ?? 'User';
@@ -59,7 +62,7 @@ class _UserHomePageState extends State<UserHomePage> {
   Widget _userContent() {
     final userRoomCode = DummyService.userRoomCode;
     if (userRoomCode == null) {
-      return _availableRoomsPage();
+      return _allRoomsPage();
     }
     final room = DummyService.findRoom(userRoomCode);
     if (room == null) {
@@ -83,18 +86,45 @@ class _UserHomePageState extends State<UserHomePage> {
     return _userRoomInfo(room);
   }
 
-  Widget _availableRoomsPage() {
-    final available = DummyService.rooms.where((r) => r.status == 'Kosong').toList();
+  Widget _allRoomsPage() {
+    // Menerapkan logika filter
+    final List<Room> filteredRooms;
+    if (_selectedStatus == 'Semua') {
+      filteredRooms = DummyService.rooms;
+    } else {
+      filteredRooms = DummyService.rooms.where((r) => r.status == _selectedStatus).toList();
+    }
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         const Padding(
           padding: EdgeInsets.only(bottom: 8.0),
-          child: Text('Kamar Tersedia', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          child: Text('Daftar Kamar', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ),
-        if (available.isEmpty)
-          const Center(child: Padding(padding: EdgeInsets.all(16.0), child: Text('Tidak ada kamar tersedia saat ini.'))),
-        ...available.map((room) => _buildRoomCard(room)),
+        // UI untuk filter
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Wrap(
+            spacing: 8.0,
+            children: ['Semua', 'Kosong', 'Dihuni'].map((status) {
+              return ChoiceChip(
+                label: Text(status),
+                selected: _selectedStatus == status,
+                onSelected: (isSelected) {
+                  if (isSelected) {
+                    setState(() {
+                      _selectedStatus = status;
+                    });
+                  }
+                },
+              );
+            }).toList(),
+          ),
+        ),
+        if (filteredRooms.isEmpty)
+          const Center(child: Padding(padding: EdgeInsets.all(16.0), child: Text('Tidak ada kamar yang cocok dengan filter ini.'))),
+        ...filteredRooms.map((room) => _buildRoomCard(room)),
         const SizedBox(height: 24),
         _bookingForm(),
       ],
@@ -127,6 +157,7 @@ class _UserHomePageState extends State<UserHomePage> {
                   children: [
                     Text('Kamar ${room.code}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     Text('Rp ${DummyService.computeTotalForRoom(room)} / bulan'),
+                    Text('Status: ${room.status}', style: TextStyle(color: room.status == 'Kosong' ? Colors.green : Colors.red, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
