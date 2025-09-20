@@ -74,7 +74,7 @@ class DummyService {
     ),
   ];
 
-  // DIUBAH: Menambahkan fungsi CRUD untuk Kamar
+  // DIUBAH: Menambahkan kembali fungsi CRUD untuk Kamar
   static void addRoom(Room room) {
     rooms.add(room);
   }

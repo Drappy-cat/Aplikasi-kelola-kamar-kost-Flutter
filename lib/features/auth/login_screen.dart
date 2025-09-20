@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tes/shared/widgets/auth_ui.dart';
+import 'package:tes/shared/widgets/auth_ui.dart'; // Untuk gradStart, gradEnd, cardRadius, AnimatedLeftPanel
 import 'package:tes/shared/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,8 +15,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _p = TextEditingController();
   bool _hide = true;
   bool _loading = false;
-  // DIUBAH: Menambahkan state untuk switch pilihan peran
-  bool _loginAsAdmin = false;
 
   @override
   void dispose() {
@@ -30,26 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
 
     try {
-      final user = await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
+      await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
       if (!mounted) return;
-
-      // DIUBAH: Logika navigasi berdasarkan pilihan peran
-      if (_loginAsAdmin) {
-        if (user.role == 'admin') {
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-        } else {
-          // Jika mencoba login sebagai admin tapi bukan admin, tampilkan error dan logout
-          await AuthService.signOut();
-          if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Anda tidak memiliki akses admin.'), backgroundColor: Colors.red),
-          );
-        }
-      } else {
-        // Login sebagai user biasa
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-      }
-
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
@@ -69,87 +50,111 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     }
 
+    // DIUBAH TOTAL: Menggunakan struktur mandiri yang aman untuk scroll dan centering
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F6FA),
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, c) {
-            final wide = c.maxWidth >= 900;
-            final card = AuthCard(
-              wide: wide,
-              left: const AnimatedLeftPanel(),
-              right: RightForm(
-                title: 'Welcome Back',
-                subtitle: 'Login untuk melanjutkan',
-                form: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _u,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.person_outline),
-                          labelText: 'Username',
-                        ),
-                        validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _p,
-                        obscureText: _hide,
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          labelText: 'Password',
-                          suffixIcon: IconButton(
-                            onPressed: () => setState(() => _hide = !_hide),
-                            icon: Icon(_hide ? Icons.visibility_off : Icons.visibility),
+        child: Center(
+          // SingleChildScrollView dihapus dari sini
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1100),
+              child: Card(
+                elevation: 8,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(cardRadius)),
+                child: LayoutBuilder(builder: (context, constraints) {
+                  final bool wide = constraints.maxWidth >= 900;
+                  if (wide) {
+                    return Row(
+                      children: [
+                        const Expanded(child: AnimatedLeftPanel()),
+                        Expanded(child: _buildRightForm()),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Expanded(child: AnimatedLeftPanel()),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: _buildRightForm(),
                           ),
                         ),
-                        validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
-                      ),
-                      const SizedBox(height: 16),
-                      // DIUBAH: Menambahkan SwitchListTile untuk memilih peran
-                      SwitchListTile(
-                        title: const Text('Login sebagai Admin'),
-                        value: _loginAsAdmin,
-                        onChanged: (bool value) {
-                          setState(() {
-                            _loginAsAdmin = value;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 48,
-                        child: ElevatedButton(
-                          onPressed: _loading ? null : _handleLogin,
-                          child: _loading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                )
-                              : const Text('LOGIN'),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Belum punya akun?'),
-                          TextButton(
-                            onPressed: () => Navigator.pushNamed(context, '/register'),
-                            child: const Text('Daftar di sini'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+                  }
+                }),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRightForm() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(36, 40, 36, 40),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Welcome Back', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            const Text('Login untuk melanjutkan', style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 28),
+            TextFormField(
+              controller: _u,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.person_outline),
+                labelText: 'Username',
+              ),
+              validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _p,
+              obscureText: _hide,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.lock_outline),
+                labelText: 'Password',
+                suffixIcon: IconButton(
+                  onPressed: () => setState(() => _hide = !_hide),
+                  icon: Icon(_hide ? Icons.visibility_off : Icons.visibility),
                 ),
               ),
-            );
-            return Center(child: Padding(padding: const EdgeInsets.all(20), child: card));
-          },
+              validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: _loading ? null : _handleLogin,
+                child: _loading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Text('LOGIN'),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Belum punya akun?'),
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(context, '/register'),
+                  child: const Text('Daftar di sini'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

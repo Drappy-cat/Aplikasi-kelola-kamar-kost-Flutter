@@ -4,7 +4,7 @@ import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
 import 'package:tes/features/home/home_screen.dart';
 import 'package:tes/features/profile/profile_screen.dart';
-import 'package:tes/features/settings/settings_screen.dart'; // Impor SettingsScreen
+import 'package:tes/features/settings/settings_screen.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -55,7 +55,7 @@ class MyAppState extends State<MyApp> {
         '/register': (context) => const RegisterScreen(),
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const ProfileScreen(),
-        '/settings': (context) => const SettingsScreen(), // DIUBAH: Tambah rute settings
+        '/settings': (context) => const SettingsScreen(),
       },
     );
   }
