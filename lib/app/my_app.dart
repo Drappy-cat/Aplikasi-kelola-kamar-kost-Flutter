@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tes/features/admin/admin_screen.dart';
 import 'package:tes/features/auth/login_screen.dart';
 import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
@@ -56,6 +57,7 @@ class MyAppState extends State<MyApp> {
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/settings': (context) => const SettingsScreen(),
+        '/admin': (context) => const AdminScreen(),
       },
     );
   }

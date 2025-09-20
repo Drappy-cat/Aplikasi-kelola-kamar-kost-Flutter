@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/widgets/auth_ui.dart'; // Untuk gradStart, gradEnd, cardRadius, AnimatedLeftPanel
 import 'package:tes/shared/services/auth_service.dart';
 
@@ -28,9 +29,15 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
 
     try {
-      await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
+      final user = await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
       if (!mounted) return;
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+
+      // Arahkan berdasarkan peran pengguna
+      if (user.role == 'admin') {
+        Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
+      } else {
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
