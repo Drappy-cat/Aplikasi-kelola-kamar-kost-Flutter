@@ -13,6 +13,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.3.2
   intl: ^0.20.2
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +28,11 @@ flutter:
     # - assets/logo/logo.png
     # lebih fleksibel: seluruh folder logo
     - assets/logo/
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: packages/google_fonts/Poppins-Regular.ttf
+        - asset: packages/google_fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: packages/google_fonts/Poppins-Light.ttf
+          weight: 300
