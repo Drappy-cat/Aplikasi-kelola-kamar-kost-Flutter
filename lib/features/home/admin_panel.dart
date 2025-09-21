@@ -20,7 +20,6 @@ class AdminPanel extends StatefulWidget {
 }
 
 class _AdminPanelState extends State<AdminPanel> {
-  // State untuk melacak tab mana yang sedang aktif (0: Kamar, 1: Tagihan, 2: Pengajuan)
   int _adminTab = 0;
 
   @override
@@ -39,7 +38,7 @@ class _AdminPanelState extends State<AdminPanel> {
             ),
           ),
         ),
-        title: const Text('Ri-Kost - Admin Panel'), // Nama aplikasi sudah diupdate
+        title: const Text('Ri-Kost - Admin Panel'),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -59,8 +58,6 @@ class _AdminPanelState extends State<AdminPanel> {
           ),
         ],
       ),
-      // IndexedStack digunakan untuk menjaga state setiap halaman tab tetap hidup
-      // bahkan ketika tab tidak aktif. Ini lebih efisien daripada membangun ulang halaman setiap kali tab diganti.
       body: IndexedStack(
         index: _adminTab,
         children: [
@@ -88,23 +85,19 @@ class _AdminPanelState extends State<AdminPanel> {
                 await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const AddEditScreen()),
                 );
-                setState(() {}); // Refresh halaman untuk menampilkan data baru
+                setState(() {});
               },
               child: const Icon(Icons.add),
             )
           : null,
     );
   }
-
-  // ===== 4. MENAMPILKAN DAFTAR DATA (LIST VIEW) =====
-  // Widget ini membangun daftar kamar dari `DummyService`.
-  // `ListView.builder` sangat efisien karena hanya merender item yang terlihat di layar.
   Widget _roomsPage() {
     return ListView.builder(
       padding: const EdgeInsets.all(8),
-      itemCount: DummyService.rooms.length, // Jumlah total item dalam daftar
+      itemCount: DummyService.rooms.length,
       itemBuilder: (context, index) {
-        final room = DummyService.rooms[index]; // Ambil data untuk item saat ini
+        final room = DummyService.rooms[index];
         return Hero(
           tag: 'room-card-${room.code}',
           child: Card(
@@ -123,7 +116,6 @@ class _AdminPanelState extends State<AdminPanel> {
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                // Navigasi ke halaman detail saat item di-tap
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => RoomDetailScreen(room: room),
@@ -137,7 +129,6 @@ class _AdminPanelState extends State<AdminPanel> {
     );
   }
 
-  // Halaman untuk menampilkan daftar tagihan
   Widget _billsPage() {
     return ListView.builder(
       padding: const EdgeInsets.all(8),
@@ -189,7 +180,7 @@ class _AdminPanelState extends State<AdminPanel> {
               TextButton(
                 onPressed: () {
                   setState(() {
-                    bill.status = 'Lunas'; // Mengubah status tagihan
+                    bill.status = 'Lunas';
                   });
                   Navigator.pop(context);
                 },
@@ -205,7 +196,6 @@ class _AdminPanelState extends State<AdminPanel> {
     );
   }
 
-  // Halaman untuk menampilkan daftar pengajuan dari pengguna
   Widget _requestsPage() {
     return ListView.builder(
       padding: const EdgeInsets.all(8),
@@ -242,7 +232,6 @@ class _AdminPanelState extends State<AdminPanel> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                // Admin dapat menyetujui atau menolak pengajuan yang statusnya masih "Pending"
                 if (req.status == 'Pending')
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -274,7 +263,6 @@ class _AdminPanelState extends State<AdminPanel> {
     );
   }
 
-  // Helper widget untuk membuat baris detail
   Widget _row(String k, String v) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
@@ -287,7 +275,6 @@ class _AdminPanelState extends State<AdminPanel> {
     );
   }
 
-  // Helper widget untuk dialog detail tagihan
   Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),

@@ -1,9 +1,3 @@
-// ===== 1. SPLASH SCREEN =====
-// Ini adalah layar pertama yang dilihat pengguna saat membuka aplikasi.
-// Fungsinya adalah untuk menampilkan logo atau branding sejenak sambil
-// memeriksa status login pengguna di latar belakang, lalu mengarahkan
-// pengguna ke halaman yang sesuai (Login atau Home).
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tes/shared/services/auth_service.dart';
@@ -14,11 +8,6 @@ class SplashScreen extends StatefulWidget {
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
-
-// ===== 9. KONSEP OOP (Object-Oriented Programming) =====
-// Kelas _SplashScreenState ini menggunakan "Mixin" yaitu `SingleTickerProviderStateMixin`.
-// Mixin adalah cara untuk menggunakan kembali kode dari sebuah kelas di beberapa hierarki kelas.
-// Di sini, ia memberikan kemampuan untuk mengelola "ticker" yang penting untuk menjalankan animasi.
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -56,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   void dispose() {
-    _controller.dispose(); // Selalu hapus controller untuk mencegah memory leak
+    _controller.dispose();
     super.dispose();
   }
 
@@ -82,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 fit: BoxFit.contain,
               ),
               const SizedBox(height: 20),
-              // Widget FadeTransition digunakan untuk menerapkan animasi fade pada child-nya
+              // Widget FadeTransition
               FadeTransition(
                 opacity: _animation,
                 child: const Text(

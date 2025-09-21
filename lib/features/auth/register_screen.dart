@@ -1,22 +1,14 @@
-// ===== 2. HALAMAN REGISTER =====
-// Halaman ini memungkinkan pengguna baru untuk membuat akun.
-// Setelah registrasi berhasil, pengguna akan diarahkan kembali ke halaman login
-// untuk masuk dengan akun yang baru dibuat.
 
 import 'package:flutter/material.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
-// ===== 7. INHERITANCE (Pewarisan) =====
-// Sama seperti LoginScreen, `RegisterScreen` juga merupakan turunan dari `StatefulWidget`,
-// yang memungkinkannya memiliki state internal yang bisa berubah.
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
-
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _u = TextEditingController();
@@ -33,14 +25,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  // Fungsi untuk menangani logika saat tombol DAFTAR ditekan
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
 
     try {
-      // 1. Panggil service autentikasi untuk mendaftarkan pengguna baru.
-      //    Peran (role) secara default diatur sebagai 'user'.
       await AuthService.register(
         username: _u.text.trim(),
         password: _p.text.trim(),
@@ -48,16 +37,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       if (!mounted) return;
 
-      // 2. Jika berhasil, kembali ke halaman login dengan membawa pesan sukses.
-      //    Argumen `{'registered': true}` digunakan oleh halaman login untuk menampilkan
-      //    SnackBar "Registrasi berhasil!".
       Navigator.of(context).pushNamedAndRemoveUntil(
         '/login',
         (route) => false,
         arguments: {'registered': true},
       );
     } catch (e) {
-      // 3. Jika gagal (misalnya, username sudah dipakai), tampilkan pesan error.
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
@@ -65,9 +50,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  // ===== 8. POLYMORPHISM (Polimorfisme) =====
-  // Metode `build` ini juga merupakan contoh polimorfisme, sama seperti di LoginScreen.
-  // `_RegisterScreenState` menyediakan implementasi UI-nya sendiri untuk proses registrasi.
   @override
   Widget build(BuildContext context) {
     return Scaffold(

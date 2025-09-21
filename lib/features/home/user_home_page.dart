@@ -1,8 +1,3 @@
-// ===== 10. USER PANEL =====
-// Ini adalah halaman utama yang dilihat oleh pengguna biasa (bukan admin).
-// Halaman ini memiliki dua kondisi utama:
-// 1. Jika pengguna belum menyewa kamar, halaman akan menampilkan daftar semua kamar yang tersedia (dengan filter).
-// 2. Jika pengguna sudah menyewa kamar, halaman akan menampilkan detail dan aksi spesifik untuk kamar tersebut.
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -82,9 +77,7 @@ class _UserHomePageState extends State<UserHomePage> {
     }
   }
 
-  // Halaman yang menampilkan daftar semua kamar dengan filter
   Widget _allRoomsPage() {
-    // Logika untuk memfilter daftar kamar berdasarkan `_selectedStatus`
     final List<Room> filteredRooms;
     if (_selectedStatus == 'Semua') {
       filteredRooms = DummyService.rooms;
@@ -99,7 +92,6 @@ class _UserHomePageState extends State<UserHomePage> {
           padding: EdgeInsets.only(bottom: 8.0),
           child: Text('Daftar Kamar', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ),
-        // UI untuk filter menggunakan ChoiceChip
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Wrap(

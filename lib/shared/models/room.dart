@@ -1,14 +1,3 @@
-// ===== 6. ENCAPSULATION (ENKAPSULASI) & 9. KONSEP OOP =====
-// Encapsulation berarti membungkus data (properti) dan metode (fungsi) yang beroperasi
-// pada data tersebut ke dalam satu unit tunggal yang disebut "Kelas" (Class).
-// Kelas `Room` ini adalah contoh sempurna dari enkapsulasi.
-
-// 1. DATA DIBUNGKUS: Semua data yang terkait dengan sebuah kamar, seperti `code`,
-//    `status`, `baseRent`, dll., dibungkus di dalam kelas `Room` ini.
-// 2. KONTROL AKSES: Dengan menggunakan `final`, kita mencegah beberapa properti
-//    (seperti `code`) diubah setelah objek dibuat. Ini adalah bentuk kontrol akses
-//    sederhana untuk memastikan integritas data.
-
 class Room {
   // Properti (Data)
   final String code;
@@ -27,8 +16,6 @@ class Room {
   String? tenantPhone;
   String? rentStartDate;
 
-  // Constructor (Metode untuk membuat objek)
-  // Ini adalah "pintu masuk" untuk membuat instance dari kelas Room.
   Room({
     required this.code,
     required this.status,
