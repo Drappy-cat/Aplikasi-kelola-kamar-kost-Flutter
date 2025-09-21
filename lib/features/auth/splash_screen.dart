@@ -1,3 +1,9 @@
+// ===== 1. SPLASH SCREEN =====
+// Ini adalah layar pertama yang dilihat pengguna saat membuka aplikasi.
+// Fungsinya adalah untuk menampilkan logo atau branding sejenak sambil
+// memeriksa status login pengguna di latar belakang, lalu mengarahkan
+// pengguna ke halaman yang sesuai (Login atau Home).
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tes/shared/services/auth_service.dart';
@@ -9,6 +15,10 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
+// ===== 9. KONSEP OOP (Object-Oriented Programming) =====
+// Kelas _SplashScreenState ini menggunakan "Mixin" yaitu `SingleTickerProviderStateMixin`.
+// Mixin adalah cara untuk menggunakan kembali kode dari sebuah kelas di beberapa hierarki kelas.
+// Di sini, ia memberikan kemampuan untuk mengelola "ticker" yang penting untuk menjalankan animasi.
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -16,25 +26,27 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
+    // Inisialisasi controller untuk animasi fade-in
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2), // Durasi animasi fade
+      duration: const Duration(seconds: 2), // Durasi animasi
     );
     _animation = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeIn,
     );
 
-    _controller.forward(); // Mulai animasi fade-in
+    _controller.forward(); // Memulai animasi
 
     _navigateToNextScreen();
   }
 
   Future<void> _navigateToNextScreen() async {
-    // Tunggu animasi selesai, lalu tunggu sebentar sebelum navigasi
+    // Menunggu animasi selesai + jeda singkat sebelum pindah halaman
     await Future.delayed(_controller.duration! + const Duration(milliseconds: 500));
     if (!mounted) return;
 
+    // Logika pengalihan halaman berdasarkan status login
     if (AuthService.currentUser == null) {
       Navigator.of(context).pushReplacementNamed('/login');
     } else {
@@ -44,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller.dispose(); // Selalu hapus controller untuk mencegah memory leak
     super.dispose();
   }
 
@@ -65,11 +77,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             children: [
               Image.asset(
                 'assets/logo/logo.png',
-                width: 200, // Ukuran logo disesuaikan
+                width: 200,
                 height: 200,
                 fit: BoxFit.contain,
               ),
               const SizedBox(height: 20),
+              // Widget FadeTransition digunakan untuk menerapkan animasi fade pada child-nya
               FadeTransition(
                 opacity: _animation,
                 child: const Text(

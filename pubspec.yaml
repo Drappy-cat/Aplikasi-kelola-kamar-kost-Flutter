@@ -25,3 +25,4 @@ flutter:
 
   assets:
     - assets/logo/
+    - assets/kamar_kost/ # <-- MENAMBAHKAN FOLDER GAMBAR KAMAR

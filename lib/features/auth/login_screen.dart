@@ -1,8 +1,15 @@
+// ===== 2. HALAMAN LOGIN =====
+// Halaman ini berfungsi sebagai gerbang masuk bagi pengguna yang sudah memiliki akun.
+// Pengguna memasukkan username dan password, yang kemudian akan diverifikasi oleh `AuthService`.
+
 import 'package:flutter/material.dart';
-import 'package:tes/shared/models/app_user.dart';
-import 'package:tes/shared/widgets/auth_ui.dart'; // Untuk gradStart, gradEnd, cardRadius, AnimatedLeftPanel
+import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
+// ===== 7. INHERITANCE (Pewarisan) =====
+// `LoginScreen` adalah turunan (subclass) dari `StatefulWidget`.
+// Ini berarti `LoginScreen` mewarisi semua sifat dan perilaku dari `StatefulWidget`,
+// memungkinkannya untuk memiliki state (data internal) yang bisa berubah seiring waktu.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -11,38 +18,56 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  // GlobalKey digunakan untuk mengidentifikasi Form dan melakukan validasi.
   final _formKey = GlobalKey<FormState>();
+  // TextEditingController digunakan untuk mengelola input dari TextFormField.
   final _u = TextEditingController();
   final _p = TextEditingController();
-  bool _hide = true;
-  bool _loading = false;
+  bool _hide = true; // State untuk menyembunyikan/menampilkan password
+  bool _loading = false; // State untuk menampilkan indikator loading saat proses login
 
   @override
   void dispose() {
+    // Penting untuk melepaskan controller saat widget tidak lagi digunakan
+    // untuk mencegah kebocoran memori (memory leak).
     _u.dispose();
     _p.dispose();
     super.dispose();
   }
 
+  // Fungsi untuk menangani logika saat tombol LOGIN ditekan
   Future<void> _handleLogin() async {
+    // 1. Validasi form: jika ada input yang tidak valid, proses berhenti.
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _loading = true);
+    setState(() => _loading = true); // Tampilkan loading
 
     try {
-      // Setelah login berhasil, semua pengguna diarahkan ke /home
+      // 2. Panggil service autentikasi untuk memverifikasi kredensial.
       await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
       if (!mounted) return;
+
+      // 3. Jika berhasil, arahkan pengguna ke halaman utama ('/home').
+      //    `pushNamedAndRemoveUntil` menghapus semua halaman sebelumnya sehingga pengguna
+      //    tidak bisa kembali ke halaman login dengan menekan tombol "back".
       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     } catch (e) {
+      // 4. Jika gagal, tampilkan pesan error menggunakan SnackBar.
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
+      // 5. Apapun hasilnya (berhasil atau gagal), hentikan loading.
       if (mounted) setState(() => _loading = false);
     }
   }
 
+  // ===== 8. POLYMORPHISM (Polimorfisme) =====
+  // Metode `build` ini adalah contoh polimorfisme. `_LoginScreenState` "meng-override"
+  // (menimpa) metode `build` yang ada di kelas induknya (`State`).
+  // Ini memungkinkan `_LoginScreenState` untuk menyediakan implementasi spesifiknya sendiri
+  // tentang bagaimana UI harus dirender, meskipun kerangka dasarnya sama.
   @override
   Widget build(BuildContext context) {
+    // ... (kode UI untuk halaman login)
     final isRegistered = ModalRoute.of(context)?.settings.arguments as Map<String, bool>?;
     if (isRegistered?['registered'] == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -52,12 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     }
 
-    // DIUBAH TOTAL: Menggunakan struktur mandiri yang aman untuk scroll dan centering
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
       body: SafeArea(
         child: Center(
-          // SingleChildScrollView dihapus dari sini
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: ConstrainedBox(
@@ -96,6 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // Widget terpisah untuk membangun form di sisi kanan
   Widget _buildRightForm() {
     return Container(
       padding: const EdgeInsets.fromLTRB(36, 40, 36, 40),

@@ -21,8 +21,8 @@ class _ImageCarouselState extends State<ImageCarousel> {
   @override
   Widget build(BuildContext context) {
     if (widget.imageUrls.isEmpty) {
-      return AspectRatio(
-        aspectRatio: 16 / 9,
+      return SizedBox(
+        height: 200, // Ukuran diubah di sini
         child: Container(
           alignment: Alignment.center,
           color: Colors.grey[200],
@@ -31,8 +31,10 @@ class _ImageCarouselState extends State<ImageCarousel> {
       );
     }
 
-    return AspectRatio(
-      aspectRatio: 16 / 9,
+    // --- PERUBAHAN UTAMA DI SINI ---
+    // Mengganti AspectRatio dengan SizedBox untuk kontrol tinggi yang presisi.
+    return SizedBox(
+      height: 200, // Tinggi galeri gambar sekarang tetap 200 piksel
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
@@ -45,15 +47,20 @@ class _ImageCarouselState extends State<ImageCarousel> {
               });
             },
             itemBuilder: (context, index) {
-              return Image.network(
+              return Image.asset(
                 widget.imageUrls[index],
                 fit: BoxFit.cover,
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                  return const Center(child: CircularProgressIndicator());
-                },
                 errorBuilder: (context, error, stackTrace) {
-                  return const Center(child: Icon(Icons.broken_image, color: Colors.grey));
+                  return const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.error, color: Colors.red, size: 40),
+                        SizedBox(height: 8),
+                        Text('Gagal memuat gambar', style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
+                  );
                 },
               );
             },

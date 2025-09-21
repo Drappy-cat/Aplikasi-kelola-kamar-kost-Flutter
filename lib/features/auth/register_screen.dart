@@ -1,9 +1,15 @@
+// ===== 2. HALAMAN REGISTER =====
+// Halaman ini memungkinkan pengguna baru untuk membuat akun.
+// Setelah registrasi berhasil, pengguna akan diarahkan kembali ke halaman login
+// untuk masuk dengan akun yang baru dibuat.
+
 import 'package:flutter/material.dart';
+import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
-import 'package:tes/shared/widgets/auth_ui.dart'; // Untuk gradStart, gradEnd, cardRadius, AnimatedLeftPanel
 
-// VERSI FINAL: Perbaikan untuk masalah layout dan overflow.
-
+// ===== 7. INHERITANCE (Pewarisan) =====
+// Sama seperti LoginScreen, `RegisterScreen` juga merupakan turunan dari `StatefulWidget`,
+// yang memungkinkannya memiliki state internal yang bisa berubah.
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -15,61 +21,59 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _u = TextEditingController();
   final _p = TextEditingController();
-  final _cp = TextEditingController();
-  final _name = TextEditingController();
-  String _role = 'user';
-  bool _hide1 = true, _hide2 = true;
+  final _p2 = TextEditingController(); // Controller untuk konfirmasi password
+  bool _hide = true;
   bool _loading = false;
 
   @override
   void dispose() {
     _u.dispose();
     _p.dispose();
-    _cp.dispose();
-    _name.dispose();
+    _p2.dispose();
     super.dispose();
   }
 
+  // Fungsi untuk menangani logika saat tombol DAFTAR ditekan
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) return;
-    if (_p.text != _cp.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Konfirmasi password tidak cocok')),
-      );
-      return;
-    }
     setState(() => _loading = true);
+
     try {
+      // 1. Panggil service autentikasi untuk mendaftarkan pengguna baru.
+      //    Peran (role) secara default diatur sebagai 'user'.
       await AuthService.register(
         username: _u.text.trim(),
         password: _p.text.trim(),
-        role: _role,
-        fullName: _name.text.trim().isEmpty ? null : _name.text.trim(),
+        role: 'user',
       );
       if (!mounted) return;
-      Navigator.pushNamedAndRemoveUntil(
-        context,
+
+      // 2. Jika berhasil, kembali ke halaman login dengan membawa pesan sukses.
+      //    Argumen `{'registered': true}` digunakan oleh halaman login untuk menampilkan
+      //    SnackBar "Registrasi berhasil!".
+      Navigator.of(context).pushNamedAndRemoveUntil(
         '/login',
         (route) => false,
-        arguments: const {'registered': true},
+        arguments: {'registered': true},
       );
     } catch (e) {
+      // 3. Jika gagal (misalnya, username sudah dipakai), tampilkan pesan error.
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
+  // ===== 8. POLYMORPHISM (Polimorfisme) =====
+  // Metode `build` ini juga merupakan contoh polimorfisme, sama seperti di LoginScreen.
+  // `_RegisterScreenState` menyediakan implementasi UI-nya sendiri untuk proses registrasi.
   @override
   Widget build(BuildContext context) {
-    // DIUBAH TOTAL: Menggunakan struktur mandiri yang aman untuk scroll dan centering
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
       body: SafeArea(
         child: Center(
-          // SingleChildScrollView dihapus dari sini
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: ConstrainedBox(
@@ -108,28 +112,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // Widget untuk panel formulir kanan
   Widget _buildRightForm() {
     return Container(
       padding: const EdgeInsets.fromLTRB(36, 40, 36, 40),
       child: Form(
         key: _formKey,
-        child: ListView(
-          // ListView di sini akan menangani scroll jika kontennya melebihi tinggi
-          shrinkWrap: true, // Penting agar ListView tidak mencoba mengambil tinggi tak terbatas
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Create Account', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const Text('Buat Akun Baru', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            const Text('Daftar untuk mulai menggunakan aplikasi', style: TextStyle(color: Colors.grey)),
+            const Text('Isi data untuk mendaftar', style: TextStyle(color: Colors.grey)),
             const SizedBox(height: 28),
-            TextFormField(
-              controller: _name,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.badge_outlined),
-                labelText: 'Nama Lengkap (opsional)',
-              ),
-            ),
-            const SizedBox(height: 16),
             TextFormField(
               controller: _u,
               decoration: const InputDecoration(
@@ -141,46 +135,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _p,
-              obscureText: _hide1,
+              obscureText: _hide,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.lock_outline),
                 labelText: 'Password',
                 suffixIcon: IconButton(
-                  onPressed: () => setState(() => _hide1 = !_hide1),
-                  icon: Icon(_hide1 ? Icons.visibility_off : Icons.visibility),
+                  onPressed: () => setState(() => _hide = !_hide),
+                  icon: Icon(_hide ? Icons.visibility_off : Icons.visibility),
                 ),
               ),
-              validator: (v) => (v == null || v.length < 6) ? 'Min. 6 karakter' : null,
+              validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: _cp,
-              obscureText: _hide2,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.lock_reset),
-                labelText: 'Confirm Password',
-                suffixIcon: IconButton(
-                  onPressed: () => setState(() => _hide2 = !_hide2),
-                  icon: Icon(_hide2 ? Icons.visibility_off : Icons.visibility),
-                ),
-              ),
-              validator: (v) => (v != _p.text) ? 'Password tidak sama' : null,
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _role,
+              controller: _p2,
+              obscureText: _hide,
               decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.account_circle_outlined),
-                labelText: 'Role',
+                prefixIcon: Icon(Icons.lock_outline),
+                labelText: 'Konfirmasi Password',
               ),
-              items: const [
-                DropdownMenuItem(value: 'user', child: Text('User')),
-                DropdownMenuItem(value: 'admin', child: Text('Admin')),
-              ],
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _role = value);
-                }
+              // Validasi untuk memastikan password konfirmasi sama dengan password awal.
+              validator: (v) {
+                if (v == null || v.isEmpty) return 'Wajib diisi';
+                if (v != _p.text) return 'Password tidak cocok';
+                return null;
               },
             ),
             const SizedBox(height: 24),
@@ -195,7 +173,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                       )
-                    : const Text('CREATE ACCOUNT'),
+                    : const Text('DAFTAR'),
               ),
             ),
             const SizedBox(height: 16),
@@ -204,7 +182,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 const Text('Sudah punya akun?'),
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pop(context), // Kembali ke halaman sebelumnya (login)
                   child: const Text('Login di sini'),
                 ),
               ],
