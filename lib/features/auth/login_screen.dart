@@ -28,27 +28,43 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-
+    // Penting untuk melepaskan controller saat widget tidak lagi digunakan
+    // untuk mencegah kebocoran memori (memory leak).
     _u.dispose();
     _p.dispose();
     super.dispose();
   }
 
+  // Fungsi untuk menangani logika saat tombol LOGIN ditekan
   Future<void> _handleLogin() async {
+    // 1. Validasi form: jika ada input yang tidak valid, proses berhenti.
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _loading = true);
+    setState(() => _loading = true); // Tampilkan loading
+
     try {
+      // 2. Panggil service autentikasi untuk memverifikasi kredensial.
       await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
       if (!mounted) return;
+
+      // 3. Jika berhasil, arahkan pengguna ke halaman utama ('/home').
+      //    `pushNamedAndRemoveUntil` menghapus semua halaman sebelumnya sehingga pengguna
+      //    tidak bisa kembali ke halaman login dengan menekan tombol "back".
       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     } catch (e) {
+      // 4. Jika gagal, tampilkan pesan error menggunakan SnackBar.
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
+      // 5. Apapun hasilnya (berhasil atau gagal), hentikan loading.
       if (mounted) setState(() => _loading = false);
     }
   }
 
+  // ===== 8. POLYMORPHISM (Polimorfisme) =====
+  // Metode `build` ini adalah contoh polimorfisme. `_LoginScreenState` "meng-override"
+  // (menimpa) metode `build` yang ada di kelas induknya (`State`).
+  // Ini memungkinkan `_LoginScreenState` untuk menyediakan implementasi spesifiknya sendiri
+  // tentang bagaimana UI harus dirender, meskipun kerangka dasarnya sama.
   @override
   Widget build(BuildContext context) {
     // ... (kode UI untuk halaman login)
@@ -112,6 +128,19 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // +++++ GAMBAR TES DIAGNOSTIK +++++
+            // Coba tampilkan satu gambar langsung di sini.
+            Image.asset(
+              'assets/kamar_kost/kamar1.png',
+              height: 100, // Beri tinggi agar tidak terlalu besar
+              errorBuilder: (context, error, stackTrace) {
+                // Jika ini muncul, berarti path gambar salah atau aset tidak terdaftar
+                return const Text('Tes Gagal: Gambar tidak ditemukan di path ini.', style: TextStyle(color: Colors.red));
+              },
+            ),
+            const SizedBox(height: 20),
+            // +++++++++++++++++++++++++++++++++++
+
             const Text('Welcome Back', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             const Text('Login untuk melanjutkan', style: TextStyle(color: Colors.grey)),

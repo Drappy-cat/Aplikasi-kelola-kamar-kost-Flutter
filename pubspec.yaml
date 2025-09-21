@@ -13,16 +13,19 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.3.2
   intl: ^0.20.2
-  google_fonts: ^6.2.1 # Ini satu-satunya yang perlu ditambahkan
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
 
+# Pastikan "flutter:" berada di paling kiri (tanpa spasi).
 flutter:
   uses-material-design: true
 
+  # Pastikan "assets:" memiliki 2 spasi di depannya.
   assets:
+    # Pastikan setiap baris "- assets/..." memiliki 4 spasi di depannya.
     - assets/logo/
-    - assets/kamar_kost/ # <-- MENAMBAHKAN FOLDER GAMBAR KAMAR
+    - assets/kamar_kost/
