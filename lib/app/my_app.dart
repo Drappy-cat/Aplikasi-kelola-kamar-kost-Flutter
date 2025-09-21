@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tes/features/auth/login_screen.dart';
 import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
@@ -34,19 +35,29 @@ class MyAppState extends State<MyApp> {
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     );
 
+    // Definisikan tema dasar
+    final lightTheme = ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.light),
+      inputDecorationTheme: inputDecorationTheme,
+    );
+
+    final darkTheme = ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.dark),
+      inputDecorationTheme: inputDecorationTheme,
+    );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Aplikasi Kost',
       themeMode: _mode,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.light),
-        inputDecorationTheme: inputDecorationTheme,
+      // Terapkan font Poppins ke tema terang dan gelap
+      theme: lightTheme.copyWith(
+        textTheme: GoogleFonts.poppinsTextTheme(lightTheme.textTheme),
       ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.dark),
-        inputDecorationTheme: inputDecorationTheme,
+      darkTheme: darkTheme.copyWith(
+        textTheme: GoogleFonts.poppinsTextTheme(darkTheme.textTheme),
       ),
       initialRoute: '/',
       routes: {
