@@ -1,4 +1,3 @@
-// ===== 5. HALAMAN DETAIL =====
 import 'package:flutter/material.dart';
 import 'package:tes/features/home/rent_options_dialog.dart';
 import 'package:tes/shared/models/room.dart';
@@ -15,17 +14,52 @@ class RoomDetailScreen extends StatefulWidget {
 }
 
 class _RoomDetailScreenState extends State<RoomDetailScreen> {
+  Future<void> _showWaitingConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pengajuan Terkirim'),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Menunggu konfirmasi dari admin...'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Tutup'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Menutup dialog menunggu konfirmasi
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showRentDialog(BuildContext context) async {
     final success = await showDialog<bool>(
       context: context,
       builder: (context) => RentOptionsDialog(room: widget.room),
     );
     if (success == true) {
-      setState(() {});
+      setState(() {}); // Rebuild the screen to show updated room status
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Kamar berhasil disewa!')),
+          const SnackBar(content: Text('Kamar berhasil diajukan!')),
         );
+        // Menampilkan pop-up menunggu konfirmasi
+        await _showWaitingConfirmationDialog(); // Menunggu pop-up ini ditutup
+        
+        // --- PERBAIKAN BUG: KEMBALI KE HALAMAN SEBELUMNYA SETELAH DIALOG DITUTUP ---
+        if (mounted) {
+          Navigator.of(context).pop(); // Menutup RoomDetailScreen dan kembali ke UserHomePage
+        }
       }
     }
   }
@@ -52,10 +86,8 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             ImageCarousel(imageUrls: widget.room.imageUrls),
             const SizedBox(height: 16),
-            // Kartu yang berisi informasi detail kamar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Card(

@@ -124,21 +124,26 @@ class AuthService {
     }
   }
 
+  // --- FUNGSI BARU UNTUK UPDATE FOTO PROFIL ---
   static Future<void> updateProfilePicture(String imageUrl) async {
     if (currentUser == null) return;
 
+    // Buat objek pengguna baru dengan URL gambar yang diperbarui
     final updatedUser = AppUser(
       username: currentUser!.username,
       password: currentUser!.password,
       role: currentUser!.role,
       fullName: currentUser!.fullName,
-      profileImageUrl: imageUrl,
+      profileImageUrl: imageUrl, // Menggunakan URL gambar yang baru
     );
 
+    // Ganti data pengguna lama dengan yang baru di daftar utama
     final userIndex = _users.indexWhere((u) => u.username == currentUser!.username);
     if (userIndex != -1) {
       _users[userIndex] = updatedUser;
     }
+    
+    // Perbarui pengguna saat ini dan simpan ke penyimpanan lokal
     currentUser = updatedUser;
     await _persist();
   }

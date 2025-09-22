@@ -4,6 +4,7 @@ import 'package:tes/features/auth/login_screen.dart';
 import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
 import 'package:tes/features/home/home_screen.dart';
+import 'package:tes/features/notification/notification_screen.dart'; // <-- IMPORT BARU
 import 'package:tes/features/profile/profile_screen.dart';
 import 'package:tes/features/settings/settings_screen.dart';
 
@@ -35,7 +36,6 @@ class MyAppState extends State<MyApp> {
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     );
 
-    // Definisikan tema dasar
     final lightTheme = ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.light),
@@ -52,7 +52,6 @@ class MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Aplikasi Kost',
       themeMode: _mode,
-      // Terapkan font Poppins ke tema terang dan gelap
       theme: lightTheme.copyWith(
         textTheme: GoogleFonts.poppinsTextTheme(lightTheme.textTheme),
       ),
@@ -67,6 +66,7 @@ class MyAppState extends State<MyApp> {
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/settings': (context) => const SettingsScreen(),
+        '/notification': (context) => const NotificationScreen(), // <-- RUTE BARU
       },
     );
   }

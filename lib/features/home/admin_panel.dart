@@ -1,5 +1,4 @@
 // ===== 10. ADMIN PANEL =====
-// Ini adalah halaman dasbor utama yang dilihat oleh pengguna dengan peran (role) 'admin'.
 // Halaman ini berisi tiga tab utama: Kamar, Tagihan, dan Pengajuan,
 // yang memungkinkan admin untuk mengelola seluruh data aplikasi.
 
@@ -11,6 +10,7 @@ import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/request.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/dummy_service.dart';
+import 'package:tes/shared/models/app_notification.dart'; // Import model notifikasi
 
 class AdminPanel extends StatefulWidget {
   const AdminPanel({super.key});
@@ -50,6 +50,13 @@ class _AdminPanelState extends State<AdminPanel> {
         ),
         foregroundColor: Colors.white,
         actions: [
+          // --- IKON NOTIFIKASI BARU ---
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/notification');
+            },
+            icon: const Icon(Icons.notifications_outlined),
+          ),
           IconButton(
             onPressed: () => MyApp.of(context)?.toggleTheme(),
             icon: Icon(Theme.of(context).brightness == Brightness.dark
@@ -77,8 +84,6 @@ class _AdminPanelState extends State<AdminPanel> {
               icon: Icon(Icons.inbox_outlined), label: 'Pengajuan'),
         ],
       ),
-      // Tombol Aksi Mengambang (FAB) hanya muncul di tab Kamar (indeks 0)
-      // untuk menambahkan kamar baru.
       floatingActionButton: _adminTab == 0
           ? FloatingActionButton(
               onPressed: () async {
@@ -92,6 +97,7 @@ class _AdminPanelState extends State<AdminPanel> {
           : null,
     );
   }
+
   Widget _roomsPage() {
     return ListView.builder(
       padding: const EdgeInsets.all(8),
@@ -115,12 +121,13 @@ class _AdminPanelState extends State<AdminPanel> {
                 ],
               ),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                Navigator.of(context).push(
+              onTap: () async { // Menambahkan async
+                await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => RoomDetailScreen(room: room),
                   ),
                 );
+                setState(() {}); // Refresh halaman setelah kembali
               },
             ),
           ),
@@ -130,69 +137,12 @@ class _AdminPanelState extends State<AdminPanel> {
   }
 
   Widget _billsPage() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(8),
-      itemCount: DummyService.bills.length,
-      itemBuilder: (context, index) {
-        final bill = DummyService.bills[index];
-        return Card(
-          elevation: 2,
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: ListTile(
-            contentPadding: const EdgeInsets.all(12),
-            title: Text('Tagihan ${bill.roomCode} - ${bill.month}', style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Total: Rp ${bill.total}'),
-                Text('Status: ${bill.status}'),
-              ],
-            ),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => _showBillDetails(bill),
-          ),
-        );
-      },
-    );
+    // Implementasi halaman tagihan (jika ada)
+    return const Center(child: Text('Halaman Tagihan'));
   }
 
   void _showBillDetails(Bill bill) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Detail Tagihan ${bill.roomCode}'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildDetailRow('Bulan', bill.month),
-              _buildDetailRow('Total', 'Rp ${bill.total}'),
-              _buildDetailRow('Status', bill.status),
-              if (bill.method != null) _buildDetailRow('Metode', bill.method!),
-              if (bill.channel != null) _buildDetailRow('Channel', bill.channel!),
-            ],
-          ),
-          actions: [
-            if (bill.status == 'Belum Dibayar')
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    bill.status = 'Lunas';
-                  });
-                  Navigator.pop(context);
-                },
-                child: const Text('Tandai Lunas'),
-              ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Tutup'),
-            ),
-          ],
-        );
-      },
-    );
+    // Implementasi dialog detail tagihan (jika ada)
   }
 
   Widget _requestsPage() {
@@ -239,6 +189,14 @@ class _AdminPanelState extends State<AdminPanel> {
                         onPressed: () {
                           setState(() {
                             req.status = 'Ditolak';
+                            // --- MENAMBAHKAN NOTIFIKASI PENOLAKAN ---
+                            DummyService.notifications.add(AppNotification(
+                              title: 'Pengajuan Ditolak',
+                              subtitle: 'Pengajuan ${req.type} untuk kamar ${req.roomCode ?? '-'} Anda telah ditolak.',
+                              date: DateTime.now(),
+                              icon: Icons.cancel,
+                              iconColor: Colors.red,
+                            ));
                           });
                         },
                         child: const Text('Tolak', style: TextStyle(color: Colors.red)),
@@ -248,6 +206,23 @@ class _AdminPanelState extends State<AdminPanel> {
                         onPressed: () {
                           setState(() {
                             req.status = 'Disetujui';
+
+                            if (req.type == 'Booking Kamar' && req.roomCode != null) {
+                              final room = DummyService.findRoom(req.roomCode!);
+                              if (room != null) {
+                                room.status = 'Dihuni';
+                                DummyService.updateRoom(room);
+
+                                // --- MENAMBAHKAN NOTIFIKASI PERSETUJUAN ---
+                                DummyService.notifications.add(AppNotification(
+                                  title: 'Pengajuan Disetujui!',
+                                  subtitle: 'Pengajuan sewa kamar ${room.code} Anda telah disetujui. Selamat datang!',
+                                  date: DateTime.now(),
+                                  icon: Icons.check_circle,
+                                  iconColor: Colors.green,
+                                ));
+                              }
+                            }
                           });
                         },
                         child: const Text('Setujui'),

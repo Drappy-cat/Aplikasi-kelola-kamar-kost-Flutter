@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -9,111 +10,141 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late final TextEditingController _nameCtrl;
 
-  @override
-  void initState() {
-    super.initState();
-    final user = AuthService.currentUser;
-    String initialName = '';
-    if (user != null) {
-      if (user.role == 'admin') {
-        initialName = 'Admin Indra';
-      } else {
-        initialName = user.fullName ?? user.username;
-      }
+  // Helper untuk menampilkan dialog ubah foto profil
+  Future<void> _showChangePictureDialog() async {
+    // Daftar URL avatar default untuk dipilih
+    final List<String> avatarUrls = [
+      'https://i.pravatar.cc/150?img=1',
+      'https://i.pravatar.cc/150?img=5',
+      'https://i.pravatar.cc/150?img=10',
+      'https://i.pravatar.cc/150?img=15',
+      'https://i.pravatar.cc/150?img=20',
+      'https://i.pravatar.cc/150?img=25',
+    ];
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Pilih Foto Profil'),
+        content: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          alignment: WrapAlignment.center,
+          children: avatarUrls.map((url) {
+            return InkWell(
+              onTap: () async {
+                await AuthService.updateProfilePicture(url);
+                setState(() {}); // Refresh UI untuk menampilkan gambar baru
+                Navigator.of(context).pop();
+              },
+              child: CircleAvatar(
+                radius: 30,
+                backgroundImage: NetworkImage(url),
+              ),
+            );
+          }).toList(),
+        ),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal'))],
+      ),
+    );
+  }
+
+  // Helper untuk menampilkan dialog edit nama
+  Future<void> _showEditProfileDialog() async {
+    final nameController = TextEditingController(text: AuthService.currentUser?.fullName ?? '');
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Nama Lengkap'),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(labelText: 'Nama Lengkap'),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Batal')),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Simpan'),
+          ),
+        ],
+      ),
+    ) ?? false;
+
+    if (ok && nameController.text.isNotEmpty) {
+      await AuthService.updateProfile(fullName: nameController.text.trim());
+      setState(() {}); // Refresh UI untuk menampilkan nama baru
     }
-    _nameCtrl = TextEditingController(text: initialName);
   }
 
-  @override
-  void dispose() {
-    _nameCtrl.dispose();
-    super.dispose();
-  }
-
+  // Helper untuk menampilkan dialog ubah password
   Future<void> _showChangePasswordDialog() async {
     final formKey = GlobalKey<FormState>();
     final oldPasswordCtrl = TextEditingController();
     final newPasswordCtrl = TextEditingController();
     final confirmPasswordCtrl = TextEditingController();
 
-    return showDialog<void>(
+    await showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Ubah Password'),
-          content: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextFormField(
-                  controller: oldPasswordCtrl,
-                  obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Password Lama'),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: newPasswordCtrl,
-                  obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Password Baru'),
-                  validator: (v) => (v == null || v.length < 6) ? 'Min. 6 karakter' : null,
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: confirmPasswordCtrl,
-                  obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Konfirmasi Password Baru'),
-                  validator: (v) => (v != newPasswordCtrl.text) ? 'Password tidak sama' : null,
-                ),
-              ],
-            ),
+      builder: (context) => AlertDialog(
+        title: const Text('Ubah Password'),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextFormField(
+                controller: oldPasswordCtrl,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Password Lama'),
+                validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: newPasswordCtrl,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Password Baru'),
+                validator: (v) => (v == null || v.length < 6) ? 'Min. 6 karakter' : null,
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: confirmPasswordCtrl,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Konfirmasi Password Baru'),
+                validator: (v) => (v != newPasswordCtrl.text) ? 'Password tidak sama' : null,
+              ),
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Batal'),
-              onPressed: () {
+        ),
+        actions: <Widget>[
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Batal')),
+          FilledButton(
+            child: const Text('Simpan'),
+            onPressed: () async {
+              if (!formKey.currentState!.validate()) return;
+              try {
+                await AuthService.changePassword(oldPassword: oldPasswordCtrl.text, newPassword: newPasswordCtrl.text);
                 Navigator.of(context).pop();
-              },
-            ),
-            FilledButton(
-              child: const Text('Simpan'),
-              onPressed: () async {
-                if (!formKey.currentState!.validate()) return;
-
-                final navigator = Navigator.of(context);
-                final messenger = ScaffoldMessenger.of(context);
-
-                try {
-                  await AuthService.changePassword(
-                    oldPassword: oldPasswordCtrl.text,
-                    newPassword: newPasswordCtrl.text,
-                  );
-                  navigator.pop(); // Tutup dialog
-                  messenger.showSnackBar(
-                    const SnackBar(content: Text('Password berhasil diubah'), backgroundColor: Colors.green),
-                  );
-                } catch (e) {
-                  navigator.pop(); // Tutup dialog
-                  messenger.showSnackBar(
-                    SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
-                  );
-                }
-              },
-            ),
-          ],
-        );
-      },
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password berhasil diubah'), backgroundColor: Colors.green));
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final AppUser? user = AuthService.currentUser;
+    if (user == null) return const Scaffold(body: Center(child: Text('Pengguna tidak ditemukan.')));
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profil'),
+        title: const Text('Profil Saya'),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -125,61 +156,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+        children: [
+          // --- BAGIAN HEADER PROFIL ---
+          Column(
+            children: [
+              GestureDetector(
+                onTap: _showChangePictureDialog,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: user.profileImageUrl != null ? NetworkImage(user.profileImageUrl!) : null,
+                  child: user.profileImageUrl == null
+                      ? const Icon(Icons.person, size: 50, color: Colors.white)
+                      : null,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(user.fullName ?? user.username, style: Theme.of(context).textTheme.headlineSmall),
+              Text('@${user.username}', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey)),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // --- BAGIAN MENU OPSI ---
+          Card(
             child: Column(
               children: [
-                const CircleAvatar(
-                  radius: 40,
-                  backgroundColor: Colors.pink,
-                  child: Icon(Icons.person, size: 40, color: Colors.white),
+                ListTile(
+                  leading: const Icon(Icons.edit_outlined),
+                  title: const Text('Edit Profil'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: _showEditProfileDialog,
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _nameCtrl,
-                  decoration: const InputDecoration(labelText: "Nama"),
+                const Divider(height: 1, indent: 16, endIndent: 16),
+                ListTile(
+                  leading: const Icon(Icons.lock_outline),
+                  title: const Text('Ubah Password'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: _showChangePasswordDialog,
                 ),
-                const SizedBox(height: 8),
-                FilledButton(
-                  onPressed: () async {
-                    await AuthService.updateProfile(fullName: _nameCtrl.text.trim());
-                    if (!mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Profil diperbarui")),
-                    );
-                  },
-                  child: const Text("Simpan Nama"),
-                ),
-                const SizedBox(height: 16),
-                OutlinedButton.icon(
-                  icon: const Icon(Icons.lock_outline),
-                  label: const Text("Ubah Password"),
-                  onPressed: _showChangePasswordDialog,
-                ),
-                const SizedBox(height: 24),
-                const Divider(),
-                const SizedBox(height: 8),
-                OutlinedButton.icon(
-                  icon: const Icon(Icons.logout),
-                  label: const Text("Logout"),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.red,
-                    side: const BorderSide(color: Colors.red),
-                  ),
-                  onPressed: () async {
-                    final navigator = Navigator.of(context);
-                    await AuthService.signOut();
-                    navigator.pushNamedAndRemoveUntil('/login', (route) => false);
-                  },
-                )
               ],
             ),
           ),
-        ),
+          const SizedBox(height: 16),
+
+          // --- BAGIAN LOGOUT ---
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text('Logout', style: TextStyle(color: Colors.red)),
+              onTap: () async {
+                await AuthService.signOut();
+                if(mounted) Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

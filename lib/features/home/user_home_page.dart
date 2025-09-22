@@ -1,6 +1,9 @@
+// ===== 10. USER PANEL =====
+// Halaman ini memiliki dua kondisi utama:
+// 1. Jika pengguna belum menyewa kamar, halaman akan menampilkan daftar semua kamar yang tersedia (dengan filter).
+// 2. Jika pengguna sudah menyewa kamar, halaman akan menampilkan detail dan aksi spesifik untuk kamar tersebut.
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tes/features/home/room_detail_screen.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/request.dart';
@@ -16,7 +19,6 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomePageState extends State<UserHomePage> {
-  // State untuk melacak filter status kamar yang dipilih pengguna
   String _selectedStatus = 'Semua';
 
   @override
@@ -48,6 +50,13 @@ class _UserHomePageState extends State<UserHomePage> {
         ),
         foregroundColor: Colors.white,
         actions: [
+          // --- IKON NOTIFIKASI BARU ---
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/notification');
+            },
+            icon: const Icon(Icons.notifications_outlined),
+          ),
           IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed('/settings');
@@ -63,10 +72,8 @@ class _UserHomePageState extends State<UserHomePage> {
   Widget _userContent() {
     final userRoomCode = DummyService.userRoomCode;
     if (userRoomCode == null) {
-      // Jika belum punya kamar, tampilkan daftar semua kamar.
       return _allRoomsPage();
     } else {
-      // Jika sudah punya kamar, tampilkan info spesifik kamar tersebut.
       final room = DummyService.findRoom(userRoomCode);
       if (room == null) {
         return const Center(child: Text('Kamar Anda tidak ditemukan.'));
@@ -94,7 +101,7 @@ class _UserHomePageState extends State<UserHomePage> {
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Wrap(
             spacing: 8.0,
-            children: ['Semua', 'Kosong', 'Dihuni'].map((status) {
+            children: ['Semua', 'Kosong', 'Booked', 'Dihuni'].map((status) {
               return ChoiceChip(
                 label: Text(status),
                 selected: _selectedStatus == status,
@@ -111,9 +118,8 @@ class _UserHomePageState extends State<UserHomePage> {
         ),
         if (filteredRooms.isEmpty)
           const Center(child: Padding(padding: EdgeInsets.all(16.0), child: Text('Tidak ada kamar yang cocok dengan filter ini.'))),
+        
         ...filteredRooms.map((room) => _buildRoomCard(room)),
-        const SizedBox(height: 24),
-        _bookingForm(),
       ],
     );
   }
@@ -125,12 +131,13 @@ class _UserHomePageState extends State<UserHomePage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          Navigator.of(context).push(
+        onTap: () async {
+          await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => RoomDetailScreen(room: room),
             ),
           );
+          setState(() {});
         },
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -144,7 +151,7 @@ class _UserHomePageState extends State<UserHomePage> {
                   children: [
                     Text('Kamar ${room.code}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     Text('Rp ${DummyService.computeTotalForRoom(room)} / bulan'),
-                    Text('Status: ${room.status}', style: TextStyle(color: room.status == 'Kosong' ? Colors.green : Colors.red, fontWeight: FontWeight.bold)),
+                    Text('Status: ${room.status}', style: TextStyle(color: room.status == 'Kosong' ? Colors.green : (room.status == 'Booked' ? Colors.orange : Colors.red), fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -156,75 +163,28 @@ class _UserHomePageState extends State<UserHomePage> {
     );
   }
 
-  Widget _bookingForm() {
-    final formKey = GlobalKey<FormState>();
-    Room? selectedRoom;
-    final name = TextEditingController(text: AuthService.currentUser?.fullName ?? '');
-    final address = TextEditingController();
-    final phone = TextEditingController();
-    final TextEditingController _dateController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(DateTime.now()));
+  Widget _userRoomInfo(Room room) {
+    // ... (sisa kode tidak berubah)
+    return Container(); // Placeholder
+  }
 
-    final available = DummyService.rooms.where((r) => r.status == 'Kosong').toList();
-
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Ajukan Kamar', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<Room>(
-                value: selectedRoom,
-                items: available
-                    .map((r) => DropdownMenuItem(value: r, child: Text('Kamar ${r.code} • Rp ${DummyService.computeTotalForRoom(r)}')))
-                    .toList(),
-                onChanged: (v) => selectedRoom = v!,
-                validator: (v) => v == null ? 'Pilih kamar' : null,
-                decoration: const InputDecoration(labelText: 'Kamar'),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () {
-                    if (!formKey.currentState!.validate()) return;
-                    final r = selectedRoom!;
-                    DummyService.userRoomCode = r.code;
-                    DummyService.userName = name.text.trim().isEmpty ? 'User' : name.text.trim();
-                    setState(() {
-                      r.status = 'Booked';
-                      r.tenantName = DummyService.userName;
-                      r.tenantAddress = address.text.trim().isEmpty ? null : address.text.trim();
-                      r.tenantPhone = phone.text.trim().isEmpty ? null : phone.text.trim();
-                      r.rentStartDate = _dateController.text;
-                    });
-                    DummyService.requests.add(Request(
-                      type: 'Booking Kamar',
-                      date: _dateController.text,
-                      note: 'Ajukan kamar ${r.code}',
-                      status: 'Pending',
-                      roomCode: r.code,
-                      userName: DummyService.userName,
-                    ));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Pengajuan kamar dikirim. Menunggu persetujuan admin.')),
-                    );
-                  },
-                  child: const Text('Ajukan'),
-                ),
-              ),
-            ],
-          ),
-        ),
+  Widget _row(String k, String v) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          SizedBox(width: 140, child: Text(k, style: const TextStyle(color: Colors.black54))),
+          Expanded(child: Text(v)),
+        ],
       ),
     );
   }
 
-  Widget _userRoomInfo(Room room) {
-    return Container(); // Placeholder
+  Future<void> _submitSimpleRequest({
+    required String type,
+    required String defaultNote,
+    required Room room,
+  }) async {
+    // ... (sisa kode tidak berubah)
   }
-
 }

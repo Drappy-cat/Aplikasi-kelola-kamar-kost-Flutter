@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:tes/shared/models/app_notification.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/request.dart';
@@ -6,7 +8,32 @@ class DummyService {
   static String? userRoomCode;
   static String? userName;
 
-  // Daftar path gambar lokal
+  static List<AppNotification> notifications = [
+    // Contoh notifikasi awal
+    AppNotification(
+      title: 'Selamat Datang di Ri-Kost!',
+      subtitle: 'Jelajahi semua fitur yang tersedia untuk Anda.',
+      date: DateTime.now().subtract(const Duration(days: 2)), // 2 hari lalu
+      icon: Icons.waving_hand,
+      iconColor: Colors.orange,
+    ),
+    // --- NOTIFIKASI TAGIHAN SIMULASI ---
+    AppNotification(
+      title: 'Tagihan Sewa Mendekati Jatuh Tempo',
+      subtitle: 'Tagihan kamar A-101 untuk bulan Juli 2024 akan jatuh tempo pada 10 Juli 2024.',
+      date: DateTime.now().subtract(const Duration(hours: 5)), // 5 jam lalu
+      icon: Icons.receipt_long,
+      iconColor: Colors.blue,
+    ),
+    AppNotification(
+      title: 'Tagihan Sewa Jatuh Tempo!',
+      subtitle: 'Tagihan kamar A-103 untuk bulan Juli 2024 sudah jatuh tempo. Mohon segera lunasi.',
+      date: DateTime.now().subtract(const Duration(minutes: 30)), // 30 menit lalu
+      icon: Icons.warning,
+      iconColor: Colors.red,
+    ),
+  ];
+
   static const List<String> localImagePaths = [
     'assets/kamar_kost/kamar1.png',
     'assets/kamar_kost/kamar2.png',
