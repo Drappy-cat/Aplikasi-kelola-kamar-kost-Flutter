@@ -25,7 +25,6 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine electricity details based on choices
     int electricityWatt = 450;
     if (_isPackageFull) {
       electricityWatt = 900;
@@ -34,7 +33,6 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
       electricityWatt = 1200;
     }
 
-    // Calculate costs
     int totalRent = widget.room.baseRent;
     int waterCost = 0;
     int electricityCost = 0;

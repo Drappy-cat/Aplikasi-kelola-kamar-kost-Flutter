@@ -157,7 +157,6 @@ class _AdminPanelState extends State<AdminPanel> {
     );
   }
 
-  // Menampilkan dialog detail tagihan
   void _showBillDetails(Bill bill) {
     showDialog(
       context: context,

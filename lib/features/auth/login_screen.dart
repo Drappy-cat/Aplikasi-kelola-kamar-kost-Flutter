@@ -1,15 +1,9 @@
 // ===== 2. HALAMAN LOGIN =====
-// Halaman ini berfungsi sebagai gerbang masuk bagi pengguna yang sudah memiliki akun.
-// Pengguna memasukkan username dan password, yang kemudian akan diverifikasi oleh `AuthService`.
-
 import 'package:flutter/material.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
 // ===== 7. INHERITANCE (Pewarisan) =====
-// `LoginScreen` adalah turunan (subclass) dari `StatefulWidget`.
-// Ini berarti `LoginScreen` mewarisi semua sifat dan perilaku dari `StatefulWidget`,
-// memungkinkannya untuk memiliki state (data internal) yang bisa berubah seiring waktu.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -18,56 +12,39 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // GlobalKey digunakan untuk mengidentifikasi Form dan melakukan validasi.
   final _formKey = GlobalKey<FormState>();
-  // TextEditingController digunakan untuk mengelola input dari TextFormField.
+
   final _u = TextEditingController();
   final _p = TextEditingController();
-  bool _hide = true; // State untuk menyembunyikan/menampilkan password
-  bool _loading = false; // State untuk menampilkan indikator loading saat proses login
-
+  bool _hide = true;
+  bool _loading = false;
   @override
   void dispose() {
-    // Penting untuk melepaskan controller saat widget tidak lagi digunakan
-    // untuk mencegah kebocoran memori (memory leak).
+
     _u.dispose();
     _p.dispose();
     super.dispose();
   }
 
-  // Fungsi untuk menangani logika saat tombol LOGIN ditekan
   Future<void> _handleLogin() async {
-    // 1. Validasi form: jika ada input yang tidak valid, proses berhenti.
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _loading = true); // Tampilkan loading
+    setState(() => _loading = true);
 
     try {
-      // 2. Panggil service autentikasi untuk memverifikasi kredensial.
       await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
       if (!mounted) return;
-
-      // 3. Jika berhasil, arahkan pengguna ke halaman utama ('/home').
-      //    `pushNamedAndRemoveUntil` menghapus semua halaman sebelumnya sehingga pengguna
-      //    tidak bisa kembali ke halaman login dengan menekan tombol "back".
       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     } catch (e) {
-      // 4. Jika gagal, tampilkan pesan error menggunakan SnackBar.
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
-      // 5. Apapun hasilnya (berhasil atau gagal), hentikan loading.
       if (mounted) setState(() => _loading = false);
     }
   }
 
   // ===== 8. POLYMORPHISM (Polimorfisme) =====
-  // Metode `build` ini adalah contoh polimorfisme. `_LoginScreenState` "meng-override"
-  // (menimpa) metode `build` yang ada di kelas induknya (`State`).
-  // Ini memungkinkan `_LoginScreenState` untuk menyediakan implementasi spesifiknya sendiri
-  // tentang bagaimana UI harus dirender, meskipun kerangka dasarnya sama.
   @override
   Widget build(BuildContext context) {
-    // ... (kode UI untuk halaman login)
     final isRegistered = ModalRoute.of(context)?.settings.arguments as Map<String, bool>?;
     if (isRegistered?['registered'] == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -119,7 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Widget terpisah untuk membangun form di sisi kanan
   Widget _buildRightForm() {
     return Container(
       padding: const EdgeInsets.fromLTRB(36, 40, 36, 40),
@@ -128,20 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // +++++ GAMBAR TES DIAGNOSTIK +++++
-            // Coba tampilkan satu gambar langsung di sini.
-            Image.asset(
-              'assets/kamar_kost/kamar1.png',
-              height: 100, // Beri tinggi agar tidak terlalu besar
-              errorBuilder: (context, error, stackTrace) {
-                // Jika ini muncul, berarti path gambar salah atau aset tidak terdaftar
-                return const Text('Tes Gagal: Gambar tidak ditemukan di path ini.', style: TextStyle(color: Colors.red));
-              },
-            ),
-            const SizedBox(height: 20),
-            // +++++++++++++++++++++++++++++++++++
-
-            const Text('Welcome Back', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const Text('Selamat Datang', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             const Text('Login untuk melanjutkan', style: TextStyle(color: Colors.grey)),
             const SizedBox(height: 28),

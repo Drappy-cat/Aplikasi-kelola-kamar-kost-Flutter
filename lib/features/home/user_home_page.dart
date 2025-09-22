@@ -60,8 +60,6 @@ class _UserHomePageState extends State<UserHomePage> {
     );
   }
 
-  // Widget ini menentukan konten apa yang harus ditampilkan berdasarkan
-  // apakah pengguna sudah memiliki kamar atau belum.
   Widget _userContent() {
     final userRoomCode = DummyService.userRoomCode;
     if (userRoomCode == null) {
@@ -113,7 +111,6 @@ class _UserHomePageState extends State<UserHomePage> {
         ),
         if (filteredRooms.isEmpty)
           const Center(child: Padding(padding: EdgeInsets.all(16.0), child: Text('Tidak ada kamar yang cocok dengan filter ini.'))),
-        // Menampilkan hasil filter menggunakan `ListView.builder` (implisit)
         ...filteredRooms.map((room) => _buildRoomCard(room)),
         const SizedBox(height: 24),
         _bookingForm(),
@@ -121,7 +118,6 @@ class _UserHomePageState extends State<UserHomePage> {
     );
   }
 
-  // Widget untuk menampilkan satu kartu kamar dalam daftar
   Widget _buildRoomCard(Room room) {
     return Card(
       elevation: 4,
@@ -160,7 +156,6 @@ class _UserHomePageState extends State<UserHomePage> {
     );
   }
 
-  // Form untuk mengajukan sewa kamar
   Widget _bookingForm() {
     final formKey = GlobalKey<FormState>();
     Room? selectedRoom;
@@ -169,7 +164,6 @@ class _UserHomePageState extends State<UserHomePage> {
     final phone = TextEditingController();
     final TextEditingController _dateController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(DateTime.now()));
 
-    // Dropdown hanya akan menampilkan kamar yang statusnya "Kosong"
     final available = DummyService.rooms.where((r) => r.status == 'Kosong').toList();
 
     return Card(
@@ -183,7 +177,6 @@ class _UserHomePageState extends State<UserHomePage> {
             children: [
               const Text('Ajukan Kamar', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
-              // ... (kode form input)
               DropdownButtonFormField<Room>(
                 value: selectedRoom,
                 items: available
@@ -193,7 +186,6 @@ class _UserHomePageState extends State<UserHomePage> {
                 validator: (v) => v == null ? 'Pilih kamar' : null,
                 decoration: const InputDecoration(labelText: 'Kamar'),
               ),
-              // ... (sisa kode form)
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
@@ -231,11 +223,8 @@ class _UserHomePageState extends State<UserHomePage> {
     );
   }
 
-  // Halaman yang menampilkan info spesifik kamar yang sedang disewa pengguna
   Widget _userRoomInfo(Room room) {
-    // ... (kode untuk menampilkan detail kamar pengguna dan aksi-aksi seperti izin, dll.)
     return Container(); // Placeholder
   }
 
-  // ... (sisa helper method)
 }

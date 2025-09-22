@@ -136,7 +136,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 prefixIcon: Icon(Icons.lock_outline),
                 labelText: 'Konfirmasi Password',
               ),
-              // Validasi untuk memastikan password konfirmasi sama dengan password awal.
               validator: (v) {
                 if (v == null || v.isEmpty) return 'Wajib diisi';
                 if (v != _p.text) return 'Password tidak cocok';

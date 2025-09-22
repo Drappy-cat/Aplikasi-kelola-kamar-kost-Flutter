@@ -1,8 +1,4 @@
 // ===== 5. HALAMAN DETAIL =====
-// Halaman ini menampilkan semua informasi rinci tentang satu kamar yang dipilih.
-// Halaman ini dapat diakses oleh admin (dari daftar kamar di AdminPanel) dan oleh pengguna
-// (dari daftar kamar di UserHomePage).
-
 import 'package:flutter/material.dart';
 import 'package:tes/features/home/rent_options_dialog.dart';
 import 'package:tes/shared/models/room.dart';
@@ -10,7 +6,6 @@ import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/widgets/image_carousel.dart';
 
 class RoomDetailScreen extends StatefulWidget {
-  // Menerima satu objek `Room` sebagai parameter. Ini adalah data yang akan ditampilkan.
   final Room room;
 
   const RoomDetailScreen({super.key, required this.room});
@@ -20,14 +15,13 @@ class RoomDetailScreen extends StatefulWidget {
 }
 
 class _RoomDetailScreenState extends State<RoomDetailScreen> {
-  // Fungsi untuk menampilkan dialog opsi sewa
   void _showRentDialog(BuildContext context) async {
     final success = await showDialog<bool>(
       context: context,
       builder: (context) => RentOptionsDialog(room: widget.room),
     );
     if (success == true) {
-      setState(() {}); // Refresh halaman untuk menampilkan status kamar yang baru
+      setState(() {});
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Kamar berhasil disewa!')),
@@ -38,8 +32,6 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Logika untuk menentukan apakah tombol "Sewa" harus ditampilkan.
-    // Tombol hanya muncul jika kamar berstatus "Kosong" DAN pengguna bukan admin.
     final bool canRent = widget.room.status == 'Kosong' && AuthService.currentUser?.role != 'admin';
 
     return Scaffold(
@@ -60,8 +52,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Menampilkan galeri gambar yang bisa digeser.
-            // Ini adalah widget kustom yang telah kita buat sebelumnya.
+
             ImageCarousel(imageUrls: widget.room.imageUrls),
             const SizedBox(height: 16),
             // Kartu yang berisi informasi detail kamar
@@ -100,7 +91,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 80), // Memberi ruang untuk FloatingActionButton
+            const SizedBox(height: 80),
           ],
         ),
       ),
@@ -115,7 +106,6 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
     );
   }
 
-  // Helper widget untuk membuat baris detail agar kode tidak berulang
   Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),

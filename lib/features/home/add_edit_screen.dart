@@ -3,7 +3,7 @@ import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/dummy_service.dart';
 
 class AddEditScreen extends StatefulWidget {
-  final Room? room; // Jika null, mode Tambah. Jika tidak, mode Edit.
+  final Room? room;
 
   const AddEditScreen({super.key, this.room});
 

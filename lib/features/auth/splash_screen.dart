@@ -31,11 +31,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   Future<void> _navigateToNextScreen() async {
-    // Menunggu animasi selesai + jeda singkat sebelum pindah halaman
     await Future.delayed(_controller.duration! + const Duration(milliseconds: 500));
     if (!mounted) return;
 
-    // Logika pengalihan halaman berdasarkan status login
     if (AuthService.currentUser == null) {
       Navigator.of(context).pushReplacementNamed('/login');
     } else {

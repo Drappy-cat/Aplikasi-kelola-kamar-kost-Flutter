@@ -1,9 +1,4 @@
 // ===== 3. HOME SCREEN (ROUTER) =====
-// Ini adalah halaman utama setelah pengguna berhasil login.
-// Fungsinya bukan untuk menampilkan UI secara langsung, melainkan sebagai "router" atau "pemandu".
-// Berdasarkan peran (role) pengguna yang sedang login, halaman ini akan memutuskan
-// untuk menampilkan `AdminPanel` atau `UserHomePage`.
-
 import 'package:flutter/material.dart';
 import 'package:tes/features/home/admin_panel.dart';
 import 'package:tes/features/home/user_home_page.dart';

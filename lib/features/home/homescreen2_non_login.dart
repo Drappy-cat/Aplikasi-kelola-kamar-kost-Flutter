@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:tes/app/my_app.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
-// Model sederhana untuk demonstrasi Getter
 class SampleItem {
   final String _title;
   final String _subtitle;
 
   const SampleItem(this._title, this._subtitle);
 
-  // Getter untuk mengakses properti privat
   String get title => _title;
   String get subtitle => _subtitle;
 }
