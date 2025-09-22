@@ -2,8 +2,6 @@
 
 Aplikasi manajemen kost (boarding house) modern yang dibangun menggunakan Flutter. Ri-Kost dirancang untuk menjembatani komunikasi dan transaksi antara pemilik kost (Admin) dan penyewa (User) dalam satu platform yang terintegrasi dan mudah digunakan.
 
-> **Catatan:** Ganti link di atas dengan screenshot atau GIF demo aplikasi Anda agar lebih menarik.
-
 ---
 
 ## 🌟 Tentang Proyek
