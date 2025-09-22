@@ -13,7 +13,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _u = TextEditingController();
   final _p = TextEditingController();
-  final _p2 = TextEditingController(); // Controller untuk konfirmasi password
+  final _p2 = TextEditingController();
   bool _hide = true;
   bool _loading = false;
 
@@ -163,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 const Text('Sudah punya akun?'),
                 TextButton(
-                  onPressed: () => Navigator.pop(context), // Kembali ke halaman sebelumnya (login)
+                  onPressed: () => Navigator.pop(context),
                   child: const Text('Login di sini'),
                 ),
               ],

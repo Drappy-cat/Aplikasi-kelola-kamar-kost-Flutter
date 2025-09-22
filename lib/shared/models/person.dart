@@ -5,6 +5,5 @@ abstract class Person {
 
   Person({required this.id, required this.nama, required this.email});
 
-  // Metode abstrak untuk polymorphism
   String getGelar();
 }

@@ -1,8 +1,3 @@
-// ===== 10. USER PANEL =====
-// Halaman ini memiliki dua kondisi utama:
-// 1. Jika pengguna belum menyewa kamar, halaman akan menampilkan daftar semua kamar yang tersedia (dengan filter).
-// 2. Jika pengguna sudah menyewa kamar, halaman akan menampilkan detail dan aksi spesifik untuk kamar tersebut.
-
 import 'package:flutter/material.dart';
 import 'package:tes/features/home/room_detail_screen.dart';
 import 'package:tes/shared/models/bill.dart';
@@ -164,7 +159,6 @@ class _UserHomePageState extends State<UserHomePage> {
   }
 
   Widget _userRoomInfo(Room room) {
-    // ... (sisa kode tidak berubah)
     return Container(); // Placeholder
   }
 
@@ -185,6 +179,5 @@ class _UserHomePageState extends State<UserHomePage> {
     required String defaultNote,
     required Room room,
   }) async {
-    // ... (sisa kode tidak berubah)
   }
 }

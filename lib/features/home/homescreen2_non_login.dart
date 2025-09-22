@@ -15,7 +15,6 @@ class SampleItem {
 class HomeScreen2NonLogin extends StatelessWidget {
   const HomeScreen2NonLogin({super.key});
 
-  // Data dummy untuk ditampilkan di list
   final List<SampleItem> _items = const [
     SampleItem('Item Satu', 'Ini adalah deskripsi untuk item satu.'),
     SampleItem('Item Dua', 'Ini adalah deskripsi untuk item dua.'),
@@ -32,7 +31,7 @@ class HomeScreen2NonLogin extends StatelessWidget {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFF72585), Color(0xFF5B2EBC)], // Gradasi Pink ke Ungu
+              colors: [Color(0xFFF72585), Color(0xFF5B2EBC)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -50,7 +49,6 @@ class HomeScreen2NonLogin extends StatelessWidget {
           ),
         ],
       ),
-      // Tampilan body yang bersih dengan ListView
       body: ListView.builder(
         padding: const EdgeInsets.all(16.0),
         itemCount: _items.length,
@@ -63,7 +61,6 @@ class HomeScreen2NonLogin extends StatelessWidget {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              // Penggunaan Getter: item.title dan item.subtitle memanggil getter
               title: Text(item.title, style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(item.subtitle),
               trailing: const Icon(Icons.chevron_right),

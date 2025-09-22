@@ -9,7 +9,6 @@ class DummyService {
   static String? userName;
 
   static List<AppNotification> notifications = [
-    // Contoh notifikasi awal
     AppNotification(
       title: 'Selamat Datang di Ri-Kost!',
       subtitle: 'Jelajahi semua fitur yang tersedia untuk Anda.',
@@ -17,7 +16,6 @@ class DummyService {
       icon: Icons.waving_hand,
       iconColor: Colors.orange,
     ),
-    // --- NOTIFIKASI TAGIHAN SIMULASI ---
     AppNotification(
       title: 'Tagihan Sewa Mendekati Jatuh Tempo',
       subtitle: 'Tagihan kamar A-101 untuk bulan Juli 2024 akan jatuh tempo pada 10 Juli 2024.',

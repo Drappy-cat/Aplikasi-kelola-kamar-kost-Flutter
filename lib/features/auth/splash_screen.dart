@@ -15,17 +15,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    // Inisialisasi controller untuk animasi fade-in
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2), // Durasi animasi
+      duration: const Duration(seconds: 2),
     );
     _animation = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeIn,
     );
 
-    _controller.forward(); // Memulai animasi
+    _controller.forward();
 
     _navigateToNextScreen();
   }

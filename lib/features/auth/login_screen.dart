@@ -1,4 +1,4 @@
-// ===== 2. HALAMAN LOGIN =====
+// =====  HALAMAN LOGIN =====
 import 'package:flutter/material.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // ===== 8. POLYMORPHISM (Polimorfisme) =====
+  // ===== POLYMORPHISM (Polimorfisme) =====
   @override
   Widget build(BuildContext context) {
     final isRegistered = ModalRoute.of(context)?.settings.arguments as Map<String, bool>?;

@@ -142,7 +142,6 @@ class _AdminPanelState extends State<AdminPanel> {
   }
 
   void _showBillDetails(Bill bill) {
-    // Implementasi dialog detail tagihan (jika ada)
   }
 
   Widget _requestsPage() {

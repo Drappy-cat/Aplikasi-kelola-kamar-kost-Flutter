@@ -13,7 +13,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     final notifications = DummyService.notifications;
-    // Urutkan notifikasi dari yang terbaru
     notifications.sort((a, b) => b.date.compareTo(a.date));
 
     return Scaffold(

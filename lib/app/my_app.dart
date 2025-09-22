@@ -4,7 +4,7 @@ import 'package:tes/features/auth/login_screen.dart';
 import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
 import 'package:tes/features/home/home_screen.dart';
-import 'package:tes/features/notification/notification_screen.dart'; // <-- IMPORT BARU
+import 'package:tes/features/notification/notification_screen.dart';
 import 'package:tes/features/profile/profile_screen.dart';
 import 'package:tes/features/settings/settings_screen.dart';
 

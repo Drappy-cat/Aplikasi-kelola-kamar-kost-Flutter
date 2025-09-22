@@ -20,15 +20,11 @@ class SettingsScreen extends StatelessWidget {
         ),
         foregroundColor: Colors.white,
       ),
-      // --- PERUBAHAN STRUKTUR BODY ---
-      // Menggunakan Column agar bisa menempatkan copyright di bawah ListView
       body: Column(
         children: [
-          // Expanded memastikan ListView mengambil semua ruang yang tersedia
           Expanded(
             child: ListView(
               children: [
-                // Opsi Tema
                 ListTile(
                   title: const Text('Mode Tema'),
                   subtitle: Text(Theme.of(context).brightness == Brightness.dark ? 'Dark Mode' : 'Light Mode'),
@@ -43,7 +39,6 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const Divider(),
 
-                // Informasi Aplikasi
                 ListTile(
                   title: const Text('Tentang Aplikasi'),
                   subtitle: const Text('Versi 1.0.0'),
@@ -68,14 +63,13 @@ class SettingsScreen extends StatelessWidget {
           ),
 
           // --- BAGIAN COPYRIGHT DI SINI ---
-          // Padding untuk memberi sedikit ruang
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
               'by Rizma Indra © 2025',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.grey[600], // Warna abu-abu agar tidak terlalu mencolok
+                color: Colors.grey[600],
                 fontSize: 12,
               ),
             ),

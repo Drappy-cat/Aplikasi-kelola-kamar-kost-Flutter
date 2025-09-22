@@ -19,8 +19,8 @@ class _AddEditScreenState extends State<AddEditScreen> {
   late TextEditingController _waterCtrl;
   late TextEditingController _electricityCtrl;
   late TextEditingController _acCostCtrl;
-  late TextEditingController _dimensionsCtrl; // Controller untuk dimensi
-  late TextEditingController _imageUrlsCtrl; // Controller untuk URL gambar
+  late TextEditingController _dimensionsCtrl;
+  late TextEditingController _imageUrlsCtrl;
 
   late String _selectedStatus;
   late bool _isPackageFull;

@@ -33,7 +33,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             TextButton(
               child: const Text('Tutup'),
               onPressed: () {
-                Navigator.of(context).pop(); // Menutup dialog menunggu konfirmasi
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -48,17 +48,15 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
       builder: (context) => RentOptionsDialog(room: widget.room),
     );
     if (success == true) {
-      setState(() {}); // Rebuild the screen to show updated room status
+      setState(() {});
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Kamar berhasil diajukan!')),
         );
-        // Menampilkan pop-up menunggu konfirmasi
-        await _showWaitingConfirmationDialog(); // Menunggu pop-up ini ditutup
-        
-        // --- PERBAIKAN BUG: KEMBALI KE HALAMAN SEBELUMNYA SETELAH DIALOG DITUTUP ---
+        await _showWaitingConfirmationDialog();
+
         if (mounted) {
-          Navigator.of(context).pop(); // Menutup RoomDetailScreen dan kembali ke UserHomePage
+          Navigator.of(context).pop();
         }
       }
     }

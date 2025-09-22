@@ -11,9 +11,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  // Helper untuk menampilkan dialog ubah foto profil
   Future<void> _showChangePictureDialog() async {
-    // Daftar URL avatar default untuk dipilih
     final List<String> avatarUrls = [
       'https://i.pravatar.cc/150?img=1',
       'https://i.pravatar.cc/150?img=5',
@@ -78,7 +76,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  // Helper untuk menampilkan dialog ubah password
   Future<void> _showChangePasswordDialog() async {
     final formKey = GlobalKey<FormState>();
     final oldPasswordCtrl = TextEditingController();
@@ -179,7 +176,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 24),
 
-          // --- BAGIAN MENU OPSI ---
           Card(
             child: Column(
               children: [

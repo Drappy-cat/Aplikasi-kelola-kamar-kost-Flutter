@@ -31,10 +31,8 @@ class _ImageCarouselState extends State<ImageCarousel> {
       );
     }
 
-    // --- PERUBAHAN UTAMA DI SINI ---
-    // Mengganti AspectRatio dengan SizedBox untuk kontrol tinggi yang presisi.
     return SizedBox(
-      height: 200, // Tinggi galeri gambar sekarang tetap 200 piksel
+      height: 200,
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
@@ -65,7 +63,6 @@ class _ImageCarouselState extends State<ImageCarousel> {
               );
             },
           ),
-          // Indikator halaman
           Positioned(
             bottom: 10,
             child: Row(
@@ -83,7 +80,6 @@ class _ImageCarouselState extends State<ImageCarousel> {
               }),
             ),
           ),
-          // Tombol navigasi
           if (widget.imageUrls.length > 1)
             Positioned(
               left: 10,

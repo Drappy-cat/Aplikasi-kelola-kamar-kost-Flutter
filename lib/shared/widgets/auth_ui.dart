@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-// === SHARED COLORS ===
 const Color gradStart = Color(0xFF5B2EBC); // ungu
 const Color gradEnd   = Color(0xFFF72585); // pink
 const double cardRadius = 12.0;
@@ -24,7 +23,6 @@ class AuthCard extends StatelessWidget {
     if (wide) {
       child = Row(children: [Expanded(child: left), Expanded(child: right)]);
     } else {
-      // Saat layar sempit, bungkus panel kanan dengan Expanded agar ukurannya tidak meluap
       child = Column(children: [left, Expanded(child: right)]);
     }
 
@@ -78,15 +76,14 @@ class AnimatedLeftPanel extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(40, 48, 40, 40),
           child: Column(
-            mainAxisSize: MainAxisSize.max, // MODIFIED HERE: Changed to MainAxisSize.max
-            mainAxisAlignment: MainAxisAlignment.center, // Added to center content vertically
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // DIUBAH: Bungkus Image.asset dengan Flexible agar tingginya bisa menyesuaikan
               Flexible(
                 child: Image.asset(
                   'assets/logo/logo.png',
                   width: 300,
-                  // height: 300, // Hapus tinggi tetap agar Flexible bisa bekerja
+
                   fit: BoxFit.contain,
                   filterQuality: FilterQuality.high,
                 ),
@@ -131,13 +128,12 @@ class RightForm extends StatelessWidget {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(36, 40, 36, 40),
-      // DIUBAH: Menggunakan LayoutBuilder dan SingleChildScrollView untuk tata letak yang aman
       child: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: constraints.maxHeight, // Memaksa tinggi minimal setinggi viewport
+                minHeight: constraints.maxHeight,
               ),
               child: IntrinsicHeight(
                 child: Column(
