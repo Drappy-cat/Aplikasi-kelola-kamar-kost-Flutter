@@ -1,22 +1,22 @@
+
 class Bill {
-  // Properti (Data)
   final String id;
-  final String roomCode;
-  final String month;
-  final String dueDate;
-  final int total;
-  String status;
-  String? method;
-  String? channel;
+  final String userId;
+  final String roomId;
+  final String period;
+  final double amount;
+  final String status; // "Belum Lunas", "Menunggu Konfirmasi", "Lunas"
+  final String? paymentProofUrl;
+  final DateTime createdAt;
 
   Bill({
     required this.id,
-    required this.roomCode,
-    required this.month,
-    required this.dueDate,
-    required this.total,
+    required this.userId,
+    required this.roomId,
+    required this.period,
+    required this.amount,
     required this.status,
-    this.method,
-    this.channel,
+    this.paymentProofUrl,
+    required this.createdAt,
   });
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tes/features/billing/bill_history_screen.dart';
 import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
@@ -10,7 +11,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   Future<void> _showChangePictureDialog() async {
     final List<String> avatarUrls = [
       'https://i.pravatar.cc/150?img=1',
@@ -191,6 +191,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: const Text('Ubah Password'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: _showChangePasswordDialog,
+                ),
+                const Divider(height: 1, indent: 16, endIndent: 16),
+                // --- MENU RIWAYAT TAGIHAN YANG SUDAH DIPERBAIKI ---
+                ListTile(
+                  leading: const Icon(Icons.receipt_long_outlined),
+                  title: const Text('Riwayat Tagihan'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const BillHistoryScreen()),
+                    );
+                  },
                 ),
               ],
             ),

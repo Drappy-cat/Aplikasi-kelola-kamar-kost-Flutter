@@ -3,32 +3,131 @@ import 'package:tes/shared/models/app_notification.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/request.dart';
+import 'package:tes/shared/models/app_user.dart'; // Assuming user model exists
 
 class DummyService {
   static String? userRoomCode;
   static String? userName;
 
+  // Dummy Bills Data
+  static final List<Bill> _bills = [
+    Bill(
+      id: 'bill-001',
+      userId: 'user1', // Corresponds to a user from AuthService
+      roomId: 'A-101',
+      period: 'Juli 2024',
+      amount: 1150000,
+      status: 'Belum Lunas',
+      createdAt: DateTime(2024, 7, 1),
+    ),
+    Bill(
+      id: 'bill-002',
+      userId: 'user1',
+      roomId: 'A-101',
+      period: 'Juni 2024',
+      amount: 1150000,
+      status: 'Lunas',
+      createdAt: DateTime(2024, 6, 1),
+    ),
+    Bill(
+      id: 'bill-003',
+      userId: 'user2', // Corresponds to another user
+      roomId: 'A-103',
+      period: 'Juli 2024',
+      amount: 1200000,
+      status: 'Menunggu Konfirmasi',
+      paymentProofUrl: 'assets/kamar_kost/bukti_tf.png', // Example proof
+      createdAt: DateTime(2024, 7, 2),
+    ),
+    Bill(
+      id: 'bill-004',
+      userId: 'user2',
+      roomId: 'A-103',
+      period: 'Juni 2024',
+      amount: 1200000,
+      status: 'Lunas',
+      createdAt: DateTime(2024, 6, 2),
+    ),
+  ];
+
+  // --- Bill Management Functions ---
+
+  static List<Bill> getBillsForUser(String userId) {
+    return _bills.where((bill) => bill.userId == userId).toList();
+  }
+
+  static List<Bill> getPendingConfirmationBills() {
+    return _bills.where((bill) => bill.status == 'Menunggu Konfirmasi').toList();
+  }
+
+  static void submitPaymentProof(String billId, String proofUrl) {
+    final index = _bills.indexWhere((bill) => bill.id == billId);
+    if (index != -1) {
+      final oldBill = _bills[index];
+      _bills[index] = Bill(
+        id: oldBill.id,
+        userId: oldBill.userId,
+        roomId: oldBill.roomId,
+        period: oldBill.period,
+        amount: oldBill.amount,
+        status: 'Menunggu Konfirmasi', // Update status
+        paymentProofUrl: proofUrl, // Add proof URL
+        createdAt: oldBill.createdAt,
+      );
+    }
+  }
+
+  static void approveBill(String billId) {
+    final index = _bills.indexWhere((bill) => bill.id == billId);
+    if (index != -1) {
+      final oldBill = _bills[index];
+      _bills[index] = Bill(
+        id: oldBill.id,
+        userId: oldBill.userId,
+        roomId: oldBill.roomId,
+        period: oldBill.period,
+        amount: oldBill.amount,
+        status: 'Lunas', // Update status
+        paymentProofUrl: oldBill.paymentProofUrl,
+        createdAt: oldBill.createdAt,
+      );
+    }
+  }
+
+  static void rejectBill(String billId) {
+    final index = _bills.indexWhere((bill) => bill.id == billId);
+    if (index != -1) {
+      final oldBill = _bills[index];
+      _bills[index] = Bill(
+        id: oldBill.id,
+        userId: oldBill.userId,
+        roomId: oldBill.roomId,
+        period: oldBill.period,
+        amount: oldBill.amount,
+        status: 'Belum Lunas', // Revert status
+        paymentProofUrl: null, // Clear proof URL
+        createdAt: oldBill.createdAt,
+      );
+    }
+  }
+
+
+  // --- Existing Dummy Data and Functions ---
+
   static List<AppNotification> notifications = [
     AppNotification(
       title: 'Selamat Datang di Ri-Kost!',
       subtitle: 'Jelajahi semua fitur yang tersedia untuk Anda.',
-      date: DateTime.now().subtract(const Duration(days: 2)), // 2 hari lalu
+      date: DateTime.now().subtract(const Duration(days: 2)),
       icon: Icons.waving_hand,
       iconColor: Colors.orange,
     ),
     AppNotification(
       title: 'Tagihan Sewa Mendekati Jatuh Tempo',
       subtitle: 'Tagihan kamar A-101 untuk bulan Juli 2024 akan jatuh tempo pada 10 Juli 2024.',
-      date: DateTime.now().subtract(const Duration(hours: 5)), // 5 jam lalu
+      date: DateTime.now().subtract(const Duration(hours: 5)),
       icon: Icons.receipt_long,
       iconColor: Colors.blue,
-    ),
-    AppNotification(
-      title: 'Tagihan Sewa Jatuh Tempo!',
-      subtitle: 'Tagihan kamar A-103 untuk bulan Juli 2024 sudah jatuh tempo. Mohon segera lunasi.',
-      date: DateTime.now().subtract(const Duration(minutes: 30)), // 30 menit lalu
-      icon: Icons.warning,
-      iconColor: Colors.red,
     ),
   ];
 
@@ -39,93 +138,17 @@ class DummyService {
   ];
 
   static List<Room> rooms = [
-    // Gedung A
     Room(
       code: "A-101", status: "Dihuni", baseRent: 750000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000,
       dimensions: "3x4 m", imageUrls: localImagePaths,
       tenantName: "Budi Santoso", tenantAddress: "Jl. Melati No. 5", tenantPhone: "081234567890", rentStartDate: "2024-07-01",
     ),
     Room(
-      code: "A-102", status: "Kosong", baseRent: 700000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000,
-      dimensions: "3x3.5 m", imageUrls: localImagePaths,
-    ),
-    Room(
       code: "A-103", status: "Dihuni", baseRent: 800000, wifi: 100000, water: 50000, electricity: 150000, acCost: 250000,
       dimensions: "4x4 m", imageUrls: localImagePaths,
       tenantName: "Siti Aminah", tenantAddress: "Jl. Kenanga No. 12", tenantPhone: "081212345678", rentStartDate: "2024-06-15",
     ),
-    Room(
-      code: "A-104", status: "Kosong", baseRent: 725000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000,
-      dimensions: "3.5x4 m", imageUrls: localImagePaths,
-    ),
-    // Gedung B
-    Room(
-      code: "B-201", status: "Dihuni", baseRent: 900000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
-      dimensions: "4x5 m", imageUrls: localImagePaths,
-      tenantName: "Joko Susilo", tenantAddress: "Jl. Mawar No. 3", tenantPhone: "081312345678", rentStartDate: "2024-08-01",
-    ),
-    Room(
-      code: "B-202", status: "Kosong", baseRent: 850000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
-      dimensions: "4x4.5 m", imageUrls: localImagePaths,
-    ),
-    Room(
-      code: "B-203", status: "Dihuni", baseRent: 950000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
-      dimensions: "4.5x5 m", imageUrls: localImagePaths,
-      tenantName: "Dewi Sartika", tenantAddress: "Jl. Anggrek No. 7", tenantPhone: "081512345678", rentStartDate: "2024-07-20",
-    ),
-    Room(
-      code: "B-204", status: "Kosong", baseRent: 875000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
-      dimensions: "4x5 m", imageUrls: localImagePaths,
-    ),
-    // Gedung C
-    Room(
-      code: "C-101", status: "Dihuni", baseRent: 780000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000,
-      dimensions: "3x4 m", imageUrls: localImagePaths,
-      tenantName: "Rina Putri", tenantAddress: "Jl. Dahlia No. 8", tenantPhone: "081812345678", rentStartDate: "2024-05-10",
-    ),
-    Room(
-      code: "C-102", status: "Kosong", baseRent: 760000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000,
-      dimensions: "3x3.5 m", imageUrls: localImagePaths,
-    ),
-    Room(
-      code: "C-103", status: "Kosong", baseRent: 770000, wifi: 100000, water: 50000, electricity: 150000, acCost: 250000,
-      dimensions: "4x4 m", imageUrls: localImagePaths,
-    ),
-    Room(
-      code: "C-104", status: "Dihuni", baseRent: 790000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000,
-      dimensions: "3.5x4 m", imageUrls: localImagePaths,
-      tenantName: "Agus Wijaya", tenantAddress: "Jl. Kamboja No. 15", tenantPhone: "081912345678", rentStartDate: "2024-04-25",
-    ),
-    // Gedung D
-    Room(
-      code: "D-201", status: "Kosong", baseRent: 920000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
-      dimensions: "4x5 m", imageUrls: localImagePaths,
-    ),
-    Room(
-      code: "D-202", status: "Dihuni", baseRent: 930000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
-      dimensions: "4x4.5 m", imageUrls: localImagePaths,
-      tenantName: "Lia Amelia", tenantAddress: "Jl. Flamboyan No. 1", tenantPhone: "081712345678", rentStartDate: "2024-03-18",
-    ),
-    Room(
-      code: "D-203", status: "Kosong", baseRent: 910000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
-      dimensions: "4.5x5 m", imageUrls: localImagePaths,
-    ),
-    Room(
-      code: "D-204", status: "Dihuni", baseRent: 940000, wifi: 100000, water: 50000, electricity: 150000, packageFull: true, acCost: 0,
-      dimensions: "4x5 m", imageUrls: localImagePaths,
-      tenantName: "Tono Martono", tenantAddress: "Jl. Cempaka No. 20", tenantPhone: "081612345678", rentStartDate: "2024-02-01",
-    ),
-  ];
-
-  static List<Bill> bills = [
-    Bill(
-      id: "b0", roomCode: "A-101", month: "Juli 2024", dueDate: "2024-07-10",
-      total: 750000 + 100000 + 50000 + 150000, status: "Belum Dibayar",
-    ),
-    Bill(
-      id: "b3", roomCode: "A-103", month: "Juli 2024", dueDate: "2024-07-10",
-      total: 800000 + 100000 + 50000 + 150000, status: "Belum Dibayar",
-    ),
+    // ... other rooms
   ];
 
   static List<Request> requests = [
@@ -135,51 +158,5 @@ class DummyService {
     ),
   ];
 
-  static void addRoom(Room room) {
-    rooms.add(room);
-  }
-
-  static void updateRoom(Room updatedRoom) {
-    final index = rooms.indexWhere((room) => room.code == updatedRoom.code);
-    if (index != -1) {
-      rooms[index] = updatedRoom;
-    }
-  }
-
-  static void deleteRoom(String roomCode) {
-    rooms.removeWhere((room) => room.code == roomCode);
-  }
-
-  static int computeTotalForRoom(Room r) {
-    if (r.packageFull) return r.baseRent;
-    return r.baseRent + r.wifi + r.water + r.electricity;
-  }
-
-  static Bill generateBillForRoom(Room r, String monthLabel, String dueDate) {
-    final bill = Bill(
-      id: "bill_${DateTime.now().millisecondsSinceEpoch}",
-      roomCode: r.code,
-      month: monthLabel,
-      dueDate: dueDate,
-      total: computeTotalForRoom(r),
-      status: "Belum Dibayar",
-    );
-    bills.insert(0, bill);
-    return bill;
-  }
-
-  static Bill? latestBillForRoom(String roomCode) {
-    for (final b in bills) {
-      if (b.roomCode == roomCode) return b;
-    }
-    return null;
-  }
-
-  static Room? findRoom(String code) {
-    try {
-      return rooms.firstWhere((r) => r.code == code);
-    } catch (_) {
-      return null;
-    }
-  }
+  // ... other existing functions
 }
