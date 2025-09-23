@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tes/features/home/room_detail_screen.dart';
-import 'package:tes/shared/models/bill.dart';
-import 'package:tes/shared/models/request.dart';
+import 'package:tes/shared/models/announcement.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
@@ -24,9 +23,7 @@ class _UserHomePageState extends State<UserHomePage> {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: () {
-              Navigator.of(context).pushNamed('/profile');
-            },
+            onTap: () => Navigator.of(context).pushNamed('/profile'),
             child: const CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(Icons.person, color: Colors.pink),
@@ -45,27 +42,67 @@ class _UserHomePageState extends State<UserHomePage> {
         ),
         foregroundColor: Colors.white,
         actions: [
-          // --- IKON NOTIFIKASI BARU ---
           IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/notification');
-            },
+            onPressed: () => Navigator.of(context).pushNamed('/notification'),
             icon: const Icon(Icons.notifications_outlined),
           ),
           IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/settings');
-            },
+            onPressed: () => Navigator.of(context).pushNamed('/settings'),
             icon: const Icon(Icons.settings),
           ),
         ],
       ),
-      body: _userContent(),
+      body: Column(
+        children: [
+          _buildAnnouncementsWidget(),
+          Expanded(child: _userContent()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnnouncementsWidget() {
+    final announcements = DummyService.getLatestAnnouncements();
+    if (announcements.isEmpty) {
+      return const SizedBox.shrink(); // Tidak menampilkan apa-apa jika tidak ada pengumuman
+    }
+
+    final latest = announcements.first;
+    return Card(
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      elevation: 3,
+      color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.7),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.campaign, color: Theme.of(context).colorScheme.primary),
+                const SizedBox(width: 8),
+                Text(
+                  latest.title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(latest.content, style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer)),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _userContent() {
-    final userRoomCode = DummyService.userRoomCode;
+    // Logika ini tetap sama, menentukan apakah pengguna sudah punya kamar atau belum
+    final userRoomCode = AuthService.currentUser?.roomId;
     if (userRoomCode == null) {
       return _allRoomsPage();
     } else {
@@ -90,7 +127,7 @@ class _UserHomePageState extends State<UserHomePage> {
       children: [
         const Padding(
           padding: EdgeInsets.only(bottom: 8.0),
-          child: Text('Daftar Kamar', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          child: Text('Daftar Kamar Tersedia', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -101,19 +138,13 @@ class _UserHomePageState extends State<UserHomePage> {
                 label: Text(status),
                 selected: _selectedStatus == status,
                 onSelected: (isSelected) {
-                  if (isSelected) {
-                    setState(() {
-                      _selectedStatus = status;
-                    });
-                  }
+                  if (isSelected) setState(() => _selectedStatus = status);
                 },
               );
             }).toList(),
           ),
         ),
-        if (filteredRooms.isEmpty)
-          const Center(child: Padding(padding: EdgeInsets.all(16.0), child: Text('Tidak ada kamar yang cocok dengan filter ini.'))),
-        
+        if (filteredRooms.isEmpty) const Center(child: Padding(padding: EdgeInsets.all(16.0), child: Text('Tidak ada kamar yang cocok.'))),
         ...filteredRooms.map((room) => _buildRoomCard(room)),
       ],
     );
@@ -127,18 +158,14 @@ class _UserHomePageState extends State<UserHomePage> {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => RoomDetailScreen(room: room),
-            ),
-          );
+          await Navigator.of(context).push(MaterialPageRoute(builder: (context) => RoomDetailScreen(room: room)));
           setState(() {});
         },
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
             children: [
-              const Icon(Icons.king_bed_outlined, size: 40, color: Colors.pink),
+              Icon(Icons.king_bed_outlined, size: 40, color: Theme.of(context).colorScheme.secondary),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -159,25 +186,19 @@ class _UserHomePageState extends State<UserHomePage> {
   }
 
   Widget _userRoomInfo(Room room) {
-    return Container(); // Placeholder
-  }
-
-  Widget _row(String k, String v) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          SizedBox(width: 140, child: Text(k, style: const TextStyle(color: Colors.black54))),
-          Expanded(child: Text(v)),
-        ],
+    // Placeholder: Halaman ini bisa dikembangkan untuk menampilkan detail kamar pengguna & tagihan terakhir
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Anda adalah penghuni kamar:', style: TextStyle(fontSize: 18)),
+            const SizedBox(height: 16),
+            _buildRoomCard(room),
+          ],
+        ),
       ),
     );
-  }
-
-  Future<void> _submitSimpleRequest({
-    required String type,
-    required String defaultNote,
-    required Room room,
-  }) async {
   }
 }

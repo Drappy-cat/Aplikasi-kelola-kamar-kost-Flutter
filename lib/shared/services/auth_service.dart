@@ -8,7 +8,10 @@ class AuthService {
   static const _kCurrent = 'auth_current_user';
 
   static List<AppUser> _users = [
-    AppUser(username: 'admin', password: 'admin123', role: 'admin', fullName: 'Pemilik Kost'),
+    // Menambahkan ID untuk pengguna awal
+    AppUser(id: 'admin0', username: 'admin', password: 'admin123', role: 'admin', fullName: 'Pemilik Kost'),
+    AppUser(id: 'user1', username: 'budi', password: 'budi123', role: 'user', fullName: 'Budi Santoso', roomId: 'A-101'),
+    AppUser(id: 'user2', username: 'siti', password: 'siti123', role: 'user', fullName: 'Siti Aminah', roomId: 'A-103'),
   ];
 
   static List<AppUser> get users => _users;
@@ -19,12 +22,20 @@ class AuthService {
     final sp = await SharedPreferences.getInstance();
     final usersStr = sp.getString(_kUsers);
     if (usersStr != null) {
-      final list = (jsonDecode(usersStr) as List).cast<Map<String, dynamic>>();
-      _users = list.map(AppUser.fromJson).toList();
+      try {
+        final list = (jsonDecode(usersStr) as List).cast<Map<String, dynamic>>();
+        _users = list.map(AppUser.fromJson).toList();
+      } catch (e) {
+        // Jika data lama tidak valid, gunakan data default
+      }
     }
     final currStr = sp.getString(_kCurrent);
     if (currStr != null) {
-      currentUser = AppUser.fromJson(jsonDecode(currStr));
+      try {
+        currentUser = AppUser.fromJson(jsonDecode(currStr));
+      } catch (e) {
+        // Abaikan jika data pengguna saat ini tidak valid
+      }
     }
   }
 
@@ -46,7 +57,6 @@ class AuthService {
   static Future<AppUser> register({
     required String username,
     required String password,
-    required String role,
     String? fullName,
   }) async {
     final exists = _users.any((u) => u.username.toLowerCase() == username.toLowerCase());
@@ -54,9 +64,11 @@ class AuthService {
       throw Exception('Username sudah dipakai');
     }
     final user = AppUser(
+      // Menghasilkan ID unik untuk pengguna baru
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
       username: username,
       password: password,
-      role: role,
+      role: 'user', // Role default untuk registrasi
       fullName: fullName,
     );
     _users.add(user);
@@ -81,13 +93,15 @@ class AuthService {
   static Future<void> updateProfile({String? fullName}) async {
     if (currentUser == null) return;
     final updatedUser = AppUser(
+      id: currentUser!.id, // Membawa ID yang ada
       username: currentUser!.username,
       password: currentUser!.password,
       role: currentUser!.role,
       fullName: fullName,
       profileImageUrl: currentUser!.profileImageUrl,
+      roomId: currentUser!.roomId, // Membawa roomId yang ada
     );
-    final userIndex = _users.indexWhere((u) => u.username == currentUser!.username);
+    final userIndex = _users.indexWhere((u) => u.id == currentUser!.id);
     if (userIndex != -1) {
       _users[userIndex] = updatedUser;
     }
@@ -101,21 +115,20 @@ class AuthService {
   }
 
   static Future<void> changePassword({required String oldPassword, required String newPassword}) async {
-    if (currentUser == null) {
-      throw Exception('Tidak ada pengguna yang sedang login');
-    }
-    if (currentUser!.password != oldPassword) {
-      throw Exception('Password lama salah');
-    }
-    final userIndex = _users.indexWhere((u) => u.username == currentUser!.username);
+    if (currentUser == null) throw Exception('Tidak ada pengguna yang sedang login');
+    if (currentUser!.password != oldPassword) throw Exception('Password lama salah');
+    
+    final userIndex = _users.indexWhere((u) => u.id == currentUser!.id);
     if (userIndex != -1) {
       final oldUser = _users[userIndex];
       _users[userIndex] = AppUser(
+        id: oldUser.id, // Membawa ID yang ada
         username: oldUser.username,
         password: newPassword,
         role: oldUser.role,
         fullName: oldUser.fullName,
         profileImageUrl: oldUser.profileImageUrl,
+        roomId: oldUser.roomId, // Membawa roomId yang ada
       );
       currentUser = _users[userIndex];
       await _persist();
@@ -128,14 +141,16 @@ class AuthService {
     if (currentUser == null) return;
 
     final updatedUser = AppUser(
+      id: currentUser!.id, // Membawa ID yang ada
       username: currentUser!.username,
       password: currentUser!.password,
       role: currentUser!.role,
       fullName: currentUser!.fullName,
       profileImageUrl: imageUrl,
+      roomId: currentUser!.roomId, // Membawa roomId yang ada
     );
 
-    final userIndex = _users.indexWhere((u) => u.username == currentUser!.username);
+    final userIndex = _users.indexWhere((u) => u.id == currentUser!.id);
     if (userIndex != -1) {
       _users[userIndex] = updatedUser;
     }

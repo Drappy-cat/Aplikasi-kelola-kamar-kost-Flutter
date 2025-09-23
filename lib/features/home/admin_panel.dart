@@ -1,7 +1,3 @@
-// ===== 10. ADMIN PANEL =====
-// Halaman ini berisi tiga tab utama: Kamar, Tagihan, dan Pengajuan,
-// yang memungkinkan admin untuk mengelola seluruh data aplikasi.
-
 import 'package:flutter/material.dart';
 import 'package:tes/app/my_app.dart';
 import 'package:tes/features/home/add_edit_screen.dart';
@@ -9,8 +5,10 @@ import 'package:tes/features/home/room_detail_screen.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/request.dart';
 import 'package:tes/shared/models/room.dart';
+import 'package:tes/shared/models/complaint.dart';
+import 'package:tes/shared/models/announcement.dart';
 import 'package:tes/shared/services/dummy_service.dart';
-import 'package:tes/shared/models/app_notification.dart'; // Import model notifikasi
+import 'package:tes/shared/models/app_notification.dart';
 
 class AdminPanel extends StatefulWidget {
   const AdminPanel({super.key});
@@ -29,9 +27,7 @@ class _AdminPanelState extends State<AdminPanel> {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: () {
-              Navigator.of(context).pushNamed('/profile');
-            },
+            onTap: () => Navigator.of(context).pushNamed('/profile'),
             child: const CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(Icons.person, color: Colors.pink),
@@ -50,18 +46,13 @@ class _AdminPanelState extends State<AdminPanel> {
         ),
         foregroundColor: Colors.white,
         actions: [
-          // --- IKON NOTIFIKASI BARU ---
           IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/notification');
-            },
+            onPressed: () => Navigator.of(context).pushNamed('/notification'),
             icon: const Icon(Icons.notifications_outlined),
           ),
           IconButton(
             onPressed: () => MyApp.of(context)?.toggleTheme(),
-            icon: Icon(Theme.of(context).brightness == Brightness.dark
-                ? Icons.light_mode
-                : Icons.dark_mode),
+            icon: Icon(Theme.of(context).brightness == Brightness.dark ? Icons.light_mode : Icons.dark_mode),
           ),
         ],
       ),
@@ -71,6 +62,8 @@ class _AdminPanelState extends State<AdminPanel> {
           _roomsPage(),
           _billsPage(),
           _requestsPage(),
+          _complaintsPage(),
+          _announcementsPage(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
@@ -78,25 +71,39 @@ class _AdminPanelState extends State<AdminPanel> {
         onDestinationSelected: (i) => setState(() => _adminTab = i),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.bed_outlined), label: 'Kamar'),
-          NavigationDestination(
-              icon: Icon(Icons.receipt_long_outlined), label: 'Tagihan'),
-          NavigationDestination(
-              icon: Icon(Icons.inbox_outlined), label: 'Pengajuan'),
+          NavigationDestination(icon: Icon(Icons.receipt_long_outlined), label: 'Tagihan'),
+          NavigationDestination(icon: Icon(Icons.inbox_outlined), label: 'Pengajuan'),
+          NavigationDestination(icon: Icon(Icons.report_problem_outlined), label: 'Pengaduan'),
+          NavigationDestination(icon: Icon(Icons.campaign_outlined), label: 'Pengumuman'),
         ],
       ),
-      floatingActionButton: _adminTab == 0
-          ? FloatingActionButton(
-              onPressed: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const AddEditScreen()),
-                );
-                setState(() {});
-              },
-              child: const Icon(Icons.add),
-            )
-          : null,
+      floatingActionButton: _getFabForTab(_adminTab),
     );
   }
+
+  Widget? _getFabForTab(int index) {
+    switch (index) {
+      case 0: // Kamar
+        return FloatingActionButton(
+          onPressed: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AddEditScreen()),
+            );
+            setState(() {});
+          },
+          child: const Icon(Icons.add),
+        );
+      case 4: // Pengumuman
+        return FloatingActionButton(
+          onPressed: _showAddAnnouncementDialog,
+          child: const Icon(Icons.add_alert),
+        );
+      default:
+        return null;
+    }
+  }
+
+  // --- WIDGETS FOR EACH TAB ---
 
   Widget _roomsPage() {
     return ListView.builder(
@@ -121,13 +128,11 @@ class _AdminPanelState extends State<AdminPanel> {
                 ],
               ),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () async { // Menambahkan async
+              onTap: () async {
                 await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => RoomDetailScreen(room: room),
-                  ),
+                  MaterialPageRoute(builder: (context) => RoomDetailScreen(room: room)),
                 );
-                setState(() {}); // Refresh halaman setelah kembali
+                setState(() {});
               },
             ),
           ),
@@ -137,11 +142,26 @@ class _AdminPanelState extends State<AdminPanel> {
   }
 
   Widget _billsPage() {
-    // Implementasi halaman tagihan (jika ada)
-    return const Center(child: Text('Halaman Tagihan'));
-  }
-
-  void _showBillDetails(Bill bill) {
+    final pendingBills = DummyService.getPendingConfirmationBills();
+    if (pendingBills.isEmpty) {
+      return const Center(child: Text('Tidak ada tagihan yang menunggu konfirmasi.', style: TextStyle(color: Colors.grey)));
+    }
+    return ListView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: pendingBills.length,
+      itemBuilder: (context, index) {
+        final bill = pendingBills[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          child: ListTile(
+            title: Text('Konfirmasi untuk Kamar ${bill.roomId}'),
+            subtitle: Text('Periode: ${bill.period}'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _showConfirmationDetails(bill),
+          ),
+        );
+      },
+    );
   }
 
   Widget _requestsPage() {
@@ -171,11 +191,7 @@ class _AdminPanelState extends State<AdminPanel> {
                     const Text('Status: ', style: TextStyle(color: Colors.black54)),
                     Chip(
                       label: Text(req.status),
-                      backgroundColor: req.status == 'Pending'
-                          ? Colors.orange.shade100
-                          : req.status == 'Disetujui'
-                              ? Colors.green.shade100
-                              : Colors.red.shade100,
+                      backgroundColor: req.status == 'Pending' ? Colors.orange.shade100 : req.status == 'Disetujui' ? Colors.green.shade100 : Colors.red.shade100,
                     ),
                   ],
                 ),
@@ -188,14 +204,7 @@ class _AdminPanelState extends State<AdminPanel> {
                         onPressed: () {
                           setState(() {
                             req.status = 'Ditolak';
-                            // --- MENAMBAHKAN NOTIFIKASI PENOLAKAN ---
-                            DummyService.notifications.add(AppNotification(
-                              title: 'Pengajuan Ditolak',
-                              subtitle: 'Pengajuan ${req.type} untuk kamar ${req.roomCode ?? '-'} Anda telah ditolak.',
-                              date: DateTime.now(),
-                              icon: Icons.cancel,
-                              iconColor: Colors.red,
-                            ));
+                            DummyService.notifications.add(AppNotification(title: 'Pengajuan Ditolak', subtitle: 'Pengajuan ${req.type} untuk kamar ${req.roomCode ?? '-'} Anda telah ditolak.', date: DateTime.now(), icon: Icons.cancel, iconColor: Colors.red));
                           });
                         },
                         child: const Text('Tolak', style: TextStyle(color: Colors.red)),
@@ -205,21 +214,12 @@ class _AdminPanelState extends State<AdminPanel> {
                         onPressed: () {
                           setState(() {
                             req.status = 'Disetujui';
-
                             if (req.type == 'Booking Kamar' && req.roomCode != null) {
                               final room = DummyService.findRoom(req.roomCode!);
                               if (room != null) {
                                 room.status = 'Dihuni';
                                 DummyService.updateRoom(room);
-
-                                // --- MENAMBAHKAN NOTIFIKASI PERSETUJUAN ---
-                                DummyService.notifications.add(AppNotification(
-                                  title: 'Pengajuan Disetujui!',
-                                  subtitle: 'Pengajuan sewa kamar ${room.code} Anda telah disetujui. Selamat datang!',
-                                  date: DateTime.now(),
-                                  icon: Icons.check_circle,
-                                  iconColor: Colors.green,
-                                ));
+                                DummyService.notifications.add(AppNotification(title: 'Pengajuan Disetujui!', subtitle: 'Pengajuan sewa kamar ${room.code} Anda telah disetujui. Selamat datang!', date: DateTime.now(), icon: Icons.check_circle, iconColor: Colors.green));
                               }
                             }
                           });
@@ -236,6 +236,122 @@ class _AdminPanelState extends State<AdminPanel> {
     );
   }
 
+  Widget _complaintsPage() {
+    final complaints = DummyService.getAllComplaints();
+    complaints.sort((a, b) {
+      if (a.status == 'Pending' && b.status != 'Pending') return -1;
+      if (a.status != 'Pending' && b.status == 'Pending') return 1;
+      return b.createdAt.compareTo(a.createdAt);
+    });
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: complaints.length,
+      itemBuilder: (context, index) {
+        final complaint = complaints[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(complaint.title, style: Theme.of(context).textTheme.titleLarge),
+                const SizedBox(height: 4),
+                Text('Dari: User ID ${complaint.userId} (Kamar ${complaint.roomId})'),
+                const SizedBox(height: 8),
+                Text(complaint.description),
+                const Divider(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Status:'),
+                    DropdownButton<String>(
+                      value: complaint.status,
+                      items: ['Pending', 'In Progress', 'Resolved'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                      onChanged: (newStatus) {
+                        if (newStatus != null) {
+                          setState(() => DummyService.updateComplaintStatus(complaint.id, newStatus));
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _announcementsPage() {
+    final announcements = DummyService.getLatestAnnouncements();
+    return ListView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: announcements.length,
+      itemBuilder: (context, index) {
+        final announcement = announcements[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          child: ListTile(
+            title: Text(announcement.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text(announcement.content),
+          ),
+        );
+      },
+    );
+  }
+
+  // --- DIALOG & HELPER WIDGETS ---
+
+  void _showConfirmationDetails(Bill bill) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Detail Konfirmasi - ${bill.roomId}'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (bill.paymentProofUrl != null) Image.asset(bill.paymentProofUrl!) else const Text('Bukti tidak tersedia.'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              setState(() => DummyService.rejectBill(bill.id));
+              Navigator.pop(context);
+            },
+            child: const Text('Tolak', style: TextStyle(color: Colors.red)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() => DummyService.approveBill(bill.id));
+              Navigator.pop(context);
+            },
+            child: const Text('Setujui'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showAddAnnouncementDialog() async {
+    final formKey = GlobalKey<FormState>();
+    final titleCtrl = TextEditingController();
+    final contentCtrl = TextEditingController();
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Buat Pengumuman Baru'),
+        content: Form(key: formKey, child: Column(mainAxisSize: MainAxisSize.min, children: [TextFormField(controller: titleCtrl, decoration: const InputDecoration(labelText: 'Judul'), validator: (v) => v!.isEmpty ? 'Wajib diisi' : null), const SizedBox(height: 8), TextFormField(controller: contentCtrl, decoration: const InputDecoration(labelText: 'Isi Pengumuman'), maxLines: 3, validator: (v) => v!.isEmpty ? 'Wajib diisi' : null)])),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')), ElevatedButton(onPressed: () {if (formKey.currentState!.validate()) {DummyService.addAnnouncement(title: titleCtrl.text, content: contentCtrl.text); setState(() {}); Navigator.pop(context);}}, child: const Text('Publikasikan'))],
+      ),
+    );
+  }
+
   Widget _row(String k, String v) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
@@ -244,16 +360,6 @@ class _AdminPanelState extends State<AdminPanel> {
           SizedBox(width: 140, child: Text(k, style: const TextStyle(color: Colors.black54))),
           Expanded(child: Text(v)),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text(label, style: const TextStyle(color: Colors.grey)), Text(value)],
       ),
     );
   }

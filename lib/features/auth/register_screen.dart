@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
@@ -30,10 +29,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => _loading = true);
 
     try {
+      // Panggil fungsi register dengan parameter yang sudah diperbaiki
       await AuthService.register(
         username: _u.text.trim(),
         password: _p.text.trim(),
-        role: 'user',
+        fullName: _u.text.trim(), // Default fullName diisi dengan username
       );
       if (!mounted) return;
 
@@ -126,7 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   icon: Icon(_hide ? Icons.visibility_off : Icons.visibility),
                 ),
               ),
-              validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
+              validator: (v) => (v == null || v.length < 6) ? 'Password minimal 6 karakter' : null,
             ),
             const SizedBox(height: 16),
             TextFormField(

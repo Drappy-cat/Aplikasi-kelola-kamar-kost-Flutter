@@ -14,18 +14,16 @@ dependencies:
   shared_preferences: ^2.3.2
   intl: ^0.20.2
   google_fonts: ^6.2.1
+  timeago: ^3.6.1 # <-- DITAMBAHKAN DI SINI
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
 
-# Pastikan "flutter:" berada di paling kiri (tanpa spasi).
 flutter:
   uses-material-design: true
 
-  # Pastikan "assets:" memiliki 2 spasi di depannya.
   assets:
-    # Pastikan setiap baris "- assets/..." memiliki 4 spasi di depannya.
     - assets/logo/
     - assets/kamar_kost/

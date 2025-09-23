@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tes/shared/models/bill.dart';
@@ -19,7 +18,7 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
   void initState() {
     super.initState();
     // Get the current user's ID from AuthService
-    final userId = AuthService.getCurrentUser()?.id ?? '';
+    final userId = AuthService.currentUser?.id ?? ''; // <-- DIPERBAIKI
     // Fetch bills for that user
     _bills = DummyService.getBillsForUser(userId);
   }
@@ -55,7 +54,7 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
               DummyService.submitPaymentProof(bill.id, 'assets/kamar_kost/bukti_tf.png');
               setState(() {
                 // Re-fetch the bills to update the UI
-                final userId = AuthService.getCurrentUser()?.id ?? '';
+                final userId = AuthService.currentUser?.id ?? ''; // <-- DIPERBAIKI
                 _bills = DummyService.getBillsForUser(userId);
               });
               Navigator.pop(context);
