@@ -7,6 +7,9 @@ import 'package:tes/features/home/home_screen.dart';
 import 'package:tes/features/notification/notification_screen.dart';
 import 'package:tes/features/profile/profile_screen.dart';
 import 'package:tes/features/settings/settings_screen.dart';
+import 'package:tes/features/complaints/admin_complaint_screen.dart';
+import 'package:tes/features/announcements/announcement_screen.dart';
+import 'package:tes/features/billing/user_bill_screen.dart'; // Import the new user bill screen
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -66,7 +69,10 @@ class MyAppState extends State<MyApp> {
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/settings': (context) => const SettingsScreen(),
-        '/notification': (context) => const NotificationScreen(), // <-- RUTE BARU
+        '/notification': (context) => const NotificationScreen(),
+        '/admin_complaints': (context) => const AdminComplaintScreen(),
+        '/announcements': (context) => const AnnouncementScreen(),
+        '/user_bills': (context) => const UserBillScreen(), // Add route for UserBillScreen
       },
     );
   }

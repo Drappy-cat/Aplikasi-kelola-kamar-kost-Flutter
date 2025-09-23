@@ -4,8 +4,9 @@ class Complaint {
   final String roomId;
   final String title;
   final String description;
+  final String category;
   final String status; // "Pending", "In Progress", "Resolved"
-  final String? imageUrl;
+  final List<String> imageUrls;
   final DateTime createdAt;
 
   Complaint({
@@ -14,8 +15,9 @@ class Complaint {
     required this.roomId,
     required this.title,
     required this.description,
+    required this.category,
     required this.status,
-    this.imageUrl,
+    this.imageUrls = const [],
     required this.createdAt,
   });
 }

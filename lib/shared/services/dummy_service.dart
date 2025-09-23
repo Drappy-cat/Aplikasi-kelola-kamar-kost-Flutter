@@ -60,11 +60,24 @@ class DummyService {
   static List<Complaint> getComplaintsForUser(String userId) => _complaints.where((c) => c.userId == userId).toList();
   static List<Complaint> getAllComplaints() => _complaints;
 
-  static void addComplaint({required String userId, required String roomId, required String title, required String description}) {
+  static void addComplaint({
+    required String userId,
+    required String roomId,
+    required String title,
+    required String description,
+    required String category,
+    List<String> imageUrls = const [],
+  }) {
     final newComplaint = Complaint(
       id: 'comp-${DateTime.now().millisecondsSinceEpoch}',
-      userId: userId, roomId: roomId, title: title, description: description,
-      status: 'Pending', createdAt: DateTime.now(),
+      userId: userId,
+      roomId: roomId,
+      title: title,
+      description: description,
+      category: category,
+      status: 'Pending',
+      imageUrls: imageUrls,
+      createdAt: DateTime.now(),
     );
     _complaints.insert(0, newComplaint);
   }
@@ -74,8 +87,15 @@ class DummyService {
     if (index != -1) {
       final old = _complaints[index];
       _complaints[index] = Complaint(
-        id: old.id, userId: old.userId, roomId: old.roomId, title: old.title, description: old.description,
-        status: newStatus, imageUrl: old.imageUrl, createdAt: old.createdAt,
+        id: old.id,
+        userId: old.userId,
+        roomId: old.roomId,
+        title: old.title,
+        description: old.description,
+        category: old.category, // Fixed: Pass existing category
+        status: newStatus,
+        imageUrls: old.imageUrls, // Fixed: Pass existing images
+        createdAt: old.createdAt,
       );
     }
   }
@@ -135,8 +155,8 @@ class DummyService {
   ];
 
   static List<Complaint> _createInitialComplaints() => [
-    Complaint(id: 'comp-001', userId: 'user1', roomId: 'A-101', title: 'Keran Bocor', description: 'Keran di kamar mandi bocor terus.', status: 'In Progress', createdAt: DateTime.now().subtract(const Duration(days: 2))),
-    Complaint(id: 'comp-002', userId: 'user2', roomId: 'A-103', title: 'AC tidak dingin', description: 'AC sudah dinyalakan lama tapi tidak terasa dingin sama sekali.', status: 'Pending', createdAt: DateTime.now().subtract(const Duration(hours: 5))),
+    Complaint(id: 'comp-001', userId: 'user1', roomId: 'A-101', title: 'Keran Bocor', description: 'Keran di kamar mandi bocor terus.', category: 'Kerusakan Fasilitas', status: 'In Progress', createdAt: DateTime.now().subtract(const Duration(days: 2)), imageUrls: ['https://picsum.photos/seed/comp-001/200/300']),
+    Complaint(id: 'comp-002', userId: 'user2', roomId: 'A-103', title: 'AC tidak dingin', description: 'AC sudah dinyalakan lama tapi tidak terasa dingin sama sekali.', category: 'Kerusakan Fasilitas', status: 'Pending', createdAt: DateTime.now().subtract(const Duration(hours: 5))),
   ];
 
   static List<Announcement> _createInitialAnnouncements() => [

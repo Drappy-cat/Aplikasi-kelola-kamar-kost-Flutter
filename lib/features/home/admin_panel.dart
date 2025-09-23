@@ -9,6 +9,7 @@ import 'package:tes/shared/models/complaint.dart';
 import 'package:tes/shared/models/announcement.dart';
 import 'package:tes/shared/services/dummy_service.dart';
 import 'package:tes/shared/models/app_notification.dart';
+import 'package:tes/features/complaints/admin_complaint_screen.dart'; // Import the new admin complaint screen
 
 class AdminPanel extends StatefulWidget {
   const AdminPanel({super.key});
@@ -62,7 +63,7 @@ class _AdminPanelState extends State<AdminPanel> {
           _roomsPage(),
           _billsPage(),
           _requestsPage(),
-          _complaintsPage(),
+          const AdminComplaintScreen(), // Use the AdminComplaintScreen directly
           _announcementsPage(),
         ],
       ),
@@ -236,54 +237,7 @@ class _AdminPanelState extends State<AdminPanel> {
     );
   }
 
-  Widget _complaintsPage() {
-    final complaints = DummyService.getAllComplaints();
-    complaints.sort((a, b) {
-      if (a.status == 'Pending' && b.status != 'Pending') return -1;
-      if (a.status != 'Pending' && b.status == 'Pending') return 1;
-      return b.createdAt.compareTo(a.createdAt);
-    });
-
-    return ListView.builder(
-      padding: const EdgeInsets.all(8),
-      itemCount: complaints.length,
-      itemBuilder: (context, index) {
-        final complaint = complaints[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(complaint.title, style: Theme.of(context).textTheme.titleLarge),
-                const SizedBox(height: 4),
-                Text('Dari: User ID ${complaint.userId} (Kamar ${complaint.roomId})'),
-                const SizedBox(height: 8),
-                Text(complaint.description),
-                const Divider(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Status:'),
-                    DropdownButton<String>(
-                      value: complaint.status,
-                      items: ['Pending', 'In Progress', 'Resolved'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                      onChanged: (newStatus) {
-                        if (newStatus != null) {
-                          setState(() => DummyService.updateComplaintStatus(complaint.id, newStatus));
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // Removed _complaintsPage() as AdminComplaintScreen will be used directly
 
   Widget _announcementsPage() {
     final announcements = DummyService.getLatestAnnouncements();

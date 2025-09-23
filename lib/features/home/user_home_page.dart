@@ -68,33 +68,47 @@ class _UserHomePageState extends State<UserHomePage> {
     }
 
     final latest = announcements.first;
-    return Card(
-      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      elevation: 3,
-      color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.7),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.campaign, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  latest.title,
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pushNamed('/announcements'), // Navigate to AnnouncementScreen
+      child: Card(
+        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        elevation: 3,
+        color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.7),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.campaign, color: Theme.of(context).colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Text(
+                    latest.title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(latest.content, style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer)),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  'Lihat Semua Pengumuman',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
                     color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(latest.content, style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer)),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -146,6 +160,17 @@ class _UserHomePageState extends State<UserHomePage> {
         ),
         if (filteredRooms.isEmpty) const Center(child: Padding(padding: EdgeInsets.all(16.0), child: Text('Tidak ada kamar yang cocok.'))),
         ...filteredRooms.map((room) => _buildRoomCard(room)),
+        const SizedBox(height: 20),
+        Center(
+          child: ElevatedButton(
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Anda harus memiliki kamar untuk melihat tagihan.')),
+              );
+            },
+            child: const Text('Lihat Tagihan Saya'),
+          ),
+        ),
       ],
     );
   }
@@ -186,7 +211,6 @@ class _UserHomePageState extends State<UserHomePage> {
   }
 
   Widget _userRoomInfo(Room room) {
-    // Placeholder: Halaman ini bisa dikembangkan untuk menampilkan detail kamar pengguna & tagihan terakhir
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -196,6 +220,13 @@ class _UserHomePageState extends State<UserHomePage> {
             const Text('Anda adalah penghuni kamar:', style: TextStyle(fontSize: 18)),
             const SizedBox(height: 16),
             _buildRoomCard(room),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/user_bills');
+              },
+              child: const Text('Lihat Tagihan Saya'),
+            ),
           ],
         ),
       ),
