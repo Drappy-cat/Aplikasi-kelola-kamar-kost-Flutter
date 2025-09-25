@@ -22,7 +22,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
   Widget build(BuildContext context) {
     if (widget.imageUrls.isEmpty) {
       return SizedBox(
-        height: 200, // Ukuran diubah di sini
+        height: 200,
         child: Container(
           alignment: Alignment.center,
           color: Colors.grey[200],

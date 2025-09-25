@@ -104,8 +104,6 @@ class _AdminPanelState extends State<AdminPanel> {
     }
   }
 
-  // --- WIDGETS FOR EACH TAB ---
-
   Widget _roomsPage() {
     return ListView.builder(
       padding: const EdgeInsets.all(8),
@@ -237,7 +235,6 @@ class _AdminPanelState extends State<AdminPanel> {
     );
   }
 
-  // Removed _complaintsPage() as AdminComplaintScreen will be used directly
 
   Widget _announcementsPage() {
     final announcements = DummyService.getLatestAnnouncements();
@@ -256,8 +253,6 @@ class _AdminPanelState extends State<AdminPanel> {
       },
     );
   }
-
-  // --- DIALOG & HELPER WIDGETS ---
 
   void _showConfirmationDetails(Bill bill) {
     showDialog(

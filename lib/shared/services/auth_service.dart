@@ -8,7 +8,6 @@ class AuthService {
   static const _kCurrent = 'auth_current_user';
 
   static List<AppUser> _users = [
-    // Menambahkan ID untuk pengguna awal
     AppUser(id: 'admin0', username: 'admin', password: 'admin123', role: 'admin', fullName: 'Pemilik Kost'),
     AppUser(id: 'user1', username: 'budi', password: 'budi123', role: 'user', fullName: 'Budi Santoso', roomId: 'A-101'),
     AppUser(id: 'user2', username: 'siti', password: 'siti123', role: 'user', fullName: 'Siti Aminah', roomId: 'A-103'),
@@ -34,7 +33,6 @@ class AuthService {
       try {
         currentUser = AppUser.fromJson(jsonDecode(currStr));
       } catch (e) {
-        // Abaikan jika data pengguna saat ini tidak valid
       }
     }
   }
@@ -64,11 +62,10 @@ class AuthService {
       throw Exception('Username sudah dipakai');
     }
     final user = AppUser(
-      // Menghasilkan ID unik untuk pengguna baru
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       username: username,
       password: password,
-      role: 'user', // Role default untuk registrasi
+      role: 'user',
       fullName: fullName,
     );
     _users.add(user);
@@ -99,7 +96,7 @@ class AuthService {
       role: currentUser!.role,
       fullName: fullName,
       profileImageUrl: currentUser!.profileImageUrl,
-      roomId: currentUser!.roomId, // Membawa roomId yang ada
+      roomId: currentUser!.roomId,
     );
     final userIndex = _users.indexWhere((u) => u.id == currentUser!.id);
     if (userIndex != -1) {
@@ -122,13 +119,13 @@ class AuthService {
     if (userIndex != -1) {
       final oldUser = _users[userIndex];
       _users[userIndex] = AppUser(
-        id: oldUser.id, // Membawa ID yang ada
+        id: oldUser.id,
         username: oldUser.username,
         password: newPassword,
         role: oldUser.role,
         fullName: oldUser.fullName,
         profileImageUrl: oldUser.profileImageUrl,
-        roomId: oldUser.roomId, // Membawa roomId yang ada
+        roomId: oldUser.roomId,
       );
       currentUser = _users[userIndex];
       await _persist();
@@ -141,13 +138,13 @@ class AuthService {
     if (currentUser == null) return;
 
     final updatedUser = AppUser(
-      id: currentUser!.id, // Membawa ID yang ada
+      id: currentUser!.id,
       username: currentUser!.username,
       password: currentUser!.password,
       role: currentUser!.role,
       fullName: currentUser!.fullName,
       profileImageUrl: imageUrl,
-      roomId: currentUser!.roomId, // Membawa roomId yang ada
+      roomId: currentUser!.roomId,
     );
 
     final userIndex = _users.indexWhere((u) => u.id == currentUser!.id);

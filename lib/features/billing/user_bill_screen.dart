@@ -54,8 +54,6 @@ class _UserBillScreenState extends State<UserBillScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Placeholder for image picker functionality
-              // In a real app, you would use image_picker package here
               TextFormField(
                 decoration: const InputDecoration(labelText: 'URL Bukti Pembayaran (Dummy)', border: OutlineInputBorder()),
                 onChanged: (value) => paymentProofUrl = value,

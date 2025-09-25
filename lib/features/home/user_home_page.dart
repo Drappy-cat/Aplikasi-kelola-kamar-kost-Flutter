@@ -115,7 +115,6 @@ class _UserHomePageState extends State<UserHomePage> {
   }
 
   Widget _userContent() {
-    // Logika ini tetap sama, menentukan apakah pengguna sudah punya kamar atau belum
     final userRoomCode = AuthService.currentUser?.roomId;
     if (userRoomCode == null) {
       return _allRoomsPage();

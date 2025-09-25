@@ -1,5 +1,4 @@
 class Room {
-  // Properti (Data)
   final String code;
   String status;
   final int baseRent;

@@ -56,7 +56,7 @@ class DummyService {
     }
   }
 
-  // --- Complaint Management ---
+  //  Complaint Management
   static List<Complaint> getComplaintsForUser(String userId) => _complaints.where((c) => c.userId == userId).toList();
   static List<Complaint> getAllComplaints() => _complaints;
 
@@ -100,7 +100,6 @@ class DummyService {
     }
   }
 
-  // --- Announcement Management ---
   static List<Announcement> getLatestAnnouncements() {
     _announcements.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return _announcements.where((a) => a.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30)))).toList();
@@ -114,7 +113,6 @@ class DummyService {
     _announcements.insert(0, newAnnouncement);
   }
 
-  // --- Room Management ---
   static Room? findRoom(String code) {
     try {
       return rooms.firstWhere((r) => r.code == code);
@@ -137,7 +135,6 @@ class DummyService {
     return r.baseRent + r.wifi + r.water + r.electricity;
   }
 
-  // --- Initial Data Generators ---
   static List<AppNotification> _createInitialNotifications() => [
     AppNotification(title: 'Selamat Datang di Ri-Kost!', subtitle: 'Jelajahi semua fitur yang tersedia untuk Anda.', date: DateTime.now().subtract(const Duration(days: 2)), icon: Icons.waving_hand, iconColor: Colors.orange),
     AppNotification(title: 'Tagihan Sewa Mendekati Jatuh Tempo', subtitle: 'Tagihan kamar A-101 untuk bulan Juli 2024 akan jatuh tempo pada 10 Juli 2024.', date: DateTime.now().subtract(const Duration(hours: 5)), icon: Icons.receipt_long, iconColor: Colors.blue),

@@ -5,7 +5,7 @@ class Complaint {
   final String title;
   final String description;
   final String category;
-  final String status; // "Pending", "In Progress", "Resolved"
+  final String status;
   final List<String> imageUrls;
   final DateTime createdAt;
 

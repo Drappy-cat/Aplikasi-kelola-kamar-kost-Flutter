@@ -17,9 +17,7 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    // Get the current user's ID from AuthService
     final userId = AuthService.currentUser?.id ?? ''; // <-- DIPERBAIKI
-    // Fetch bills for that user
     _bills = DummyService.getBillsForUser(userId);
   }
 
@@ -49,8 +47,6 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              // For now, this is a dummy action.
-              // In a real app, you would trigger an image picker here.
               DummyService.submitPaymentProof(bill.id, 'assets/kamar_kost/bukti_tf.png');
               setState(() {
                 // Re-fetch the bills to update the UI

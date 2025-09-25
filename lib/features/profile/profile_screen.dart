@@ -48,7 +48,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Helper untuk menampilkan dialog edit nama
   Future<void> _showEditProfileDialog() async {
     final nameController = TextEditingController(text: AuthService.currentUser?.fullName ?? '');
     final ok = await showDialog<bool>(

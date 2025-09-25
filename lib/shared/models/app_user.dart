@@ -1,5 +1,5 @@
 class AppUser {
-  final String id; // <-- DITAMBAHKAN
+  final String id;
   String username;
   String password;
   final String role;
@@ -8,7 +8,7 @@ class AppUser {
   String? roomId;
 
   AppUser({
-    required this.id, // <-- DITAMBAHKAN
+    required this.id,
     required this.username,
     required this.password,
     required this.role,
@@ -18,7 +18,7 @@ class AppUser {
   });
 
   Map<String, dynamic> toJson() => {
-    'id': id, // <-- DITAMBAHKAN
+    'id': id,
     'username': username,
     'password': password,
     'role': role,
@@ -28,7 +28,7 @@ class AppUser {
   };
 
   factory AppUser.fromJson(Map<String, dynamic> j) => AppUser(
-    id: j['id'], // <-- DITAMBAHKAN
+    id: j['id'],
     username: j['username'],
     password: j['password'],
     role: j['role'],
