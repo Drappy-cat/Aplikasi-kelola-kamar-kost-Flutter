@@ -7,6 +7,7 @@ class Bill {
   final double amount;
   final String status; // "Belum Lunas", "Menunggu Konfirmasi", "Lunas"
   final String? paymentProofUrl;
+  final String? paymentMethod; // "Tunai", "Transfer"
   final DateTime createdAt;
 
   Bill({
@@ -17,6 +18,7 @@ class Bill {
     required this.amount,
     required this.status,
     this.paymentProofUrl,
+    this.paymentMethod,
     required this.createdAt,
   });
 }

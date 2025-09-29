@@ -41,6 +41,46 @@ class _UserBillScreenState extends State<UserBillScreen> {
     }
   }
 
+  Future<void> _showPaymentOptionsDialog(Bill bill) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Pilih Metode Pembayaran'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.money),
+              title: const Text('Bayar Tunai'),
+              onTap: () {
+                DummyService.confirmCashPayment(bill.id);
+                _loadBills();
+                Navigator.pop(context); // Close the dialog
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Konfirmasi pembayaran tunai berhasil. Menunggu persetujuan admin.')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.transfer_within_a_station),
+              title: const Text('Transfer Bank'),
+              onTap: () {
+                Navigator.pop(context); // Close this dialog first
+                _showUploadPaymentProofDialog(bill); // Then open the upload dialog
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _showUploadPaymentProofDialog(Bill bill) async {
     final formKey = GlobalKey<FormState>();
     String? paymentProofUrl; // This would typically come from an image picker
@@ -112,6 +152,11 @@ class _UserBillScreenState extends State<UserBillScreen> {
                           'Status: ${bill.status}',
                           style: TextStyle(color: _getStatusColor(bill.status), fontWeight: FontWeight.bold),
                         ),
+                        if (bill.paymentMethod != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text('Metode: ${bill.paymentMethod}', style: TextStyle(color: Colors.grey.shade700)),
+                          ),
                         if (bill.paymentProofUrl != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 4.0),
@@ -126,7 +171,7 @@ class _UserBillScreenState extends State<UserBillScreen> {
                     ),
                     trailing: bill.status == 'Belum Lunas'
                         ? ElevatedButton(
-                            onPressed: () => _showUploadPaymentProofDialog(bill),
+                            onPressed: () => _showPaymentOptionsDialog(bill),
                             child: const Text('Bayar'),
                           )
                         : null,

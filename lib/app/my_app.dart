@@ -9,7 +9,8 @@ import 'package:tes/features/profile/profile_screen.dart';
 import 'package:tes/features/settings/settings_screen.dart';
 import 'package:tes/features/complaints/admin_complaint_screen.dart';
 import 'package:tes/features/announcements/announcement_screen.dart';
-import 'package:tes/features/billing/user_bill_screen.dart'; // Import the new user bill screen
+import 'package:tes/features/billing/user_bill_screen.dart';
+import 'package:tes/features/billing/payment_history_screen.dart'; // Import the new payment history screen
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -72,7 +73,8 @@ class MyAppState extends State<MyApp> {
         '/notification': (context) => const NotificationScreen(),
         '/admin_complaints': (context) => const AdminComplaintScreen(),
         '/announcements': (context) => const AnnouncementScreen(),
-        '/user_bills': (context) => const UserBillScreen(), // Add route for UserBillScreen
+        '/user_bills': (context) => const UserBillScreen(),
+        '/payment_history': (context) => const PaymentHistoryScreen(), // Add route for PaymentHistoryScreen
       },
     );
   }

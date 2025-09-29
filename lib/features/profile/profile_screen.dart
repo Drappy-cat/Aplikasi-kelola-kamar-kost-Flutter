@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tes/features/billing/bill_history_screen.dart';
 import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
@@ -192,16 +191,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: _showChangePasswordDialog,
                 ),
                 const Divider(height: 1, indent: 16, endIndent: 16),
-                // --- MENU RIWAYAT TAGIHAN YANG SUDAH DIPERBAIKI ---
                 ListTile(
                   leading: const Icon(Icons.receipt_long_outlined),
-                  title: const Text('Riwayat Tagihan'),
+                  title: const Text('Riwayat Pembayaran'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const BillHistoryScreen()),
-                    );
+                    // Menggunakan named route yang akan didaftarkan di my_app.dart
+                    Navigator.of(context).pushNamed('/payment_history');
                   },
                 ),
               ],

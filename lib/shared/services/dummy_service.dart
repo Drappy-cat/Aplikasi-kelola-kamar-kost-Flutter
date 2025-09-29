@@ -23,13 +23,38 @@ class DummyService {
   static List<Bill> getBillsForUser(String userId) => _bills.where((b) => b.userId == userId).toList();
   static List<Bill> getPendingConfirmationBills() => _bills.where((b) => b.status == 'Menunggu Konfirmasi').toList();
 
+  static void confirmCashPayment(String billId) {
+    final index = _bills.indexWhere((bill) => bill.id == billId);
+    if (index != -1) {
+      final oldBill = _bills[index];
+      _bills[index] = Bill(
+        id: oldBill.id,
+        userId: oldBill.userId,
+        roomId: oldBill.roomId,
+        period: oldBill.period,
+        amount: oldBill.amount,
+        status: 'Menunggu Konfirmasi',
+        paymentProofUrl: null,
+        paymentMethod: 'Tunai',
+        createdAt: oldBill.createdAt,
+      );
+    }
+  }
+
   static void submitPaymentProof(String billId, String proofUrl) {
     final index = _bills.indexWhere((bill) => bill.id == billId);
     if (index != -1) {
       final oldBill = _bills[index];
       _bills[index] = Bill(
-        id: oldBill.id, userId: oldBill.userId, roomId: oldBill.roomId, period: oldBill.period, amount: oldBill.amount,
-        status: 'Menunggu Konfirmasi', paymentProofUrl: proofUrl, createdAt: oldBill.createdAt,
+        id: oldBill.id,
+        userId: oldBill.userId,
+        roomId: oldBill.roomId,
+        period: oldBill.period,
+        amount: oldBill.amount,
+        status: 'Menunggu Konfirmasi',
+        paymentProofUrl: proofUrl,
+        paymentMethod: 'Transfer',
+        createdAt: oldBill.createdAt,
       );
     }
   }
@@ -39,8 +64,15 @@ class DummyService {
     if (index != -1) {
       final oldBill = _bills[index];
       _bills[index] = Bill(
-        id: oldBill.id, userId: oldBill.userId, roomId: oldBill.roomId, period: oldBill.period, amount: oldBill.amount,
-        status: 'Lunas', paymentProofUrl: oldBill.paymentProofUrl, createdAt: oldBill.createdAt,
+        id: oldBill.id,
+        userId: oldBill.userId,
+        roomId: oldBill.roomId,
+        period: oldBill.period,
+        amount: oldBill.amount,
+        status: 'Lunas',
+        paymentProofUrl: oldBill.paymentProofUrl,
+        paymentMethod: oldBill.paymentMethod,
+        createdAt: oldBill.createdAt,
       );
     }
   }
@@ -50,9 +82,101 @@ class DummyService {
     if (index != -1) {
       final oldBill = _bills[index];
       _bills[index] = Bill(
-        id: oldBill.id, userId: oldBill.userId, roomId: oldBill.roomId, period: oldBill.period, amount: oldBill.amount,
-        status: 'Belum Lunas', paymentProofUrl: null, createdAt: oldBill.createdAt,
+        id: oldBill.id,
+        userId: oldBill.userId,
+        roomId: oldBill.roomId,
+        period: oldBill.period,
+        amount: oldBill.amount,
+        status: 'Belum Lunas',
+        paymentProofUrl: null,
+        paymentMethod: null,
+        createdAt: oldBill.createdAt,
       );
+    }
+  }
+
+  // --- Request Management ---
+  static Future<void> submitAndAutoApproveRentalRequest({
+    required AppUser user,
+    required Room room,
+  }) async {
+    // 1. Create and add the request with "Pending" status
+    // NOTE: Assumes 'id' field is added to Request model
+    final requestId = 'req-${DateTime.now().millisecondsSinceEpoch}';
+    final newRequest = Request(
+      id: requestId, 
+      type: "Pengajuan Sewa",
+      date: DateTime.now().toIso8601String().substring(0, 10),
+      note: "Pengajuan sewa oleh ${user.name}",
+      status: "Pending",
+      roomCode: room.code,
+      userName: user.name,
+    );
+    requests.insert(0, newRequest);
+
+    // 2. Simulate a delay for processing
+    await Future.delayed(const Duration(seconds: 3));
+
+    // 3. Auto-approve the request and update data
+    final requestIndex = requests.indexWhere((req) => req.id == requestId);
+    if (requestIndex != -1) {
+      // Update request status
+      final oldRequest = requests[requestIndex];
+      requests[requestIndex] = Request(
+        id: oldRequest.id,
+        type: oldRequest.type,
+        date: oldRequest.date,
+        note: oldRequest.note,
+        status: "Approved", // Auto-approve
+        roomCode: oldRequest.roomCode,
+        userName: oldRequest.userName,
+      );
+
+      // Update room status
+      final roomIndex = rooms.indexWhere((r) => r.code == room.code);
+      if (roomIndex != -1) {
+        final oldRoom = rooms[roomIndex];
+        final now = DateTime.now();
+        rooms[roomIndex] = Room(
+          code: oldRoom.code,
+          status: "Dihuni", // Update status
+          baseRent: oldRoom.baseRent,
+          wifi: oldRoom.wifi,
+          water: oldRoom.water,
+          electricity: oldRoom.electricity,
+          acCost: oldRoom.acCost,
+          dimensions: oldRoom.dimensions,
+          imageUrls: oldRoom.imageUrls,
+          tenantName: user.name, // Add tenant info
+          tenantAddress: "Jl. Baru No. 1", // Dummy address
+          tenantPhone: "08123456789", // Dummy phone
+          rentStartDate: now.toIso8601String().substring(0, 10),
+        );
+        
+        // Create the first bill
+        final totalRent = computeTotalForRoom(rooms[roomIndex]);
+        final billPeriod = "${_getMonthName(now.month)} ${now.year}";
+
+        final firstBill = Bill(
+          id: 'bill-${now.millisecondsSinceEpoch}',
+          userId: user.id,
+          roomId: room.code,
+          period: billPeriod,
+          amount: totalRent,
+          status: 'Belum Lunas',
+          createdAt: now,
+        );
+        _bills.insert(0, firstBill);
+
+        // Add a notification for the user
+        notifications.insert(0, AppNotification(
+          title: 'Pengajuan Sewa Disetujui!',
+          subtitle: 'Pengajuan sewa untuk kamar ${room.code} telah disetujui. Tagihan pertama telah dibuat.',
+          date: now,
+          icon: Icons.check_circle,
+          iconColor: Colors.green,
+        ));
+      }
     }
   }
 
@@ -141,14 +265,14 @@ class DummyService {
   ];
 
   static List<Request> _createInitialRequests() => [
-    Request(type: "Kunjungan Ortu", date: "2025-09-10", note: "Ayah Ibu datang jam 10 pagi", status: "Pending", roomCode: "A-101", userName: "Budi Santoso"),
+    Request(id: 'req-001', type: "Kunjungan Ortu", date: "2025-09-10", note: "Ayah Ibu datang jam 10 pagi", status: "Pending", roomCode: "A-101", userName: "Budi Santoso"),
   ];
 
   static List<Bill> _createInitialBills() => [
     Bill(id: 'bill-001', userId: 'user1', roomId: 'A-101', period: 'Juli 2024', amount: 1150000, status: 'Belum Lunas', createdAt: DateTime(2024, 7, 1)),
-    Bill(id: 'bill-002', userId: 'user1', roomId: 'A-101', period: 'Juni 2024', amount: 1150000, status: 'Lunas', createdAt: DateTime(2024, 6, 1)),
-    Bill(id: 'bill-003', userId: 'user2', roomId: 'A-103', period: 'Juli 2024', amount: 1200000, status: 'Menunggu Konfirmasi', paymentProofUrl: 'assets/kamar_kost/bukti_tf.png', createdAt: DateTime(2024, 7, 2)),
-    Bill(id: 'bill-004', userId: 'user2', roomId: 'A-103', period: 'Juni 2024', amount: 1200000, status: 'Lunas', createdAt: DateTime(2024, 6, 2)),
+    Bill(id: 'bill-002', userId: 'user1', roomId: 'A-101', period: 'Juni 2024', amount: 1150000, status: 'Lunas', paymentMethod: 'Transfer', createdAt: DateTime(2024, 6, 1)),
+    Bill(id: 'bill-003', userId: 'user2', roomId: 'A-103', period: 'Juli 2024', amount: 1200000, status: 'Menunggu Konfirmasi', paymentProofUrl: 'assets/kamar_kost/bukti_tf.png', paymentMethod: 'Transfer', createdAt: DateTime(2024, 7, 2)),
+    Bill(id: 'bill-004', userId: 'user2', roomId: 'A-103', period: 'Juni 2024', amount: 1200000, status: 'Lunas', paymentMethod: 'Tunai', createdAt: DateTime(2024, 6, 2)),
   ];
 
   static List<Complaint> _createInitialComplaints() => [
@@ -168,5 +292,16 @@ class DummyService {
       Room(code: "A-103", status: "Dihuni", baseRent: 800000, wifi: 100000, water: 50000, electricity: 150000, acCost: 250000, dimensions: "4x4 m", imageUrls: localImagePaths, tenantName: "Siti Aminah", tenantAddress: "Jl. Kenanga No. 12", tenantPhone: "081212345678", rentStartDate: "2024-06-15"),
       Room(code: "A-104", status: "Kosong", baseRent: 725000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000, dimensions: "3.5x4 m", imageUrls: localImagePaths),
     ];
+  }
+
+  static String _getMonthName(int month) {
+    const monthNames = [
+      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    if (month < 1 || month > 12) {
+      return "";
+    }
+    return monthNames[month - 1];
   }
 }
