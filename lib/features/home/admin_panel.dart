@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tes/app/my_app.dart';
 import 'package:tes/features/home/add_edit_screen.dart';
 import 'package:tes/features/home/room_detail_screen.dart';
@@ -28,7 +29,7 @@ class _AdminPanelState extends State<AdminPanel> {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: () => Navigator.of(context).pushNamed('/profile'),
+            onTap: () => context.push('/profile'), // Menggunakan GoRouter
             child: const CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(Icons.person, color: Colors.pink),
@@ -48,7 +49,7 @@ class _AdminPanelState extends State<AdminPanel> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            onPressed: () => Navigator.of(context).pushNamed('/notification'),
+            onPressed: () => context.push('/notification'), // Menggunakan GoRouter
             icon: const Icon(Icons.notifications_outlined),
           ),
           IconButton(
@@ -87,9 +88,7 @@ class _AdminPanelState extends State<AdminPanel> {
       case 0: // Kamar
         return FloatingActionButton(
           onPressed: () async {
-            await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const AddEditScreen()),
-            );
+            await context.push('/add_edit_room'); // Placeholder, rute perlu dibuat
             setState(() {});
           },
           child: const Icon(Icons.add),
@@ -128,6 +127,9 @@ class _AdminPanelState extends State<AdminPanel> {
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {
+                // Navigasi ke detail dengan GoRouter, mengirim objek room
+                // context.push('/room_detail', extra: room);
+                // Untuk sementara, tetap gunakan MaterialPageRoute jika rute belum siap
                 await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => RoomDetailScreen(room: room)),
                 );
@@ -202,8 +204,12 @@ class _AdminPanelState extends State<AdminPanel> {
                       TextButton(
                         onPressed: () {
                           setState(() {
-                            req.status = 'Ditolak';
-                            DummyService.notifications.add(AppNotification(title: 'Pengajuan Ditolak', subtitle: 'Pengajuan ${req.type} untuk kamar ${req.roomCode ?? '-'} Anda telah ditolak.', date: DateTime.now(), icon: Icons.cancel, iconColor: Colors.red));
+                            final reqIndex = DummyService.requests.indexWhere((r) => r.id == req.id);
+                            if (reqIndex != -1) {
+                              final updatedReq = req.copyWith(status: 'Ditolak');
+                              DummyService.requests[reqIndex] = updatedReq;
+                              DummyService.notifications.add(AppNotification(title: 'Pengajuan Ditolak', subtitle: 'Pengajuan ${req.type} untuk kamar ${req.roomCode ?? '-'} Anda telah ditolak.', date: DateTime.now(), icon: Icons.cancel, iconColor: Colors.red));
+                            }
                           });
                         },
                         child: const Text('Tolak', style: TextStyle(color: Colors.red)),
@@ -212,13 +218,18 @@ class _AdminPanelState extends State<AdminPanel> {
                       FilledButton(
                         onPressed: () {
                           setState(() {
-                            req.status = 'Disetujui';
-                            if (req.type == 'Booking Kamar' && req.roomCode != null) {
-                              final room = DummyService.findRoom(req.roomCode!);
-                              if (room != null) {
-                                room.status = 'Dihuni';
-                                DummyService.updateRoom(room);
-                                DummyService.notifications.add(AppNotification(title: 'Pengajuan Disetujui!', subtitle: 'Pengajuan sewa kamar ${room.code} Anda telah disetujui. Selamat datang!', date: DateTime.now(), icon: Icons.check_circle, iconColor: Colors.green));
+                            final reqIndex = DummyService.requests.indexWhere((r) => r.id == req.id);
+                            if (reqIndex != -1) {
+                              final updatedReq = req.copyWith(status: 'Disetujui');
+                              DummyService.requests[reqIndex] = updatedReq;
+
+                              if (updatedReq.type == 'Booking Kamar' && updatedReq.roomCode != null) {
+                                final room = DummyService.findRoom(updatedReq.roomCode!);
+                                if (room != null) {
+                                  final updatedRoom = room.copyWith(status: 'Dihuni');
+                                  DummyService.updateRoom(updatedRoom);
+                                  DummyService.notifications.add(AppNotification(title: 'Pengajuan Disetujui!', subtitle: 'Pengajuan sewa kamar ${room.code} Anda telah disetujui. Selamat datang!', date: DateTime.now(), icon: Icons.check_circle, iconColor: Colors.green));
+                                }
                               }
                             }
                           });
@@ -263,7 +274,7 @@ class _AdminPanelState extends State<AdminPanel> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (bill.paymentProofUrl != null) Image.asset(bill.paymentProofUrl!) else const Text('Bukti tidak tersedia.'),
+            if (bill.paymentProofUrl != null) Image.network(bill.paymentProofUrl!) else const Text('Bukti tidak tersedia.'),
           ],
         ),
         actions: [

@@ -1,24 +1,21 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Bill {
-  final String id;
-  final String userId;
-  final String roomId;
-  final String period;
-  final double amount;
-  final String status; // "Belum Lunas", "Menunggu Konfirmasi", "Lunas"
-  final String? paymentProofUrl;
-  final String? paymentMethod; // "Tunai", "Transfer"
-  final DateTime createdAt;
+part 'bill.freezed.dart';
+part 'bill.g.dart';
 
-  Bill({
-    required this.id,
-    required this.userId,
-    required this.roomId,
-    required this.period,
-    required this.amount,
-    required this.status,
-    this.paymentProofUrl,
-    this.paymentMethod,
-    required this.createdAt,
-  });
+@freezed
+class Bill with _$Bill {
+  const factory Bill({
+    required String id,
+    required String userId,
+    required String roomId,
+    required String period,
+    required double amount,
+    required String status, // "Belum Lunas", "Menunggu Konfirmasi", "Lunas"
+    String? paymentProofUrl,
+    String? paymentMethod, // "Tunai", "Transfer"
+    required DateTime createdAt,
+  }) = _Bill;
+
+  factory Bill.fromJson(Map<String, dynamic> json) => _$BillFromJson(json);
 }

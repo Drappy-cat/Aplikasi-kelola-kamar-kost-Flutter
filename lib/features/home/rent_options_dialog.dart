@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:tes/shared/models/app_notification.dart'; // Import model notifikasi
 import 'package:tes/shared/models/request.dart';
@@ -136,7 +137,7 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context, false),
+          onPressed: () => context.pop(false), // Menggunakan GoRouter
           child: const Text('Batal'),
         ),
         ElevatedButton(
@@ -145,37 +146,39 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
             final user = AuthService.currentUser;
             if (user == null) return;
 
-            final room = widget.room;
-            room.status = 'Booked';
-            room.tenantName = _nameController.text.trim();
-            room.tenantAddress = _addressController.text.trim();
-            room.tenantPhone = _phoneController.text.trim();
-            room.rentStartDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-            room.packageFull = _isPackageFull;
+            // Membuat objek Room baru yang sudah diperbarui menggunakan copyWith
+            final updatedRoom = widget.room.copyWith(
+              status: 'Booked',
+              tenantName: _nameController.text.trim(),
+              tenantAddress: _addressController.text.trim(),
+              tenantPhone: _phoneController.text.trim(),
+              rentStartDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+              packageFull: _isPackageFull,
+            );
 
             DummyService.requests.add(Request(
-              id: 'req-${room.code}-${DateTime.now().millisecondsSinceEpoch}',
+              id: 'req-${updatedRoom.code}-${DateTime.now().millisecondsSinceEpoch}',
               type: 'Booking Kamar',
-              date: room.rentStartDate!,
-              note: 'Pengajuan sewa untuk kamar ${room.code} oleh ${_nameController.text.trim()}',
+              date: updatedRoom.rentStartDate!,
+              note: 'Pengajuan sewa untuk kamar ${updatedRoom.code} oleh ${_nameController.text.trim()}',
               status: 'Pending',
-              roomCode: room.code,
+              roomCode: updatedRoom.code,
               userName: user.username,
             ));
 
             // --- MENAMBAHKAN NOTIFIKASI PENGajuan SEWA ---
             DummyService.notifications.add(AppNotification(
-              title: 'Pengajuan Sewa Kamar ${room.code}',
+              title: 'Pengajuan Sewa Kamar ${updatedRoom.code}',
               subtitle: 'Pengajuan Anda sedang menunggu konfirmasi admin.',
               date: DateTime.now(),
               icon: Icons.hourglass_empty,
               iconColor: Colors.orange,
             ));
 
-            DummyService.userRoomCode = room.code;
-            DummyService.updateRoom(room);
+            DummyService.userRoomCode = updatedRoom.code;
+            DummyService.updateRoom(updatedRoom); // Mengirim objek yang sudah diperbarui
 
-            Navigator.pop(context, true);
+            context.pop(true); // Menggunakan GoRouter
           },
           child: const Text('Ajukan Sewa'),
         ),

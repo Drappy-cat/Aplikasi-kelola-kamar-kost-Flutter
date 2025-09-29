@@ -1,20 +1,19 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Request {
-  final String id;
-  final String type;
-  final String date;
-  final String note;
-  String status;
-  final String? roomCode;
-  final String? userName;
+part 'request.freezed.dart';
+part 'request.g.dart';
 
-  Request({
-    required this.id,
-    required this.type,
-    required this.date,
-    required this.note,
-    required this.status,
-    this.roomCode,
-    this.userName,
-  });
+@freezed
+class Request with _$Request {
+  const factory Request({
+    required String id,
+    required String type,
+    required String date,
+    required String note,
+    required String status,
+    String? roomCode,
+    String? userName,
+  }) = _Request;
+
+  factory Request.fromJson(Map<String, dynamic> json) => _$RequestFromJson(json);
 }

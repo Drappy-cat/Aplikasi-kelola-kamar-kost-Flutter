@@ -1,17 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:tes/features/auth/login_screen.dart';
-import 'package:tes/features/auth/register_screen.dart';
-import 'package:tes/features/auth/splash_screen.dart';
-import 'package:tes/features/home/home_screen.dart';
-import 'package:tes/features/notification/notification_screen.dart';
-import 'package:tes/features/profile/profile_screen.dart';
-import 'package:tes/features/settings/settings_screen.dart';
-import 'package:tes/features/complaints/admin_complaint_screen.dart';
-import 'package:tes/features/announcements/announcement_screen.dart';
-import 'package:tes/features/billing/user_bill_screen.dart';
-import 'package:tes/features/billing/payment_history_screen.dart'; // Import the new payment history screen
+import 'package:tes/app/app_router.dart'; // Import router baru
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -55,7 +45,9 @@ class MyAppState extends State<MyApp> {
 
     return ResponsiveSizer(
       builder: (context, orientation, screenType) {
-        return MaterialApp(
+        // Menggunakan MaterialApp.router untuk integrasi dengan go_router
+        return MaterialApp.router(
+          routerConfig: appRouter, // Menggunakan konfigurasi dari app_router.dart
           debugShowCheckedModeBanner: false,
           title: 'Aplikasi Kost',
           themeMode: _mode,
@@ -65,20 +57,6 @@ class MyAppState extends State<MyApp> {
           darkTheme: darkTheme.copyWith(
             textTheme: GoogleFonts.poppinsTextTheme(darkTheme.textTheme),
           ),
-          initialRoute: '/',
-          routes: {
-            '/': (context) => const SplashScreen(),
-            '/login': (context) => const LoginScreen(),
-            '/register': (context) => const RegisterScreen(),
-            '/home': (context) => const HomeScreen(),
-            '/profile': (context) => const ProfileScreen(),
-            '/settings': (context) => const SettingsScreen(),
-            '/notification': (context) => const NotificationScreen(),
-            '/admin_complaints': (context) => const AdminComplaintScreen(),
-            '/announcements': (context) => const AnnouncementScreen(),
-            '/user_bills': (context) => const UserBillScreen(),
-            '/payment_history': (context) => const PaymentHistoryScreen(), // Add route for PaymentHistoryScreen
-          },
         );
       },
     );

@@ -1,41 +1,25 @@
-class AppUser {
-  final String id;
-  String username;
-  String password;
-  final String role;
-  String? fullName;
-  String? profileImageUrl;
-  String? roomId;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  AppUser({
-    required this.id,
-    required this.username,
-    required this.password,
-    required this.role,
-    this.fullName,
-    this.profileImageUrl,
-    this.roomId,
-  });
+part 'app_user.freezed.dart';
+part 'app_user.g.dart';
 
+@freezed
+class AppUser with _$AppUser {
+  // Menambahkan constructor privat agar bisa membuat custom getter
+  const AppUser._();
+
+  const factory AppUser({
+    required String id,
+    required String username,
+    required String password,
+    required String role,
+    String? fullName,
+    String? profileImageUrl,
+    String? roomId,
+  }) = _AppUser;
+
+  // Custom getter untuk mendapatkan nama
   String get name => fullName ?? username;
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'username': username,
-    'password': password,
-    'role': role,
-    'fullName': fullName,
-    'profileImageUrl': profileImageUrl,
-    'roomId': roomId,
-  };
-
-  factory AppUser.fromJson(Map<String, dynamic> j) => AppUser(
-    id: j['id'],
-    username: j['username'],
-    password: j['password'],
-    role: j['role'],
-    fullName: j['fullName'],
-    profileImageUrl: j['profileImageUrl'],
-    roomId: j['roomId'],
-  );
+  factory AppUser.fromJson(Map<String, dynamic> json) => _$AppUserFromJson(json);
 }

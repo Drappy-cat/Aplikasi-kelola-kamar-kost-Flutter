@@ -1,34 +1,26 @@
-class Room {
-  final String code;
-  String status;
-  final int baseRent;
-  final int wifi;
-  final int water;
-  final int electricity;
-  final int acCost;
-  bool packageFull;
-  final String dimensions;
-  final List<String> imageUrls;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  String? tenantName;
-  String? tenantAddress;
-  String? tenantPhone;
-  String? rentStartDate;
+part 'room.freezed.dart';
+part 'room.g.dart';
 
-  Room({
-    required this.code,
-    required this.status,
-    required this.baseRent,
-    required this.wifi,
-    required this.water,
-    required this.electricity,
-    this.acCost = 0,
-    this.packageFull = false,
-    this.dimensions = 'N/A',
-    this.imageUrls = const [],
-    this.tenantName,
-    this.tenantAddress,
-    this.tenantPhone,
-    this.rentStartDate,
-  });
+@freezed
+class Room with _$Room {
+  const factory Room({
+    required String code,
+    required String status,
+    required int baseRent,
+    required int wifi,
+    required int water,
+    required int electricity,
+    @Default(0) int acCost,
+    @Default(false) bool packageFull,
+    @Default('N/A') String dimensions,
+    @Default([]) List<String> imageUrls,
+    String? tenantName,
+    String? tenantAddress,
+    String? tenantPhone,
+    String? rentStartDate,
+  }) = _Room;
+
+  factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);
 }
