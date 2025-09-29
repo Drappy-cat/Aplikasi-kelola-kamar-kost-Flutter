@@ -1,32 +1,25 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tes/features/billing/bloc/bill_bloc.dart';
 import 'package:tes/shared/models/bill.dart';
-import 'package:tes/shared/services/auth_service.dart';
-import 'package:tes/shared/services/dummy_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class UserBillScreen extends StatefulWidget {
+class UserBillScreen extends StatelessWidget {
   const UserBillScreen({super.key});
 
   @override
-  State<UserBillScreen> createState() => _UserBillScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => BillBloc()..add(LoadBills()),
+      child: const UserBillView(),
+    );
+  }
 }
 
-class _UserBillScreenState extends State<UserBillScreen> {
-  late List<Bill> _bills;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadBills();
-  }
-
-  void _loadBills() {
-    final userId = AuthService.currentUser?.id ?? '';
-    setState(() {
-      _bills = DummyService.getBillsForUser(userId);
-      _bills.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    });
-  }
+class UserBillView extends StatelessWidget {
+  const UserBillView({super.key});
 
   Color _getStatusColor(String status) {
     switch (status) {
@@ -41,10 +34,10 @@ class _UserBillScreenState extends State<UserBillScreen> {
     }
   }
 
-  Future<void> _showPaymentOptionsDialog(Bill bill) async {
+  Future<void> _showPaymentOptionsDialog(BuildContext context, Bill bill) async {
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Pilih Metode Pembayaran'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -53,9 +46,8 @@ class _UserBillScreenState extends State<UserBillScreen> {
               leading: const Icon(Icons.money),
               title: const Text('Bayar Tunai'),
               onTap: () {
-                DummyService.confirmCashPayment(bill.id);
-                _loadBills();
-                Navigator.pop(context); // Close the dialog
+                context.read<BillBloc>().add(ConfirmCashPayment(bill.id));
+                Navigator.pop(dialogContext);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Konfirmasi pembayaran tunai berhasil. Menunggu persetujuan admin.')),
                 );
@@ -65,15 +57,15 @@ class _UserBillScreenState extends State<UserBillScreen> {
               leading: const Icon(Icons.transfer_within_a_station),
               title: const Text('Transfer Bank'),
               onTap: () {
-                Navigator.pop(context); // Close this dialog first
-                _showUploadPaymentProofDialog(bill); // Then open the upload dialog
+                Navigator.pop(dialogContext);
+                _showUploadPaymentProofDialog(context, bill);
               },
             ),
           ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Batal'),
           ),
         ],
@@ -81,46 +73,78 @@ class _UserBillScreenState extends State<UserBillScreen> {
     );
   }
 
-  Future<void> _showUploadPaymentProofDialog(Bill bill) async {
-    final formKey = GlobalKey<FormState>();
-    String? paymentProofUrl; // This would typically come from an image picker
+  Future<void> _showUploadPaymentProofDialog(BuildContext context, Bill bill) async {
+    final ImagePicker picker = ImagePicker();
+    XFile? pickedFile;
 
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Unggah Bukti Pembayaran'),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'URL Bukti Pembayaran (Dummy)', border: OutlineInputBorder()),
-                onChanged: (value) => paymentProofUrl = value,
-                validator: (v) => (v == null || v.isEmpty) ? 'URL tidak boleh kosong' : null,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (stfContext, stfSetState) {
+            return AlertDialog(
+              title: const Text('Unggah Bukti Pembayaran'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                          if (image != null) {
+                            stfSetState(() {
+                              pickedFile = image;
+                            });
+                          }
+                        },
+                        icon: const Icon(Icons.photo_library),
+                        label: const Text('Galeri'),
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          final XFile? image = await picker.pickImage(source: ImageSource.camera);
+                          if (image != null) {
+                            stfSetState(() {
+                              pickedFile = image;
+                            });
+                          }
+                        },
+                        icon: const Icon(Icons.camera_alt),
+                        label: const Text('Kamera'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    pickedFile == null
+                        ? 'Belum ada gambar yang dipilih.'
+                        : 'File: ${pickedFile!.name}',
+                    style: const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              const Text('Fitur unggah gambar sebenarnya akan diimplementasikan di sini.', style: TextStyle(color: Colors.grey)),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
-          ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate() && paymentProofUrl != null) {
-                DummyService.submitPaymentProof(bill.id, paymentProofUrl!);
-                _loadBills();
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Bukti pembayaran berhasil diunggah!')),
-                );
-              }
-            },
-            child: const Text('Unggah'),
-          ),
-        ],
-      ),
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Batal')),
+                ElevatedButton(
+                  onPressed: pickedFile == null
+                      ? null // Disable button if no file is picked
+                      : () {
+                          context.read<BillBloc>().add(SubmitTransferProof(bill.id, pickedFile!.path));
+                          Navigator.pop(dialogContext);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Bukti pembayaran berhasil diunggah!')),
+                          );
+                        },
+                  child: const Text('Unggah'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -130,15 +154,22 @@ class _UserBillScreenState extends State<UserBillScreen> {
       appBar: AppBar(
         title: const Text('Tagihan Saya'),
       ),
-      body: _bills.isEmpty
-          ? const Center(
-              child: Text('Belum ada tagihan.', style: TextStyle(fontSize: 16, color: Colors.grey)),
-            )
-          : ListView.builder(
+      body: BlocBuilder<BillBloc, BillState>(
+        builder: (context, state) {
+          if (state is BillLoading || state is BillInitial) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is BillLoaded) {
+            if (state.bills.isEmpty) {
+              return const Center(
+                child: Text('Belum ada tagihan.', style: TextStyle(fontSize: 16, color: Colors.grey)),
+              );
+            }
+            return ListView.builder(
               padding: const EdgeInsets.all(8.0),
-              itemCount: _bills.length,
+              itemCount: state.bills.length,
               itemBuilder: (context, index) {
-                final bill = _bills[index];
+                final bill = state.bills[index];
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
                   child: ListTile(
@@ -171,14 +202,30 @@ class _UserBillScreenState extends State<UserBillScreen> {
                     ),
                     trailing: bill.status == 'Belum Lunas'
                         ? ElevatedButton(
-                            onPressed: () => _showPaymentOptionsDialog(bill),
+                            onPressed: () => _showPaymentOptionsDialog(context, bill),
                             child: const Text('Bayar'),
                           )
                         : null,
                   ),
                 );
               },
-            ),
+            );
+          }
+          if (state is BillError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Terjadi Kesalahan: ${state.message}',
+                  style: const TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+          return const Center(child: Text('Silakan muat ulang halaman.'));
+        },
+      ),
     );
   }
 }

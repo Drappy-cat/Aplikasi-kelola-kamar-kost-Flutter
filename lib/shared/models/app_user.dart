@@ -17,6 +17,8 @@ class AppUser {
     this.roomId,
   });
 
+  String get name => fullName ?? username;
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'username': username,

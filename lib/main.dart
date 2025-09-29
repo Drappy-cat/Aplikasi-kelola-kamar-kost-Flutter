@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tes/app/my_app.dart';
-import 'package:tes/shared/services/auth_service.dart';
+import 'package:tes/shared/services/locator.dart'; // Import locator
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await AuthService.init();
+  
+  // Inisialisasi Service Locator
+  setupLocator();
+  
   runApp(const MyApp());
 }

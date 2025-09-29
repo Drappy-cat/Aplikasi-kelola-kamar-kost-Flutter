@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ImageCarousel extends StatefulWidget {
@@ -45,21 +46,21 @@ class _ImageCarouselState extends State<ImageCarousel> {
               });
             },
             itemBuilder: (context, index) {
-              return Image.asset(
-                widget.imageUrls[index],
+              // Mengganti Image.asset dengan CachedNetworkImage
+              return CachedNetworkImage(
+                imageUrl: widget.imageUrls[index],
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error, color: Colors.red, size: 40),
-                        SizedBox(height: 8),
-                        Text('Gagal memuat gambar', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
-                  );
-                },
+                placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error, color: Colors.red, size: 40),
+                      SizedBox(height: 8),
+                      Text('Gagal memuat gambar', style: TextStyle(color: Colors.red)),
+                    ],
+                  ),
+                ),
               );
             },
           ),

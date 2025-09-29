@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/auth_service.dart';
@@ -37,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
               child: CircleAvatar(
                 radius: 30,
-                backgroundImage: NetworkImage(url),
+                backgroundImage: CachedNetworkImageProvider(url), // Menggunakan CachedNetworkImageProvider
               ),
             );
           }).toList(),
@@ -161,7 +162,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: _showChangePictureDialog,
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: user.profileImageUrl != null ? NetworkImage(user.profileImageUrl!) : null,
+                  // Menggunakan CachedNetworkImageProvider untuk gambar utama
+                  backgroundImage: user.profileImageUrl != null ? CachedNetworkImageProvider(user.profileImageUrl!) : null,
                   child: user.profileImageUrl == null
                       ? const Icon(Icons.person, size: 50, color: Colors.white)
                       : null,

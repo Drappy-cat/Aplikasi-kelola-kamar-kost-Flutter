@@ -100,8 +100,6 @@ class DummyService {
     required AppUser user,
     required Room room,
   }) async {
-    // 1. Create and add the request with "Pending" status
-    // NOTE: Assumes 'id' field is added to Request model
     final requestId = 'req-${DateTime.now().millisecondsSinceEpoch}';
     final newRequest = Request(
       id: requestId, 
@@ -114,32 +112,28 @@ class DummyService {
     );
     requests.insert(0, newRequest);
 
-    // 2. Simulate a delay for processing
     await Future.delayed(const Duration(seconds: 3));
 
-    // 3. Auto-approve the request and update data
     final requestIndex = requests.indexWhere((req) => req.id == requestId);
     if (requestIndex != -1) {
-      // Update request status
       final oldRequest = requests[requestIndex];
       requests[requestIndex] = Request(
         id: oldRequest.id,
         type: oldRequest.type,
         date: oldRequest.date,
         note: oldRequest.note,
-        status: "Approved", // Auto-approve
+        status: "Approved",
         roomCode: oldRequest.roomCode,
         userName: oldRequest.userName,
       );
 
-      // Update room status
       final roomIndex = rooms.indexWhere((r) => r.code == room.code);
       if (roomIndex != -1) {
         final oldRoom = rooms[roomIndex];
         final now = DateTime.now();
         rooms[roomIndex] = Room(
           code: oldRoom.code,
-          status: "Dihuni", // Update status
+          status: "Dihuni",
           baseRent: oldRoom.baseRent,
           wifi: oldRoom.wifi,
           water: oldRoom.water,
@@ -147,13 +141,12 @@ class DummyService {
           acCost: oldRoom.acCost,
           dimensions: oldRoom.dimensions,
           imageUrls: oldRoom.imageUrls,
-          tenantName: user.name, // Add tenant info
-          tenantAddress: "Jl. Baru No. 1", // Dummy address
-          tenantPhone: "08123456789", // Dummy phone
+          tenantName: user.name,
+          tenantAddress: "Jl. Baru No. 1",
+          tenantPhone: "08123456789",
           rentStartDate: now.toIso8601String().substring(0, 10),
         );
         
-        // Create the first bill
         final totalRent = computeTotalForRoom(rooms[roomIndex]);
         final billPeriod = "${_getMonthName(now.month)} ${now.year}";
 
@@ -162,13 +155,12 @@ class DummyService {
           userId: user.id,
           roomId: room.code,
           period: billPeriod,
-          amount: totalRent,
+          amount: totalRent.toDouble(),
           status: 'Belum Lunas',
           createdAt: now,
         );
         _bills.insert(0, firstBill);
 
-        // Add a notification for the user
         notifications.insert(0, AppNotification(
           title: 'Pengajuan Sewa Disetujui!',
           subtitle: 'Pengajuan sewa untuk kamar ${room.code} telah disetujui. Tagihan pertama telah dibuat.',
@@ -216,9 +208,9 @@ class DummyService {
         roomId: old.roomId,
         title: old.title,
         description: old.description,
-        category: old.category, // Fixed: Pass existing category
+        category: old.category,
         status: newStatus,
-        imageUrls: old.imageUrls, // Fixed: Pass existing images
+        imageUrls: old.imageUrls,
         createdAt: old.createdAt,
       );
     }
@@ -271,7 +263,7 @@ class DummyService {
   static List<Bill> _createInitialBills() => [
     Bill(id: 'bill-001', userId: 'user1', roomId: 'A-101', period: 'Juli 2024', amount: 1150000, status: 'Belum Lunas', createdAt: DateTime(2024, 7, 1)),
     Bill(id: 'bill-002', userId: 'user1', roomId: 'A-101', period: 'Juni 2024', amount: 1150000, status: 'Lunas', paymentMethod: 'Transfer', createdAt: DateTime(2024, 6, 1)),
-    Bill(id: 'bill-003', userId: 'user2', roomId: 'A-103', period: 'Juli 2024', amount: 1200000, status: 'Menunggu Konfirmasi', paymentProofUrl: 'assets/kamar_kost/bukti_tf.png', paymentMethod: 'Transfer', createdAt: DateTime(2024, 7, 2)),
+    Bill(id: 'bill-003', userId: 'user2', roomId: 'A-103', period: 'Juli 2024', amount: 1200000, status: 'Menunggu Konfirmasi', paymentProofUrl: 'https://picsum.photos/seed/bill-003/400/600', paymentMethod: 'Transfer', createdAt: DateTime(2024, 7, 2)),
     Bill(id: 'bill-004', userId: 'user2', roomId: 'A-103', period: 'Juni 2024', amount: 1200000, status: 'Lunas', paymentMethod: 'Tunai', createdAt: DateTime(2024, 6, 2)),
   ];
 
@@ -285,12 +277,19 @@ class DummyService {
   ];
 
   static List<Room> _createInitialRooms() {
-    const localImagePaths = ['assets/kamar_kost/kamar1.png', 'assets/kamar_kost/kamar2.png', 'assets/kamar_kost/kamar3.png'];
+    // Menggunakan URL gambar dari internet
+    final networkImagePaths = {
+      "A-101": ['https://picsum.photos/seed/A-101-1/800/600', 'https://picsum.photos/seed/A-101-2/800/600', 'https://picsum.photos/seed/A-101-3/800/600'],
+      "A-102": ['https://picsum.photos/seed/A-102-1/800/600', 'https://picsum.photos/seed/A-102-2/800/600', 'https://picsum.photos/seed/A-102-3/800/600'],
+      "A-103": ['https://picsum.photos/seed/A-103-1/800/600', 'https://picsum.photos/seed/A-103-2/800/600', 'https://picsum.photos/seed/A-103-3/800/600'],
+      "A-104": ['https://picsum.photos/seed/A-104-1/800/600', 'https://picsum.photos/seed/A-104-2/800/600', 'https://picsum.photos/seed/A-104-3/800/600'],
+    };
+
     return [
-      Room(code: "A-101", status: "Dihuni", baseRent: 750000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000, dimensions: "3x4 m", imageUrls: localImagePaths, tenantName: "Budi Santoso", tenantAddress: "Jl. Melati No. 5", tenantPhone: "081234567890", rentStartDate: "2024-07-01"),
-      Room(code: "A-102", status: "Kosong", baseRent: 700000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000, dimensions: "3x3.5 m", imageUrls: localImagePaths),
-      Room(code: "A-103", status: "Dihuni", baseRent: 800000, wifi: 100000, water: 50000, electricity: 150000, acCost: 250000, dimensions: "4x4 m", imageUrls: localImagePaths, tenantName: "Siti Aminah", tenantAddress: "Jl. Kenanga No. 12", tenantPhone: "081212345678", rentStartDate: "2024-06-15"),
-      Room(code: "A-104", status: "Kosong", baseRent: 725000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000, dimensions: "3.5x4 m", imageUrls: localImagePaths),
+      Room(code: "A-101", status: "Dihuni", baseRent: 750000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000, dimensions: "3x4 m", imageUrls: networkImagePaths["A-101"]!, tenantName: "Budi Santoso", tenantAddress: "Jl. Melati No. 5", tenantPhone: "081234567890", rentStartDate: "2024-07-01"),
+      Room(code: "A-102", status: "Kosong", baseRent: 700000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000, dimensions: "3x3.5 m", imageUrls: networkImagePaths["A-102"]!),
+      Room(code: "A-103", status: "Dihuni", baseRent: 800000, wifi: 100000, water: 50000, electricity: 150000, acCost: 250000, dimensions: "4x4 m", imageUrls: networkImagePaths["A-103"]!, tenantName: "Siti Aminah", tenantAddress: "Jl. Kenanga No. 12", tenantPhone: "081212345678", rentStartDate: "2024-06-15"),
+      Room(code: "A-104", status: "Kosong", baseRent: 725000, wifi: 100000, water: 50000, electricity: 150000, acCost: 200000, dimensions: "3.5x4 m", imageUrls: networkImagePaths["A-104"]!),
     ];
   }
 

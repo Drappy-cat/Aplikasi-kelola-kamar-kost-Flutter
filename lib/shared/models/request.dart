@@ -1,5 +1,6 @@
 
 class Request {
+  final String id;
   final String type;
   final String date;
   final String note;
@@ -8,6 +9,7 @@ class Request {
   final String? userName;
 
   Request({
+    required this.id,
     required this.type,
     required this.date,
     required this.note,

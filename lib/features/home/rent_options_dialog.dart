@@ -154,6 +154,7 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
             room.packageFull = _isPackageFull;
 
             DummyService.requests.add(Request(
+              id: 'req-${room.code}-${DateTime.now().millisecondsSinceEpoch}',
               type: 'Booking Kamar',
               date: room.rentStartDate!,
               note: 'Pengajuan sewa untuk kamar ${room.code} oleh ${_nameController.text.trim()}',

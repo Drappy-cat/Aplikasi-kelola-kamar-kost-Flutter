@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tes/features/auth/login_screen.dart';
 import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
@@ -52,29 +53,33 @@ class MyAppState extends State<MyApp> {
       inputDecorationTheme: inputDecorationTheme,
     );
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Aplikasi Kost',
-      themeMode: _mode,
-      theme: lightTheme.copyWith(
-        textTheme: GoogleFonts.poppinsTextTheme(lightTheme.textTheme),
-      ),
-      darkTheme: darkTheme.copyWith(
-        textTheme: GoogleFonts.poppinsTextTheme(darkTheme.textTheme),
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const SplashScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/register': (context) => const RegisterScreen(),
-        '/home': (context) => const HomeScreen(),
-        '/profile': (context) => const ProfileScreen(),
-        '/settings': (context) => const SettingsScreen(),
-        '/notification': (context) => const NotificationScreen(),
-        '/admin_complaints': (context) => const AdminComplaintScreen(),
-        '/announcements': (context) => const AnnouncementScreen(),
-        '/user_bills': (context) => const UserBillScreen(),
-        '/payment_history': (context) => const PaymentHistoryScreen(), // Add route for PaymentHistoryScreen
+    return ResponsiveSizer(
+      builder: (context, orientation, screenType) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Aplikasi Kost',
+          themeMode: _mode,
+          theme: lightTheme.copyWith(
+            textTheme: GoogleFonts.poppinsTextTheme(lightTheme.textTheme),
+          ),
+          darkTheme: darkTheme.copyWith(
+            textTheme: GoogleFonts.poppinsTextTheme(darkTheme.textTheme),
+          ),
+          initialRoute: '/',
+          routes: {
+            '/': (context) => const SplashScreen(),
+            '/login': (context) => const LoginScreen(),
+            '/register': (context) => const RegisterScreen(),
+            '/home': (context) => const HomeScreen(),
+            '/profile': (context) => const ProfileScreen(),
+            '/settings': (context) => const SettingsScreen(),
+            '/notification': (context) => const NotificationScreen(),
+            '/admin_complaints': (context) => const AdminComplaintScreen(),
+            '/announcements': (context) => const AnnouncementScreen(),
+            '/user_bills': (context) => const UserBillScreen(),
+            '/payment_history': (context) => const PaymentHistoryScreen(), // Add route for PaymentHistoryScreen
+          },
+        );
       },
     );
   }
