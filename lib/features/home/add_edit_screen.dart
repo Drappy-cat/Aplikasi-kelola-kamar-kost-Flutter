@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/dummy_service.dart';
 
@@ -83,7 +84,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
       DummyService.addRoom(newRoom);
     }
 
-    Navigator.of(context).pop();
+    context.pop();
   }
 
   @override

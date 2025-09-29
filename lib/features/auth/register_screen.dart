@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
@@ -37,11 +38,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       if (!mounted) return;
 
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        '/login',
-        (route) => false,
-        arguments: {'registered': true},
-      );
+      // Navigasi ke halaman login dengan GoRouter, menghapus stack sebelumnya
+      context.go('/login', extra: {'registered': true});
+
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
@@ -163,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 const Text('Sudah punya akun?'),
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => context.pop(),
                   child: const Text('Login di sini'),
                 ),
               ],

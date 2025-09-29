@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tes/features/home/rent_options_dialog.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/auth_service.dart';
@@ -33,7 +34,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             TextButton(
               child: const Text('Tutup'),
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
           ],
@@ -56,7 +57,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
         await _showWaitingConfirmationDialog();
 
         if (mounted) {
-          Navigator.of(context).pop();
+          context.pop();
         }
       }
     }

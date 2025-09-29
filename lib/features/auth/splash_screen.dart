@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:go_router/go_router.dart'; // Import GoRouter
 import 'package:tes/shared/services/auth_service.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -30,13 +31,15 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   Future<void> _navigateToNextScreen() async {
+    // Menunggu animasi selesai
     await Future.delayed(_controller.duration! + const Duration(milliseconds: 500));
     if (!mounted) return;
 
+    // Cek status login dan navigasi menggunakan GoRouter
     if (AuthService.currentUser == null) {
-      Navigator.of(context).pushReplacementNamed('/login');
+      context.go('/login'); // Ganti dengan context.go()
     } else {
-      Navigator.of(context).pushReplacementNamed('/home');
+      context.go('/home'); // Ganti dengan context.go()
     }
   }
 

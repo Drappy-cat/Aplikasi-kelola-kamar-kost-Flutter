@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
@@ -34,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () async {
                 await AuthService.updateProfilePicture(url);
                 setState(() {}); // Refresh UI untuk menampilkan gambar baru
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: CircleAvatar(
                 radius: 30,
@@ -43,7 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }).toList(),
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal'))],
+        actions: [TextButton(onPressed: () => context.pop(), child: const Text('Batal'))],
       ),
     );
   }
@@ -60,9 +61,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           autofocus: true,
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Batal')),
+          TextButton(onPressed: () => context.pop(false), child: const Text('Batal')),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => context.pop(true),
             child: const Text('Simpan'),
           ),
         ],
@@ -114,14 +115,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         actions: <Widget>[
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Batal')),
+          TextButton(onPressed: () => context.pop(), child: const Text('Batal')),
           FilledButton(
             child: const Text('Simpan'),
             onPressed: () async {
               if (!formKey.currentState!.validate()) return;
               try {
                 await AuthService.changePassword(oldPassword: oldPasswordCtrl.text, newPassword: newPasswordCtrl.text);
-                Navigator.of(context).pop();
+                if (mounted) context.pop();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password berhasil diubah'), backgroundColor: Colors.green));
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
@@ -198,8 +199,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: const Text('Riwayat Pembayaran'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
-                    // Menggunakan named route yang akan didaftarkan di my_app.dart
-                    Navigator.of(context).pushNamed('/payment_history');
+                    context.push('/payment_history');
                   },
                 ),
               ],
@@ -214,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               title: const Text('Logout', style: TextStyle(color: Colors.red)),
               onTap: () async {
                 await AuthService.signOut();
-                if(mounted) Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+                if(mounted) context.go('/login');
               },
             ),
           ),

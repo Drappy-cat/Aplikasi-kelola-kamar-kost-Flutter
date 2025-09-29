@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tes/features/home/room_detail_screen.dart';
 import 'package:tes/shared/models/announcement.dart';
 import 'package:tes/shared/models/room.dart';
@@ -23,7 +24,7 @@ class _UserHomePageState extends State<UserHomePage> {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: () => Navigator.of(context).pushNamed('/profile'),
+            onTap: () => context.push('/profile'),
             child: const CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(Icons.person, color: Colors.pink),
@@ -43,11 +44,11 @@ class _UserHomePageState extends State<UserHomePage> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            onPressed: () => Navigator.of(context).pushNamed('/notification'),
+            onPressed: () => context.push('/notification'),
             icon: const Icon(Icons.notifications_outlined),
           ),
           IconButton(
-            onPressed: () => Navigator.of(context).pushNamed('/settings'),
+            onPressed: () => context.push('/settings'),
             icon: const Icon(Icons.settings),
           ),
         ],
@@ -69,7 +70,7 @@ class _UserHomePageState extends State<UserHomePage> {
 
     final latest = announcements.first;
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed('/announcements'), // Navigate to AnnouncementScreen
+      onTap: () => context.push('/announcements'), // Navigate to AnnouncementScreen
       child: Card(
         margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
         elevation: 3,
@@ -182,7 +183,7 @@ class _UserHomePageState extends State<UserHomePage> {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () async {
-          await Navigator.of(context).push(MaterialPageRoute(builder: (context) => RoomDetailScreen(room: room)));
+          await context.push('/room_detail', extra: room);
           setState(() {});
         },
         child: Padding(
@@ -222,7 +223,7 @@ class _UserHomePageState extends State<UserHomePage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('/user_bills');
+                context.push('/user_bills');
               },
               child: const Text('Lihat Tagihan Saya'),
             ),
