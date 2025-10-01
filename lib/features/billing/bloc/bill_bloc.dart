@@ -1,55 +1,58 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
 
 part 'bill_event.dart';
 part 'bill_state.dart';
+part 'bill_bloc.freezed.dart'; // Tambahkan part untuk freezed
 
 class BillBloc extends Bloc<BillEvent, BillState> {
-  BillBloc() : super(BillInitial()) {
-    on<LoadBills>(_onLoadBills);
-    on<ConfirmCashPayment>(_onConfirmCashPayment);
-    on<SubmitTransferProof>(_onSubmitTransferProof);
+  BillBloc() : super(const BillState.initial()) {
+    // Menggunakan satu handler utama dan memetakan event
+    on<BillEvent>((event, emit) {
+      event.map(
+        loadBills: (event) => _onLoadBills(event, emit),
+        confirmCashPayment: (event) => _onConfirmCashPayment(event, emit),
+        submitTransferProof: (event) => _onSubmitTransferProof(event, emit),
+      );
+    });
   }
 
   void _onLoadBills(LoadBills event, Emitter<BillState> emit) {
-    emit(BillLoading());
+    emit(const BillState.loading());
     try {
-      // Mengakses properti statis langsung dari kelas AuthService
       final userId = AuthService.currentUser?.id;
       if (userId == null) {
-        emit(const BillError('Pengguna tidak ditemukan. Silakan login kembali.'));
+        emit(const BillState.error('Pengguna tidak ditemukan. Silakan login kembali.'));
         return;
       }
-      // Memanggil metode statis langsung dari kelas DummyService
       final bills = DummyService.getBillsForUser(userId);
       bills.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      emit(BillLoaded(bills));
+      emit(BillState.loaded(bills));
     } catch (e) {
-      emit(BillError('Gagal memuat tagihan: ${e.toString()}'));
+      emit(BillState.error('Gagal memuat tagihan: ${e.toString()}'));
     }
   }
 
   void _onConfirmCashPayment(ConfirmCashPayment event, Emitter<BillState> emit) {
     try {
-      // Memanggil metode statis langsung dari kelas DummyService
       DummyService.confirmCashPayment(event.billId);
-      add(LoadBills());
+      // Memicu event loadBills untuk me-refresh data
+      add(const BillEvent.loadBills());
     } catch (e) {
-      emit(BillError('Gagal mengonfirmasi pembayaran tunai: ${e.toString()}'));
+      emit(BillState.error('Gagal mengonfirmasi pembayaran tunai: ${e.toString()}'));
     }
   }
 
   void _onSubmitTransferProof(SubmitTransferProof event, Emitter<BillState> emit) {
     try {
-      // Memanggil metode statis langsung dari kelas DummyService
       DummyService.submitPaymentProof(event.billId, event.proofUrl);
-      add(LoadBills());
+      // Memicu event loadBills untuk me-refresh data
+      add(const BillEvent.loadBills());
     } catch (e) {
-      emit(BillError('Gagal mengirim bukti transfer: ${e.toString()}'));
+      emit(BillState.error('Gagal mengirim bukti transfer: ${e.toString()}'));
     }
   }
 }

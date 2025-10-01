@@ -1,11 +1,13 @@
-// =====  HALAMAN LOGIN =====
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
-// ===== 7. INHERITANCE (Pewarisan) =====
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  // Menerima boolean langsung, bukan Map
+  final bool isRegistered;
+
+  const LoginScreen({super.key, this.isRegistered = false});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -13,14 +15,26 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-
   final _u = TextEditingController();
   final _p = TextEditingController();
   bool _hide = true;
   bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Menampilkan Snackbar setelah frame pertama selesai dibangun
+    if (widget.isRegistered) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registrasi berhasil! Silakan login.')),
+        );
+      });
+    }
+  }
+
   @override
   void dispose() {
-
     _u.dispose();
     _p.dispose();
     super.dispose();
@@ -33,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
       if (!mounted) return;
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      context.go('/home');
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
@@ -42,18 +56,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // ===== POLYMORPHISM (Polimorfisme) =====
   @override
   Widget build(BuildContext context) {
-    final isRegistered = ModalRoute.of(context)?.settings.arguments as Map<String, bool>?;
-    if (isRegistered?['registered'] == true) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registrasi berhasil! Silakan login.')),
-        );
-      });
-    }
-
+    // Logika Snackbar sudah dipindah ke initState, jadi build method menjadi bersih
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
       body: SafeArea(
@@ -151,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const Text('Belum punya akun?'),
                 TextButton(
-                  onPressed: () => Navigator.pushNamed(context, '/register'),
+                  onPressed: () => context.push('/register'),
                   child: const Text('Daftar di sini'),
                 ),
               ],

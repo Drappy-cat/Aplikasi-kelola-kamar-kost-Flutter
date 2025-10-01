@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,7 +11,8 @@ class UserBillScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BillBloc()..add(LoadBills()),
+      // Menggunakan event freezed yang baru
+      create: (context) => BillBloc()..add(const BillEvent.loadBills()),
       child: const UserBillView(),
     );
   }
@@ -46,7 +46,8 @@ class UserBillView extends StatelessWidget {
               leading: const Icon(Icons.money),
               title: const Text('Bayar Tunai'),
               onTap: () {
-                context.read<BillBloc>().add(ConfirmCashPayment(bill.id));
+                // Menggunakan event freezed yang baru
+                context.read<BillBloc>().add(BillEvent.confirmCashPayment(bill.id));
                 Navigator.pop(dialogContext);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Konfirmasi pembayaran tunai berhasil. Menunggu persetujuan admin.')),
@@ -130,9 +131,10 @@ class UserBillView extends StatelessWidget {
                 TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Batal')),
                 ElevatedButton(
                   onPressed: pickedFile == null
-                      ? null // Disable button if no file is picked
+                      ? null
                       : () {
-                          context.read<BillBloc>().add(SubmitTransferProof(bill.id, pickedFile!.path));
+                          // Menggunakan event freezed yang baru
+                          context.read<BillBloc>().add(BillEvent.submitTransferProof(bill.id, pickedFile!.path));
                           Navigator.pop(dialogContext);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Bukti pembayaran berhasil diunggah!')),
@@ -156,74 +158,73 @@ class UserBillView extends StatelessWidget {
       ),
       body: BlocBuilder<BillBloc, BillState>(
         builder: (context, state) {
-          if (state is BillLoading || state is BillInitial) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is BillLoaded) {
-            if (state.bills.isEmpty) {
-              return const Center(
-                child: Text('Belum ada tagihan.', style: TextStyle(fontSize: 16, color: Colors.grey)),
-              );
-            }
-            return ListView.builder(
-              padding: const EdgeInsets.all(8.0),
-              itemCount: state.bills.length,
-              itemBuilder: (context, index) {
-                final bill = state.bills[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                  child: ListTile(
-                    title: Text('Tagihan Periode ${bill.period}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Jumlah: Rp ${bill.amount}'),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Status: ${bill.status}',
-                          style: TextStyle(color: _getStatusColor(bill.status), fontWeight: FontWeight.bold),
-                        ),
-                        if (bill.paymentMethod != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text('Metode: ${bill.paymentMethod}', style: TextStyle(color: Colors.grey.shade700)),
-                          ),
-                        if (bill.paymentProofUrl != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text('Bukti Pembayaran: Diunggah', style: TextStyle(color: Colors.grey.shade700)),
-                          ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Dibuat: ${timeago.format(bill.createdAt, locale: 'id')}',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                    trailing: bill.status == 'Belum Lunas'
-                        ? ElevatedButton(
-                            onPressed: () => _showPaymentOptionsDialog(context, bill),
-                            child: const Text('Bayar'),
-                          )
-                        : null,
-                  ),
+          // Menggunakan state.when() untuk UI yang lebih bersih dan aman
+          return state.when(
+            initial: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            loaded: (bills) {
+              if (bills.isEmpty) {
+                return const Center(
+                  child: Text('Belum ada tagihan.', style: TextStyle(fontSize: 16, color: Colors.grey)),
                 );
-              },
-            );
-          }
-          if (state is BillError) {
-            return Center(
+              }
+              return ListView.builder(
+                padding: const EdgeInsets.all(8.0),
+                itemCount: bills.length,
+                itemBuilder: (context, index) {
+                  final bill = bills[index];
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                    child: ListTile(
+                      title: Text('Tagihan Periode ${bill.period}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Jumlah: Rp ${bill.amount}'),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Status: ${bill.status}',
+                            style: TextStyle(color: _getStatusColor(bill.status), fontWeight: FontWeight.bold),
+                          ),
+                          if (bill.paymentMethod != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Text('Metode: ${bill.paymentMethod}', style: TextStyle(color: Colors.grey.shade700)),
+                            ),
+                          if (bill.paymentProofUrl != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Text('Bukti Pembayaran: Diunggah', style: TextStyle(color: Colors.grey.shade700)),
+                            ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Dibuat: ${timeago.format(bill.createdAt, locale: 'id')}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                      trailing: bill.status == 'Belum Lunas'
+                          ? ElevatedButton(
+                              onPressed: () => _showPaymentOptionsDialog(context, bill),
+                              child: const Text('Bayar'),
+                            )
+                          : null,
+                    ),
+                  );
+                },
+              );
+            },
+            error: (message) => Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'Terjadi Kesalahan: ${state.message}',
+                  'Terjadi Kesalahan: $message',
                   style: const TextStyle(color: Colors.red),
                   textAlign: TextAlign.center,
                 ),
               ),
-            );
-          }
-          return const Center(child: Text('Silakan muat ulang halaman.'));
+            ),
+          );
         },
       ),
     );

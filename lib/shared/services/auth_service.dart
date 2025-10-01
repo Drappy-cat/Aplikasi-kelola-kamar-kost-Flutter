@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/dummy_service.dart';
@@ -84,20 +86,33 @@ class AuthService {
     currentUser = user;
     await _persist();
     DummyService.userName = user.fullName?.isNotEmpty == true ? user.fullName : user.username;
+
+    // --- Implementasi Device Info Plus ---
+    _logDeviceInfo(user);
+    // -------------------------------------
+
     return user;
+  }
+
+  static Future<void> _logDeviceInfo(AppUser user) async {
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    try {
+      if (kIsWeb) {
+        final info = await deviceInfoPlugin.webBrowserInfo;
+        debugPrint('>>> Login successful for ${user.username} from browser: ${info.browserName.name}');
+      } else {
+        final info = await deviceInfoPlugin.deviceInfo;
+        debugPrint('>>> Login successful for ${user.username} from device: ${info.toMap()}');
+      }
+    } catch (e) {
+      debugPrint('Error getting device info: $e');
+    }
   }
 
   static Future<void> updateProfile({String? fullName}) async {
     if (currentUser == null) return;
-    final updatedUser = AppUser(
-      id: currentUser!.id, // Membawa ID yang ada
-      username: currentUser!.username,
-      password: currentUser!.password,
-      role: currentUser!.role,
-      fullName: fullName,
-      profileImageUrl: currentUser!.profileImageUrl,
-      roomId: currentUser!.roomId,
-    );
+    final updatedUser = currentUser!.copyWith(fullName: fullName);
+    
     final userIndex = _users.indexWhere((u) => u.id == currentUser!.id);
     if (userIndex != -1) {
       _users[userIndex] = updatedUser;
@@ -117,17 +132,9 @@ class AuthService {
     
     final userIndex = _users.indexWhere((u) => u.id == currentUser!.id);
     if (userIndex != -1) {
-      final oldUser = _users[userIndex];
-      _users[userIndex] = AppUser(
-        id: oldUser.id,
-        username: oldUser.username,
-        password: newPassword,
-        role: oldUser.role,
-        fullName: oldUser.fullName,
-        profileImageUrl: oldUser.profileImageUrl,
-        roomId: oldUser.roomId,
-      );
-      currentUser = _users[userIndex];
+      final updatedUser = _users[userIndex].copyWith(password: newPassword);
+      _users[userIndex] = updatedUser;
+      currentUser = updatedUser;
       await _persist();
     } else {
       throw Exception('Pengguna tidak ditemukan');
@@ -137,15 +144,7 @@ class AuthService {
   static Future<void> updateProfilePicture(String imageUrl) async {
     if (currentUser == null) return;
 
-    final updatedUser = AppUser(
-      id: currentUser!.id,
-      username: currentUser!.username,
-      password: currentUser!.password,
-      role: currentUser!.role,
-      fullName: currentUser!.fullName,
-      profileImageUrl: imageUrl,
-      roomId: currentUser!.roomId,
-    );
+    final updatedUser = currentUser!.copyWith(profileImageUrl: imageUrl);
 
     final userIndex = _users.indexWhere((u) => u.id == currentUser!.id);
     if (userIndex != -1) {

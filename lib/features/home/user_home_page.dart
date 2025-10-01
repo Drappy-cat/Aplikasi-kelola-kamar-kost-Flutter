@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart'; // Import flutter_animate
 import 'package:go_router/go_router.dart';
 import 'package:tes/features/home/room_detail_screen.dart';
 import 'package:tes/shared/models/announcement.dart';
@@ -65,12 +66,12 @@ class _UserHomePageState extends State<UserHomePage> {
   Widget _buildAnnouncementsWidget() {
     final announcements = DummyService.getLatestAnnouncements();
     if (announcements.isEmpty) {
-      return const SizedBox.shrink(); // Tidak menampilkan apa-apa jika tidak ada pengumuman
+      return const SizedBox.shrink();
     }
 
     final latest = announcements.first;
     return GestureDetector(
-      onTap: () => context.push('/announcements'), // Navigate to AnnouncementScreen
+      onTap: () => context.push('/announcements'),
       child: Card(
         margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
         elevation: 3,
@@ -112,7 +113,7 @@ class _UserHomePageState extends State<UserHomePage> {
           ),
         ),
       ),
-    );
+    ).animate().fade(duration: 500.ms).slideY(begin: -0.2, end: 0);
   }
 
   Widget _userContent() {
@@ -142,7 +143,7 @@ class _UserHomePageState extends State<UserHomePage> {
         const Padding(
           padding: EdgeInsets.only(bottom: 8.0),
           child: Text('Daftar Kamar Tersedia', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        ),
+        ).animate().fade().slideX(begin: -0.5, end: 0),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Wrap(
@@ -157,9 +158,17 @@ class _UserHomePageState extends State<UserHomePage> {
               );
             }).toList(),
           ),
-        ),
+        ).animate().fade(delay: 200.ms).slideX(begin: -0.5, end: 0),
         if (filteredRooms.isEmpty) const Center(child: Padding(padding: EdgeInsets.all(16.0), child: Text('Tidak ada kamar yang cocok.'))),
-        ...filteredRooms.map((room) => _buildRoomCard(room)),
+        // Menambahkan animasi pada setiap kartu kamar
+        ...filteredRooms.asMap().entries.map((entry) {
+          final index = entry.key;
+          final room = entry.value;
+          return _buildRoomCard(room)
+              .animate()
+              .fade(delay: (100 * index).ms, duration: 400.ms)
+              .slideY(begin: 0.5, end: 0);
+        }),
         const SizedBox(height: 20),
         Center(
           child: ElevatedButton(
@@ -217,16 +226,16 @@ class _UserHomePageState extends State<UserHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Anda adalah penghuni kamar:', style: TextStyle(fontSize: 18)),
+            const Text('Anda adalah penghuni kamar:', style: TextStyle(fontSize: 18)).animate().fade(),
             const SizedBox(height: 16),
-            _buildRoomCard(room),
+            _buildRoomCard(room).animate().fade(delay: 200.ms),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 context.push('/user_bills');
               },
               child: const Text('Lihat Tagihan Saya'),
-            ),
+            ).animate().fade(delay: 400.ms),
           ],
         ),
       ),

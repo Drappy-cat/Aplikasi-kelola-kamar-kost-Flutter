@@ -1,33 +1,12 @@
 part of 'bill_bloc.dart';
 
-@immutable
-abstract class BillEvent extends Equatable {
-  const BillEvent();
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  @override
-  List<Object?> get props => [];
-}
+part 'bill_event.freezed.dart';
 
-// Event untuk memuat semua tagihan pengguna
-class LoadBills extends BillEvent {}
-
-// Event saat pengguna memilih bayar tunai
-class ConfirmCashPayment extends BillEvent {
-  final String billId;
-
-  const ConfirmCashPayment(this.billId);
-
-  @override
-  List<Object?> get props => [billId];
-}
-
-// Event saat pengguna mengunggah bukti transfer
-class SubmitTransferProof extends BillEvent {
-  final String billId;
-  final String proofUrl;
-
-  const SubmitTransferProof(this.billId, this.proofUrl);
-
-  @override
-  List<Object?> get props => [billId, proofUrl];
+@freezed
+abstract class BillEvent with _$BillEvent {
+  const factory BillEvent.loadBills() = LoadBills;
+  const factory BillEvent.confirmCashPayment(String billId) = ConfirmCashPayment;
+  const factory BillEvent.submitTransferProof(String billId, String proofUrl) = SubmitTransferProof;
 }

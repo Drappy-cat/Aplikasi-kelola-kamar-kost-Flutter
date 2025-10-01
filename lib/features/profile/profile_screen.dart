@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart'; // Import GetWidget
 import 'package:go_router/go_router.dart';
 import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/auth_service.dart';
@@ -139,6 +140,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final AppUser? user = AuthService.currentUser;
     if (user == null) return const Scaffold(body: Center(child: Text('Pengguna tidak ditemukan.')));
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profil Saya'),
@@ -161,9 +164,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               GestureDetector(
                 onTap: _showChangePictureDialog,
-                child: CircleAvatar(
+                child: GFAvatar(
                   radius: 50,
-                  // Menggunakan CachedNetworkImageProvider untuk gambar utama
                   backgroundImage: user.profileImageUrl != null ? CachedNetworkImageProvider(user.profileImageUrl!) : null,
                   child: user.profileImageUrl == null
                       ? const Icon(Icons.person, size: 50, color: Colors.white)
@@ -178,29 +180,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 24),
 
           Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            clipBehavior: Clip.antiAlias,
             child: Column(
               children: [
-                ListTile(
-                  leading: const Icon(Icons.edit_outlined),
-                  title: const Text('Edit Profil'),
-                  trailing: const Icon(Icons.chevron_right),
+                GFListTile(
+                  avatar: GFAvatar(
+                    backgroundColor: colorScheme.primaryContainer,
+                    child: Icon(Icons.edit_outlined, color: colorScheme.onPrimaryContainer),
+                  ),
+                  title: const Text('Edit Profil', style: TextStyle(fontSize: 16)),
+                  icon: const Icon(Icons.chevron_right, color: Colors.grey),
                   onTap: _showEditProfileDialog,
                 ),
-                const Divider(height: 1, indent: 16, endIndent: 16),
-                ListTile(
-                  leading: const Icon(Icons.lock_outline),
-                  title: const Text('Ubah Password'),
-                  trailing: const Icon(Icons.chevron_right),
+                GFListTile(
+                  avatar: GFAvatar(
+                    backgroundColor: colorScheme.primaryContainer,
+                    child: Icon(Icons.lock_outline, color: colorScheme.onPrimaryContainer),
+                  ),
+                  title: const Text('Ubah Password', style: TextStyle(fontSize: 16)),
+                  icon: const Icon(Icons.chevron_right, color: Colors.grey),
                   onTap: _showChangePasswordDialog,
                 ),
-                const Divider(height: 1, indent: 16, endIndent: 16),
-                ListTile(
-                  leading: const Icon(Icons.receipt_long_outlined),
-                  title: const Text('Riwayat Pembayaran'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    context.push('/payment_history');
-                  },
+                GFListTile(
+                  avatar: GFAvatar(
+                    backgroundColor: colorScheme.primaryContainer,
+                    child: Icon(Icons.receipt_long_outlined, color: colorScheme.onPrimaryContainer),
+                  ),
+                  title: const Text('Riwayat Pembayaran', style: TextStyle(fontSize: 16)),
+                  icon: const Icon(Icons.chevron_right, color: Colors.grey),
+                  onTap: () => context.push('/payment_history'),
+                ),
+                GFListTile(
+                  avatar: GFAvatar(
+                    backgroundColor: colorScheme.primaryContainer,
+                    child: Icon(Icons.description_outlined, color: colorScheme.onPrimaryContainer),
+                  ),
+                  title: const Text('Syarat & Ketentuan', style: TextStyle(fontSize: 16)),
+                  icon: const Icon(Icons.chevron_right, color: Colors.grey),
+                  onTap: () => context.push('/terms'),
                 ),
               ],
             ),
@@ -209,12 +228,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           // --- BAGIAN LOGOUT ---
           Card(
-            child: ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
-              title: const Text('Logout', style: TextStyle(color: Colors.red)),
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            clipBehavior: Clip.antiAlias,
+            child: GFListTile(
+              avatar: GFAvatar(
+                backgroundColor: Colors.red.withOpacity(0.1),
+                child: const Icon(Icons.logout, color: Colors.red),
+              ),
+              title: const Text('Logout', style: TextStyle(color: Colors.red, fontSize: 16)),
               onTap: () async {
                 await AuthService.signOut();
-                if(mounted) context.go('/login');
+                if (mounted) context.go('/login');
               },
             ),
           ),
