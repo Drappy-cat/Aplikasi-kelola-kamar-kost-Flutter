@@ -88,7 +88,9 @@ class _AdminPanelState extends State<AdminPanel> {
       case 0: // Kamar
         return FloatingActionButton(
           onPressed: () async {
-            await context.push('/add_edit_room'); // Placeholder, rute perlu dibuat
+            // Anda perlu membuat rute '/add_edit_room' di app_router.dart
+            // dan pastikan AddEditScreen bisa diakses dari sana.
+            await context.push('/add_edit_room'); 
             setState(() {});
           },
           child: const Icon(Icons.add),
@@ -127,12 +129,7 @@ class _AdminPanelState extends State<AdminPanel> {
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {
-                // Navigasi ke detail dengan GoRouter, mengirim objek room
-                // context.push('/room_detail', extra: room);
-                // Untuk sementara, tetap gunakan MaterialPageRoute jika rute belum siap
-                await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => RoomDetailScreen(room: room)),
-                );
+                await context.push('/room_detail', extra: room);
                 setState(() {});
               },
             ),
@@ -206,7 +203,9 @@ class _AdminPanelState extends State<AdminPanel> {
                           setState(() {
                             final reqIndex = DummyService.requests.indexWhere((r) => r.id == req.id);
                             if (reqIndex != -1) {
+                              // Membuat salinan objek dengan status baru
                               final updatedReq = req.copyWith(status: 'Ditolak');
+                              // Mengganti objek lama dengan yang baru di dalam list
                               DummyService.requests[reqIndex] = updatedReq;
                               DummyService.notifications.add(AppNotification(title: 'Pengajuan Ditolak', subtitle: 'Pengajuan ${req.type} untuk kamar ${req.roomCode ?? '-'} Anda telah ditolak.', date: DateTime.now(), icon: Icons.cancel, iconColor: Colors.red));
                             }
@@ -220,13 +219,17 @@ class _AdminPanelState extends State<AdminPanel> {
                           setState(() {
                             final reqIndex = DummyService.requests.indexWhere((r) => r.id == req.id);
                             if (reqIndex != -1) {
+                              // Membuat salinan objek dengan status baru
                               final updatedReq = req.copyWith(status: 'Disetujui');
+                              // Mengganti objek lama dengan yang baru
                               DummyService.requests[reqIndex] = updatedReq;
 
                               if (updatedReq.type == 'Booking Kamar' && updatedReq.roomCode != null) {
                                 final room = DummyService.findRoom(updatedReq.roomCode!);
                                 if (room != null) {
+                                  // Membuat salinan objek Room dengan status baru
                                   final updatedRoom = room.copyWith(status: 'Dihuni');
+                                  // Memperbarui data kamar di service
                                   DummyService.updateRoom(updatedRoom);
                                   DummyService.notifications.add(AppNotification(title: 'Pengajuan Disetujui!', subtitle: 'Pengajuan sewa kamar ${room.code} Anda telah disetujui. Selamat datang!', date: DateTime.now(), icon: Icons.check_circle, iconColor: Colors.green));
                                 }
@@ -281,14 +284,14 @@ class _AdminPanelState extends State<AdminPanel> {
           TextButton(
             onPressed: () {
               setState(() => DummyService.rejectBill(bill.id));
-              Navigator.pop(context);
+              context.pop();
             },
             child: const Text('Tolak', style: TextStyle(color: Colors.red)),
           ),
           ElevatedButton(
             onPressed: () {
               setState(() => DummyService.approveBill(bill.id));
-              Navigator.pop(context);
+              context.pop();
             },
             child: const Text('Setujui'),
           ),
@@ -307,7 +310,7 @@ class _AdminPanelState extends State<AdminPanel> {
       builder: (context) => AlertDialog(
         title: const Text('Buat Pengumuman Baru'),
         content: Form(key: formKey, child: Column(mainAxisSize: MainAxisSize.min, children: [TextFormField(controller: titleCtrl, decoration: const InputDecoration(labelText: 'Judul'), validator: (v) => v!.isEmpty ? 'Wajib diisi' : null), const SizedBox(height: 8), TextFormField(controller: contentCtrl, decoration: const InputDecoration(labelText: 'Isi Pengumuman'), maxLines: 3, validator: (v) => v!.isEmpty ? 'Wajib diisi' : null)])),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')), ElevatedButton(onPressed: () {if (formKey.currentState!.validate()) {DummyService.addAnnouncement(title: titleCtrl.text, content: contentCtrl.text); setState(() {}); Navigator.pop(context);}}, child: const Text('Publikasikan'))],
+        actions: [TextButton(onPressed: () => context.pop(), child: const Text('Batal')), ElevatedButton(onPressed: () {if (formKey.currentState!.validate()) {DummyService.addAnnouncement(title: titleCtrl.text, content: contentCtrl.text); setState(() {}); context.pop();}}, child: const Text('Publikasikan'))],
       ),
     );
   }
