@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tes/app/my_app.dart';
 import 'package:tes/features/home/add_edit_screen.dart';
 import 'package:tes/features/home/room_detail_screen.dart';
 import 'package:tes/shared/models/bill.dart';
@@ -11,6 +10,8 @@ import 'package:tes/shared/models/announcement.dart';
 import 'package:tes/shared/services/dummy_service.dart';
 import 'package:tes/shared/models/app_notification.dart';
 import 'package:tes/features/complaints/admin_complaint_screen.dart'; // Import the new admin complaint screen
+import 'package:tes/shared/services/locator.dart';
+import 'package:tes/shared/services/theme_service.dart';
 
 class AdminPanel extends StatefulWidget {
   const AdminPanel({super.key});
@@ -24,6 +25,7 @@ class _AdminPanelState extends State<AdminPanel> {
 
   @override
   Widget build(BuildContext context) {
+    final themeService = getIt<ThemeService>();
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -52,9 +54,15 @@ class _AdminPanelState extends State<AdminPanel> {
             onPressed: () => context.push('/notification'), // Menggunakan GoRouter
             icon: const Icon(Icons.notifications_outlined),
           ),
-          IconButton(
-            onPressed: () => MyApp.of(context)?.toggleTheme(),
-            icon: Icon(Theme.of(context).brightness == Brightness.dark ? Icons.light_mode : Icons.dark_mode),
+          // Gunakan AnimatedBuilder agar icon-nya juga ikut berubah
+          AnimatedBuilder(
+            animation: themeService,
+            builder: (context, child) {
+              return IconButton(
+                onPressed: () => themeService.toggleTheme(),
+                icon: Icon(themeService.isDarkMode ? Icons.light_mode : Icons.dark_mode),
+              );
+            },
           ),
         ],
       ),

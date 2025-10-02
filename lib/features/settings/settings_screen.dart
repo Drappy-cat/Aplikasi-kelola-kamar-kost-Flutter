@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:tes/app/my_app.dart';
+import 'package:tes/shared/services/locator.dart';
+import 'package:tes/shared/services/theme_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeService = getIt<ThemeService>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -25,17 +28,24 @@ class SettingsScreen extends StatelessWidget {
           Expanded(
             child: ListView(
               children: [
-                ListTile(
-                  title: const Text('Mode Tema'),
-                  subtitle: Text(Theme.of(context).brightness == Brightness.dark ? 'Dark Mode' : 'Light Mode'),
-                  trailing: IconButton(
-                    icon: Icon(
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Icons.light_mode
-                          : Icons.dark_mode,
-                    ),
-                    onPressed: () => MyApp.of(context)?.toggleTheme(),
-                  ),
+                // Gunakan AnimatedBuilder agar UI-nya update saat tema berganti
+                AnimatedBuilder(
+                  animation: themeService,
+                  builder: (context, child) {
+                    return ListTile(
+                      title: const Text('Mode Tema'),
+                      subtitle: Text(themeService.isDarkMode ? 'Dark Mode' : 'Light Mode'),
+                      trailing: IconButton(
+                        icon: Icon(
+                          themeService.isDarkMode
+                              ? Icons.light_mode
+                              : Icons.dark_mode,
+                        ),
+                        // Panggil toggleTheme dari service
+                        onPressed: () => themeService.toggleTheme(),
+                      ),
+                    );
+                  },
                 ),
                 const Divider(),
 

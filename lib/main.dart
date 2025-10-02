@@ -6,7 +6,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Inisialisasi Service Locator
-  setupLocator();
+  await setupLocator(); // Menunggu setup selesai
   
   runApp(const MyApp());
 }
