@@ -4,7 +4,6 @@ import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
-  // Menerima boolean langsung, bukan Map
   final bool isRegistered;
 
   const LoginScreen({super.key, this.isRegistered = false});
@@ -23,7 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // Menampilkan Snackbar setelah frame pertama selesai dibangun
     if (widget.isRegistered) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -46,11 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
-      if (!mounted) return;
-      context.go('/home');
+      if (mounted) context.go('/home');
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -58,7 +54,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Logika Snackbar sudah dipindah ke initState, jadi build method menjadi bersih
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
       body: SafeArea(

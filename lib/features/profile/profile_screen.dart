@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart'; // Import GetWidget
 import 'package:go_router/go_router.dart';
 import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/auth_service.dart';
+import 'package:tes/shared/services/locator.dart';
+import 'package:tes/shared/services/theme_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -40,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
               child: CircleAvatar(
                 radius: 30,
-                backgroundImage: CachedNetworkImageProvider(url), // Menggunakan CachedNetworkImageProvider
+                backgroundImage: CachedNetworkImageProvider(url),
               ),
             );
           }).toList(),
@@ -141,6 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (user == null) return const Scaffold(body: Center(child: Text('Pengguna tidak ditemukan.')));
 
     final colorScheme = Theme.of(context).colorScheme;
+    final themeService = getIt<ThemeService>();
 
     return Scaffold(
       appBar: AppBar(
@@ -164,11 +166,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               GestureDetector(
                 onTap: _showChangePictureDialog,
-                child: GFAvatar(
+                // GFAvatar diganti dengan CircleAvatar
+                child: CircleAvatar(
                   radius: 50,
                   backgroundImage: user.profileImageUrl != null ? CachedNetworkImageProvider(user.profileImageUrl!) : null,
+                  backgroundColor: user.profileImageUrl == null ? colorScheme.primaryContainer : Colors.transparent,
                   child: user.profileImageUrl == null
-                      ? const Icon(Icons.person, size: 50, color: Colors.white)
+                      ? Icon(Icons.person, size: 50, color: colorScheme.onPrimaryContainer)
                       : null,
                 ),
               ),
@@ -185,41 +189,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
             clipBehavior: Clip.antiAlias,
             child: Column(
               children: [
-                GFListTile(
-                  avatar: GFAvatar(
+                // GFListTile diganti dengan ListTile
+                ListTile(
+                  leading: CircleAvatar(
                     backgroundColor: colorScheme.primaryContainer,
                     child: Icon(Icons.edit_outlined, color: colorScheme.onPrimaryContainer),
                   ),
                   title: const Text('Edit Profil', style: TextStyle(fontSize: 16)),
-                  icon: const Icon(Icons.chevron_right, color: Colors.grey),
+                  trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                   onTap: _showEditProfileDialog,
                 ),
-                GFListTile(
-                  avatar: GFAvatar(
+                ListTile(
+                  leading: CircleAvatar(
                     backgroundColor: colorScheme.primaryContainer,
                     child: Icon(Icons.lock_outline, color: colorScheme.onPrimaryContainer),
                   ),
                   title: const Text('Ubah Password', style: TextStyle(fontSize: 16)),
-                  icon: const Icon(Icons.chevron_right, color: Colors.grey),
+                  trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                   onTap: _showChangePasswordDialog,
                 ),
-                GFListTile(
-                  avatar: GFAvatar(
+                ListTile(
+                  leading: CircleAvatar(
                     backgroundColor: colorScheme.primaryContainer,
                     child: Icon(Icons.receipt_long_outlined, color: colorScheme.onPrimaryContainer),
                   ),
                   title: const Text('Riwayat Pembayaran', style: TextStyle(fontSize: 16)),
-                  icon: const Icon(Icons.chevron_right, color: Colors.grey),
+                  trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                   onTap: () => context.push('/payment_history'),
                 ),
-                GFListTile(
-                  avatar: GFAvatar(
+                ListTile(
+                  leading: CircleAvatar(
                     backgroundColor: colorScheme.primaryContainer,
                     child: Icon(Icons.description_outlined, color: colorScheme.onPrimaryContainer),
                   ),
                   title: const Text('Syarat & Ketentuan', style: TextStyle(fontSize: 16)),
-                  icon: const Icon(Icons.chevron_right, color: Colors.grey),
+                  trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                   onTap: () => context.push('/terms'),
+                ),
+                const Divider(height: 1, indent: 16, endIndent: 16),
+                // Menambahkan toggle tema dengan widget standar
+                AnimatedBuilder(
+                  animation: themeService,
+                  builder: (context, child) {
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: colorScheme.primaryContainer,
+                        child: Icon(
+                          themeService.isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                          color: colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                      title: Text(themeService.isDarkMode ? 'Mode Terang' : 'Mode Gelap', style: const TextStyle(fontSize: 16)),
+                      trailing: Switch(
+                        value: themeService.isDarkMode,
+                        onChanged: (value) {
+                          themeService.toggleTheme();
+                        },
+                      ),
+                      onTap: () {
+                        themeService.toggleTheme();
+                      },
+                    );
+                  },
                 ),
               ],
             ),
@@ -231,8 +262,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             elevation: 2,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             clipBehavior: Clip.antiAlias,
-            child: GFListTile(
-              avatar: GFAvatar(
+            child: ListTile(
+              leading: CircleAvatar(
                 backgroundColor: Colors.red.withOpacity(0.1),
                 child: const Icon(Icons.logout, color: Colors.red),
               ),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tes/app/my_app.dart';
-import 'package:tes/shared/services/locator.dart'; // Import locator
+import 'package:tes/shared/services/locator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Inisialisasi Service Locator
-  await setupLocator(); // Menunggu setup selesai
-  
+
+  // Inisialisasi service locator Anda
+  await setupLocator();
+
+  // Jalankan aplikasi
   runApp(const MyApp());
 }

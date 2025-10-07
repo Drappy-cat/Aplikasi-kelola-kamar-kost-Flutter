@@ -1,55 +1,8 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 const Color gradStart = Color(0xFF5B2EBC); // ungu
 const Color gradEnd   = Color(0xFFF72585); // pink
 const double cardRadius = 12.0;
-
-class AuthCard extends StatelessWidget {
-  final bool wide;
-  final Widget left;
-  final Widget right;
-
-  const AuthCard({
-    super.key,
-    required this.wide,
-    required this.left,
-    required this.right,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final Widget child;
-    if (wide) {
-      child = Row(children: [Expanded(child: left), Expanded(child: right)]);
-    } else {
-      child = Column(children: [left, Expanded(child: right)]);
-    }
-
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 1100),
-      child: Container(
-        decoration: const BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Color(0x33000000),
-              blurRadius: 40,
-              offset: Offset(0, 20),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(cardRadius),
-          child: Material(
-            elevation: 0,
-            borderRadius: BorderRadius.circular(cardRadius),
-            child: child,
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class AnimatedLeftPanel extends StatelessWidget {
   final String title;
@@ -59,7 +12,6 @@ class AnimatedLeftPanel extends StatelessWidget {
     super.key,
     this.title = 'Welcome Page',
     this.subtitle = 'Sign in to continue access',
-    int bubbleCount = 0,
   });
 
   @override
@@ -83,7 +35,6 @@ class AnimatedLeftPanel extends StatelessWidget {
                 child: Image.asset(
                   'assets/logo/logo.png',
                   width: 300,
-
                   fit: BoxFit.contain,
                   filterQuality: FilterQuality.high,
                 ),

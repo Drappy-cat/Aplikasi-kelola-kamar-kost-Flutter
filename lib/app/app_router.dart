@@ -7,8 +7,9 @@ import 'package:tes/features/home/room_detail_screen.dart';
 import 'package:tes/features/notification/notification_screen.dart';
 import 'package:tes/features/profile/profile_screen.dart';
 import 'package:tes/features/settings/settings_screen.dart';
-import 'package:tes/features/settings/terms_screen.dart'; // Import layar baru
+import 'package:tes/features/settings/terms_screen.dart';
 import 'package:tes/features/complaints/admin_complaint_screen.dart';
+import 'package:tes/features/complaints/report_issue_screen.dart'; // <-- Import halaman baru
 import 'package:tes/features/announcements/announcement_screen.dart';
 import 'package:tes/features/billing/user_bill_screen.dart';
 import 'package:tes/features/billing/payment_history_screen.dart';
@@ -46,7 +47,6 @@ final appRouter = GoRouter(
       path: '/settings',
       builder: (context, state) => const SettingsScreen(),
     ),
-    // Rute baru untuk Syarat & Ketentuan
     GoRoute(
       path: '/terms',
       builder: (context, state) => const TermsScreen(),
@@ -71,6 +71,11 @@ final appRouter = GoRouter(
       path: '/payment_history',
       builder: (context, state) => const PaymentHistoryScreen(),
     ),
+    // Rute baru untuk Lapor Kerusakan
+    GoRoute(
+      path: '/report_issue',
+      builder: (context, state) => const ReportIssueScreen(),
+    ),
     GoRoute(
       path: '/room_detail',
       builder: (context, state) {
@@ -78,6 +83,7 @@ final appRouter = GoRouter(
         if (room != null) {
           return RoomDetailScreen(room: room);
         } else {
+          // Kembali ke home jika tidak ada data kamar
           return const HomeScreen();
         }
       },

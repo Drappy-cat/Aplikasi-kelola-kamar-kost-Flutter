@@ -1,9 +1,58 @@
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tes/shared/services/locator.dart';
 import 'package:tes/shared/services/theme_service.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  Map<String, String> _deviceInfo = {};
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDeviceInfo();
+  }
+
+  Future<void> _loadDeviceInfo() async {
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    Map<String, String> info = {};
+
+    try {
+      if (Platform.isAndroid) {
+        final androidInfo = await deviceInfoPlugin.androidInfo;
+        info = {
+          'Model Perangkat': '${androidInfo.manufacturer.toUpperCase()} ${androidInfo.model}',
+          'Sistem Operasi': 'Android ${androidInfo.version.release}',
+          'Pabrikan': androidInfo.manufacturer,
+        };
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfoPlugin.iosInfo;
+        info = {
+          'Model Perangkat': iosInfo.name ?? 'N/A',
+          'Sistem Operasi': '${iosInfo.systemName} ${iosInfo.systemVersion}',
+          'Pabrikan': 'Apple',
+        };
+      }
+    } catch (e) {
+      info = {'Error': 'Gagal memuat info perangkat'};
+    }
+
+    if (mounted) {
+      setState(() {
+        _deviceInfo = info;
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +60,7 @@ class SettingsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text('Pengaturan'),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -23,69 +72,113 @@ class SettingsScreen extends StatelessWidget {
         ),
         foregroundColor: Colors.white,
       ),
-      body: Column(
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
         children: [
-          Expanded(
-            child: ListView(
-              children: [
-                // Gunakan AnimatedBuilder agar UI-nya update saat tema berganti
-                AnimatedBuilder(
-                  animation: themeService,
-                  builder: (context, child) {
-                    return ListTile(
-                      title: const Text('Mode Tema'),
-                      subtitle: Text(themeService.isDarkMode ? 'Dark Mode' : 'Light Mode'),
-                      trailing: IconButton(
-                        icon: Icon(
-                          themeService.isDarkMode
-                              ? Icons.light_mode
-                              : Icons.dark_mode,
-                        ),
-                        // Panggil toggleTheme dari service
-                        onPressed: () => themeService.toggleTheme(),
-                      ),
-                    );
-                  },
-                ),
-                const Divider(),
+          // --- Bagian Tampilan ---
+          _buildSectionHeader(context, 'Tampilan'),
+          _buildSettingsCard(
+            child: AnimatedBuilder(
+              animation: themeService,
+              builder: (context, child) {
+                return ListTile(
+                  leading: const Icon(Icons.brightness_6_outlined),
+                  title: const Text('Mode Gelap'),
+                  trailing: Switch(
+                    value: themeService.isDarkMode,
+                    onChanged: (value) => themeService.toggleTheme(),
+                  ),
+                  onTap: () => themeService.toggleTheme(),
+                );
+              },
+            ),
+          ),
 
+          // --- Bagian Informasi Perangkat ---
+          _buildSectionHeader(context, 'Informasi Perangkat'),
+          _buildSettingsCard(
+            child: _isLoading
+                ? const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : Column(
+                    children: _deviceInfo.entries.map((entry) {
+                      return _buildInfoTile(entry.key, entry.value);
+                    }).toList(),
+                  ),
+          ),
+
+          // --- Bagian Aplikasi ---
+          _buildSectionHeader(context, 'Aplikasi'),
+          _buildSettingsCard(
+            child: Column(
+              children: [
                 ListTile(
+                  leading: const Icon(Icons.info_outline),
                   title: const Text('Tentang Aplikasi'),
                   subtitle: const Text('Versi 1.0.0'),
+                  trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     showAboutDialog(
                       context: context,
-                      applicationName: 'Ri-Kost', // Nama aplikasi diupdate
+                      applicationName: 'Ri-Kost',
                       applicationVersion: '1.0.0',
-                      applicationLegalese: '© 2025 Rizma Indra', // Copyright diupdate
+                      applicationLegalese: '© 2025 Rizma Indra',
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15.0),
                           child: Text('Aplikasi manajemen kost sederhana.'),
                         ),
                       ],
                     );
                   },
                 ),
-                const Divider(),
+                const Divider(height: 1, indent: 16, endIndent: 16),
+                ListTile(
+                  leading: const Icon(Icons.description_outlined),
+                  title: const Text('Syarat & Ketentuan'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push('/terms'),
+                ),
               ],
-            ),
-          ),
-
-          // --- BAGIAN COPYRIGHT DI SINI ---
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'by Rizma Indra © 2025',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 12,
-              ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  // Widget pembantu untuk header setiap seksi
+  Widget _buildSectionHeader(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0, left: 8.0),
+      child: Text(
+        title.toUpperCase(),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+
+  // Widget pembantu untuk kartu pengaturan
+  Widget _buildSettingsCard({required Widget child}) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      clipBehavior: Clip.antiAlias,
+      child: child,
+    );
+  }
+
+  // Widget pembantu untuk menampilkan info perangkat
+  Widget _buildInfoTile(String title, String subtitle) {
+    return ListTile(
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+      subtitle: Text(subtitle, style: TextStyle(color: Colors.grey[600])),
     );
   }
 }

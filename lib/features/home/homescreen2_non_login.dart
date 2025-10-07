@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tes/app/my_app.dart';
 import 'package:tes/shared/services/auth_service.dart';
+import 'package:tes/shared/services/locator.dart';
+import 'package:tes/shared/services/theme_service.dart';
 
 class SampleItem {
   final String _title;
@@ -24,6 +25,7 @@ class HomeScreen2NonLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userName = AuthService.currentUser?.fullName ?? AuthService.currentUser?.username ?? 'Pengguna';
+    final themeService = getIt<ThemeService>(); // Ambil theme service
 
     return Scaffold(
       appBar: AppBar(
@@ -39,13 +41,20 @@ class HomeScreen2NonLogin extends StatelessWidget {
         ),
         foregroundColor: Colors.white,
         actions: [
-          IconButton(
-            onPressed: () => MyApp.of(context)?.toggleTheme(),
-            icon: Icon(
-              Theme.of(context).brightness == Brightness.dark
-                  ? Icons.light_mode
-                  : Icons.dark_mode,
-            ),
+          // Gunakan AnimatedBuilder agar icon berubah saat tema diganti
+          AnimatedBuilder(
+            animation: themeService,
+            builder: (context, child) {
+              return IconButton(
+                // Panggil toggleTheme dari service
+                onPressed: () => themeService.toggleTheme(),
+                icon: Icon(
+                  themeService.isDarkMode
+                      ? Icons.light_mode
+                      : Icons.dark_mode,
+                ),
+              );
+            },
           ),
         ],
       ),
