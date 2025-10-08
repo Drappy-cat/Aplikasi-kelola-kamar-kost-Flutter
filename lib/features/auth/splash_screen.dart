@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:go_router/go_router.dart'; // Import GoRouter
+import 'package:go_router/go_router.dart';
+import 'package:tes/app/app_routes.dart';
 import 'package:tes/shared/services/auth_service.dart';
+import 'package:tes/shared/services/locator.dart'; // <-- IMPORT LOCATOR
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -9,6 +11,7 @@ class SplashScreen extends StatefulWidget {
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
+
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -31,15 +34,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   Future<void> _navigateToNextScreen() async {
-    // Menunggu animasi selesai
     await Future.delayed(_controller.duration! + const Duration(milliseconds: 500));
     if (!mounted) return;
 
-    // Cek status login dan navigasi menggunakan GoRouter
-    if (AuthService.currentUser == null) {
-      context.go('/login'); // Ganti dengan context.go()
+    // Menggunakan instance AuthService dari GetIt
+    final authService = getIt<AuthService>();
+
+    if (authService.currentUser == null) {
+      context.go(AppRoutes.login);
     } else {
-      context.go('/home'); // Ganti dengan context.go()
+      context.go(AppRoutes.home);
     }
   }
 
@@ -60,38 +64,58 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             end: Alignment.bottomRight,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/logo/logo.png',
-                width: 200,
-                height: 200,
-                fit: BoxFit.contain,
+        child: Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/logo/logo.png',
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 20),
+                  FadeTransition(
+                    opacity: _animation,
+                    child: const Text(
+                      'Ri-Kost',
+                      style: TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 10.0,
+                            color: Colors.black38,
+                            offset: Offset(3.0, 3.0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              // Widget FadeTransition
-              FadeTransition(
+            ),
+            Positioned(
+              bottom: 40,
+              left: 0,
+              right: 0,
+              child: FadeTransition(
                 opacity: _animation,
                 child: const Text(
-                  'Ri-Kost',
+                  'Apps by Rizma Indra',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10.0,
-                        color: Colors.black38,
-                        offset: Offset(3.0, 3.0),
-                      ),
-                    ],
+                    fontSize: 14,
+                    color: Colors.white70,
+                    letterSpacing: 1.2,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

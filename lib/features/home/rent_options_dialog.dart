@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:tes/shared/models/app_notification.dart'; // Import model notifikasi
+import 'package:tes/shared/models/app_notification.dart';
+import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/models/request.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
+import 'package:tes/shared/services/locator.dart';
 
 class RentOptionsDialog extends StatefulWidget {
   final Room room;
@@ -17,186 +19,151 @@ class RentOptionsDialog extends StatefulWidget {
 }
 
 class _RentOptionsDialogState extends State<RentOptionsDialog> {
-  final _formKey = GlobalKey<FormState>();
-  late TextEditingController _nameController;
-  late TextEditingController _addressController;
-  late TextEditingController _phoneController;
+  bool _useAc = false;
+  bool _isBooking = false;
+  bool _isLoading = false;
 
-  bool _isPackageFull = true;
-  bool _hasAc = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _isPackageFull = widget.room.packageFull;
-    final currentUser = AuthService.currentUser;
-    _nameController = TextEditingController(text: currentUser?.fullName ?? currentUser?.username ?? '');
-    _addressController = TextEditingController();
-    _phoneController = TextEditingController();
+  int get _totalPrice {
+    int total = widget.room.totalPrice;
+    if (!_useAc) {
+      total -= widget.room.acCost;
+    }
+    return total;
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _addressController.dispose();
-    _phoneController.dispose();
-    super.dispose();
+  Future<void> _processRequest() async {
+    setState(() => _isLoading = true);
+
+    final authService = getIt<AuthService>();
+    final dummyService = getIt<DummyService>();
+    final currentUser = authService.currentUser;
+
+    if (currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Sesi tidak valid, silakan login ulang.')),
+      );
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    // Simulasi proses backend
+    await Future.delayed(const Duration(seconds: 2));
+
+    final roomToUpdate = dummyService.findRoom(widget.room.code);
+    if (roomToUpdate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Kamar tidak ditemukan.')),
+      );
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    if (_isBooking) {
+      // Logika untuk Booking
+      final updatedRoom = roomToUpdate.copyWith(status: 'Booked');
+      await dummyService.updateRoom(updatedRoom);
+
+      dummyService.requests.add(Request(
+        id: 'req-${DateTime.now().millisecondsSinceEpoch}',
+        type: 'Booking Kamar',
+        date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        note: 'Booking kamar oleh ${currentUser.fullName}',
+        status: 'Disetujui', // Booking langsung disetujui
+        roomCode: widget.room.code,
+        userName: currentUser.fullName,
+      ));
+
+      dummyService.notifications.add(AppNotification(
+        title: 'Booking Berhasil!',
+        subtitle: 'Anda berhasil melakukan booking untuk kamar ${widget.room.code}.',
+        date: DateTime.now(),
+        icon: Icons.bookmark_added,
+        iconColor: Colors.blue,
+      ));
+    } else {
+      // Logika untuk Sewa Langsung
+      final updatedRoom = roomToUpdate.copyWith(
+        status: 'Dihuni',
+        tenantName: currentUser.fullName,
+        rentStartDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      );
+      await dummyService.updateRoom(updatedRoom);
+
+      // Update data user di AuthService
+      authService.currentUser = currentUser.copyWith(roomId: updatedRoom.code);
+
+      dummyService.notifications.add(AppNotification(
+        title: 'Sewa Kamar Berhasil!',
+        subtitle: 'Selamat! Anda sekarang adalah penghuni kamar ${widget.room.code}.',
+        date: DateTime.now(),
+        icon: Icons.check_circle,
+        iconColor: Colors.green,
+      ));
+    }
+
+    if (mounted) {
+      context.pop(true); // Kirim sinyal sukses
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    int totalRent = widget.room.baseRent;
-    int wifiCost = _isPackageFull ? 0 : widget.room.wifi;
-    int waterCost = _isPackageFull ? 0 : widget.room.water;
-    int electricityCost = _isPackageFull ? 0 : widget.room.electricity;
-    int acCost = _hasAc ? widget.room.acCost : 0;
-    totalRent += wifiCost + waterCost + electricityCost + acCost;
-
     return AlertDialog(
-      title: Text('Sewa Kamar ${widget.room.code}'),
-      content: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.9,
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Data Calon Penyewa:', style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Nama Lengkap'),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Nama wajib diisi' : null,
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _addressController,
-                  decoration: const InputDecoration(labelText: 'Alamat Asal'),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Alamat wajib diisi' : null,
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _phoneController,
-                  decoration: const InputDecoration(labelText: 'No. Telepon Aktif'),
-                  keyboardType: TextInputType.phone,
-                  validator: (v) => (v == null || v.isEmpty) ? 'No. Telepon wajib diisi' : null,
-                ),
-                const Divider(height: 24),
-
-                const Text('Pilih Paket Sewa:', style: TextStyle(fontWeight: FontWeight.bold)),
-                RadioListTile<bool>(
-                  title: const Text('Paket Lengkap'),
-                  subtitle: const Text('WiFi, Air, & Listrik sudah termasuk'),
-                  value: true,
-                  groupValue: _isPackageFull,
-                  onChanged: (value) => setState(() => _isPackageFull = value!),
-                ),
-                RadioListTile<bool>(
-                  title: const Text('Bayar Mandiri'),
-                  subtitle: const Text('Bayar utilitas secara terpisah'),
-                  value: false,
-                  groupValue: _isPackageFull,
-                  onChanged: (value) => setState(() => _isPackageFull = value!),
-                ),
-                const Divider(),
-                CheckboxListTile(
-                  title: const Text('Tambah AC'),
-                  subtitle: Text('Biaya tambahan: ${NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(widget.room.acCost)}'),
-                  value: _hasAc,
-                  onChanged: (value) => setState(() => _hasAc = value!),
-                ),
-                const Divider(height: 24),
-
-                const Text('Rincian Biaya:', style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                _buildCostRow('Sewa Dasar', widget.room.baseRent),
-                _buildCostRow('WiFi (10 Mbps)', wifiCost),
-                _buildCostRow('Air', waterCost),
-                _buildCostRow('Listrik', electricityCost),
-                _buildCostRow('AC', acCost),
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Total per Bulan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      Text(
-                        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(totalRent),
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    ],
-                  ),
-                ),
+      title: Text(_isBooking ? 'Booking Kamar' : 'Sewa Kamar'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Anda akan menyewa kamar ${widget.room.code}.'),
+            const SizedBox(height: 16),
+            if (widget.room.acCost > 0)
+              SwitchListTile(
+                title: const Text('Sertakan AC'),
+                value: _useAc,
+                onChanged: (val) => setState(() => _useAc = val),
+              ),
+            const Divider(),
+            ListTile(
+              title: const Text('Total Harga per Bulan'),
+              trailing: Text(
+                NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(_totalPrice),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            ),
+            const SizedBox(height: 16),
+            ToggleButtons(
+              isSelected: [_isBooking, !_isBooking],
+              onPressed: (index) {
+                setState(() {
+                  _isBooking = index == 0;
+                });
+              },
+              borderRadius: BorderRadius.circular(8),
+              children: const [
+                Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text('Booking')),
+                Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text('Sewa Langsung')),
               ],
             ),
-          ),
+            const SizedBox(height: 8),
+            Text(
+              _isBooking
+                  ? 'Booking akan mengamankan kamar ini untuk Anda. Pembayaran penuh diharapkan dalam 1x24 jam.'
+                  : 'Sewa langsung akan menjadikan Anda penghuni kamar ini dan tagihan pertama akan segera dibuat.',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+            ),
+          ],
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () => context.pop(false), // Menggunakan GoRouter
-          child: const Text('Batal'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            if (!_formKey.currentState!.validate()) return;
-            final user = AuthService.currentUser;
-            if (user == null) return;
-
-            // Membuat objek Room baru yang sudah diperbarui menggunakan copyWith
-            final updatedRoom = widget.room.copyWith(
-              status: 'Booked',
-              tenantName: _nameController.text.trim(),
-              tenantAddress: _addressController.text.trim(),
-              tenantPhone: _phoneController.text.trim(),
-              rentStartDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-              packageFull: _isPackageFull,
-            );
-
-            DummyService.requests.add(Request(
-              id: 'req-${updatedRoom.code}-${DateTime.now().millisecondsSinceEpoch}',
-              type: 'Booking Kamar',
-              date: updatedRoom.rentStartDate!,
-              note: 'Pengajuan sewa untuk kamar ${updatedRoom.code} oleh ${_nameController.text.trim()}',
-              status: 'Pending',
-              roomCode: updatedRoom.code,
-              userName: user.username,
-            ));
-
-            // --- MENAMBAHKAN NOTIFIKASI PENGajuan SEWA ---
-            DummyService.notifications.add(AppNotification(
-              title: 'Pengajuan Sewa Kamar ${updatedRoom.code}',
-              subtitle: 'Pengajuan Anda sedang menunggu konfirmasi admin.',
-              date: DateTime.now(),
-              icon: Icons.hourglass_empty,
-              iconColor: Colors.orange,
-            ));
-
-            DummyService.userRoomCode = updatedRoom.code;
-            DummyService.updateRoom(updatedRoom); // Mengirim objek yang sudah diperbarui
-
-            context.pop(true); // Menggunakan GoRouter
-          },
-          child: const Text('Ajukan Sewa'),
-        ),
+        TextButton(onPressed: () => context.pop(false), child: const Text('Batal')),
+        _isLoading
+            ? const CircularProgressIndicator()
+            : FilledButton(
+                onPressed: _processRequest,
+                child: Text(_isBooking ? 'Booking Sekarang' : 'Sewa Sekarang'),
+              ),
       ],
-    );
-  }
-
-  Widget _buildCostRow(String label, int cost) {
-    final currencyFormatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(color: Colors.black54)),
-          Text(currencyFormatter.format(cost)),
-        ],
-      ),
     );
   }
 }

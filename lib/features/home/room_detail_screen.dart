@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:tes/app/app_routes.dart';
 import 'package:tes/features/home/rent_options_dialog.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/auth_service.dart';
-import 'package:tes/shared/widgets/image_carousel.dart';
+import 'package:tes/shared/services/dummy_service.dart';
+import 'package:tes/shared/services/locator.dart';
 
 class RoomDetailScreen extends StatefulWidget {
   final Room room;
@@ -15,138 +19,155 @@ class RoomDetailScreen extends StatefulWidget {
 }
 
 class _RoomDetailScreenState extends State<RoomDetailScreen> {
-  Future<void> _showWaitingConfirmationDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Pengajuan Terkirim'),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
-              Text('Menunggu konfirmasi dari admin...'),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Tutup'),
-              onPressed: () {
-                context.pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  late Room _currentRoom;
+  // Mengambil instance service dari GetIt
+  final DummyService _dummyService = getIt<DummyService>();
+  final AuthService _authService = getIt<AuthService>();
+
+  @override
+  void initState() {
+    super.initState();
+    _currentRoom = widget.room;
   }
 
-  void _showRentDialog(BuildContext context) async {
-    final success = await showDialog<bool>(
-      context: context,
-      builder: (context) => RentOptionsDialog(room: widget.room),
-    );
-    if (success == true) {
-      setState(() {});
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Kamar berhasil diajukan!')),
-        );
-        await _showWaitingConfirmationDialog();
+  String _formatCurrency(num amount) {
+    return NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(amount);
+  }
 
-        if (mounted) {
-          context.pop();
-        }
+  Future<void> _showRentDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => RentOptionsDialog(room: _currentRoom),
+    );
+
+    if (result == true && mounted) {
+      // Menggunakan instance service
+      final updatedRoom = _dummyService.findRoom(_currentRoom.code);
+      if (updatedRoom != null) {
+        setState(() {
+          _currentRoom = updatedRoom;
+        });
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool canRent = widget.room.status == 'Kosong' && AuthService.currentUser?.role != 'admin';
+    // Menggunakan instance service
+    final bool isAdmin = _authService.currentUser?.role == 'admin';
+    final bool isOccupied = _currentRoom.tenantName != null;
+    final bool isAvailable = _currentRoom.status == 'Kosong';
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Detail Kamar ${widget.room.code}'),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFF72585), Color(0xFF5B2EBC)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        foregroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ImageCarousel(imageUrls: widget.room.imageUrls),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                elevation: 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Informasi Kamar ${widget.room.code}',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const Divider(height: 24),
-                      _buildDetailRow('Dimensi', widget.room.dimensions),
-                      _buildDetailRow('Status', widget.room.status),
-                      if (widget.room.tenantName != null)
-                        _buildDetailRow('Penyewa', widget.room.tenantName!),
-                      const Divider(height: 24),
-                      Text(
-                        'Fasilitas & Biaya',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildDetailRow('Sewa Dasar', 'Rp ${widget.room.baseRent}'),
-                      _buildDetailRow('WiFi', '10 Mbps'),
-                      _buildDetailRow('Air', widget.room.packageFull ? 'Gratis' : 'Bayar sendiri (Rp ${widget.room.water})'),
-                      _buildDetailRow('Listrik', widget.room.packageFull ? 'Gratis' : 'Bayar sendiri (Rp ${widget.room.electricity})'),
-                      _buildDetailRow('AC', 'Tersedia (opsional)'),
-                    ],
-                  ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300.0,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text('Kamar ${_currentRoom.code}', style: const TextStyle(shadows: [Shadow(blurRadius: 8)])),
+              background: Hero(
+                tag: 'room-image-${_currentRoom.code}',
+                child: Image.asset(
+                  _currentRoom.imageUrls.isNotEmpty ? _currentRoom.imageUrls.first : 'assets/logo/logo.png',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey[200], child: const Icon(Icons.broken_image)),
                 ),
               ),
             ),
-            const SizedBox(height: 80),
-          ],
-        ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionHeader('Detail Kamar'),
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    child: Column(
+                      children: [
+                        _buildInfoTile(Icons.aspect_ratio_outlined, 'Ukuran', _currentRoom.dimensions),
+                        _buildInfoTile(Icons.paid_outlined, 'Harga Sewa', _formatCurrency(_currentRoom.totalPrice)),
+                        _buildInfoTile(
+                          Icons.event_available_outlined,
+                          'Status',
+                          _currentRoom.status,
+                          valueColor: isAvailable ? Colors.green : Colors.red,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  if (isAdmin && isOccupied)
+                    _buildSectionHeader('Detail Penghuni'),
+                  if (isAdmin && isOccupied)
+                    Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      child: Column(
+                        children: [
+                          _buildInfoTile(Icons.person_outline, 'Nama', _currentRoom.tenantName!),
+                          _buildInfoTile(Icons.home_outlined, 'Alamat Asal', _currentRoom.tenantAddress ?? 'N/A'),
+                          _buildInfoTile(Icons.phone_outlined, 'No. Telepon', _currentRoom.tenantPhone ?? 'N/A'),
+                          _buildInfoTile(Icons.date_range_outlined, 'Mulai Sewa', _currentRoom.rentStartDate ?? 'N/A'),
+                        ],
+                      ),
+                    ),
+                  if (isAdmin && isOccupied) const SizedBox(height: 24),
+
+                  _buildSectionHeader('Fasilitas'),
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    child: Column(
+                      children: [
+                        _buildInfoTile(Icons.wifi, 'Wi-Fi', _formatCurrency(_currentRoom.wifi)),
+                        _buildInfoTile(Icons.water_drop_outlined, 'Air', _formatCurrency(_currentRoom.water)),
+                        _buildInfoTile(Icons.electrical_services_outlined, 'Listrik', _formatCurrency(_currentRoom.electricity)),
+                        if (_currentRoom.acCost > 0)
+                          _buildInfoTile(Icons.ac_unit, 'AC', _formatCurrency(_currentRoom.acCost)),
+                      ],
+                    ),
+                  ),
+                ].animate(interval: 100.ms).fade(duration: 300.ms).slideY(begin: 0.2, end: 0),
+              ),
+            ),
+          ),
+        ],
       ),
-      floatingActionButton: canRent
-          ? FloatingActionButton.extended(
-              onPressed: () => _showRentDialog(context),
-              label: const Text('Sewa Kamar Ini'),
-              icon: const Icon(Icons.shopping_cart_checkout),
+      bottomNavigationBar: (isAvailable && !isAdmin)
+          ? Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: _showRentDialog,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                child: const Text('Sewa Kamar Ini'),
+              ),
             )
           : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(width: 120, child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold))),
-          const Text(': '),
-          Expanded(child: Text(value)),
-        ],
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+    );
+  }
+
+  Widget _buildInfoTile(IconData icon, String title, String value, {Color? valueColor}) {
+    return ListTile(
+      leading: Icon(icon, color: Theme.of(context).colorScheme.secondary),
+      title: Text(title),
+      trailing: Text(
+        value,
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: valueColor),
       ),
     );
   }

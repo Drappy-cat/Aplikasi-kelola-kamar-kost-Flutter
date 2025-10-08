@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tes/app/app_routes.dart'; // <-- IMPORT
 import 'package:tes/shared/services/locator.dart';
 import 'package:tes/shared/services/theme_service.dart';
 
@@ -75,7 +76,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          // --- Bagian Tampilan ---
           _buildSectionHeader(context, 'Tampilan'),
           _buildSettingsCard(
             child: AnimatedBuilder(
@@ -94,7 +94,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
 
-          // --- Bagian Informasi Perangkat ---
           _buildSectionHeader(context, 'Informasi Perangkat'),
           _buildSettingsCard(
             child: _isLoading
@@ -109,7 +108,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
           ),
 
-          // --- Bagian Aplikasi ---
           _buildSectionHeader(context, 'Aplikasi'),
           _buildSettingsCard(
             child: Column(
@@ -139,7 +137,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   leading: const Icon(Icons.description_outlined),
                   title: const Text('Syarat & Ketentuan'),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.push('/terms'),
+                  onTap: () => context.push(AppRoutes.terms), // <-- GANTI
                 ),
               ],
             ),
@@ -149,7 +147,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // Widget pembantu untuk header setiap seksi
   Widget _buildSectionHeader(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0, bottom: 8.0, left: 8.0),
@@ -164,7 +161,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // Widget pembantu untuk kartu pengaturan
   Widget _buildSettingsCard({required Widget child}) {
     return Card(
       elevation: 2,
@@ -174,7 +170,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // Widget pembantu untuk menampilkan info perangkat
   Widget _buildInfoTile(String title, String subtitle) {
     return ListTile(
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),

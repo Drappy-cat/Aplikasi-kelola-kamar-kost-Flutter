@@ -1,14 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:tes/app/app_routes.dart';
 import 'package:tes/features/home/bloc/user_home_bloc.dart';
 import 'package:tes/shared/models/announcement.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/auth_service.dart';
+import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
 
 // Wrapper untuk menyediakan BLoC
 class UserHomePage extends StatelessWidget {
@@ -17,7 +18,8 @@ class UserHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => UserHomeBloc()..add(const UserHomeEvent.loadData()),
+      // Menggunakan instance UserHomeBloc dari GetIt
+      create: (context) => getIt<UserHomeBloc>()..add(const UserHomeEvent.loadData()),
       child: const UserHomeView(),
     );
   }
@@ -41,20 +43,22 @@ class _UserHomeViewState extends State<UserHomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final userName = AuthService.currentUser?.fullName ?? AuthService.currentUser?.username ?? 'User';
+    // Menggunakan instance AuthService dari GetIt
+    final authService = getIt<AuthService>();
+    final userName = authService.currentUser?.fullName ?? authService.currentUser?.username ?? 'User';
 
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: () => context.push('/profile'),
+            onTap: () => context.push(AppRoutes.profile),
             child: CircleAvatar(
               backgroundColor: Colors.white,
-              backgroundImage: AuthService.currentUser?.profileImageUrl != null
-                  ? CachedNetworkImageProvider(AuthService.currentUser!.profileImageUrl!)
+              backgroundImage: authService.currentUser?.profileImageUrl != null
+                  ? NetworkImage(authService.currentUser!.profileImageUrl!)
                   : null,
-              child: AuthService.currentUser?.profileImageUrl == null
+              child: authService.currentUser?.profileImageUrl == null
                   ? const Icon(Icons.person, color: Colors.pink)
                   : null,
             ),
@@ -73,11 +77,11 @@ class _UserHomeViewState extends State<UserHomeView> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            onPressed: () => context.push('/notification'),
+            onPressed: () => context.push(AppRoutes.notification),
             icon: const Icon(Icons.notifications_outlined),
           ),
           IconButton(
-            onPressed: () => context.push('/settings'),
+            onPressed: () => context.push(AppRoutes.settings),
             icon: const Icon(Icons.settings_outlined),
           ),
         ],
@@ -169,14 +173,11 @@ class _UserHomeViewState extends State<UserHomeView> {
         if (filteredRooms.isEmpty)
           const Center(child: Padding(padding: EdgeInsets.all(16.0), child: Text('Tidak ada kamar yang cocok.'))),
         
-        // LayoutBuilder untuk UI Responsif
         LayoutBuilder(
           builder: (context, constraints) {
-            // Tentukan breakpoint untuk mode tablet/desktop
             const double tabletBreakpoint = 600.0;
 
             if (constraints.maxWidth < tabletBreakpoint) {
-              // Tampilan LIST untuk layar sempit (Potrait)
               return Column(
                 children: filteredRooms.asMap().entries.map((entry) {
                   final index = entry.key;
@@ -188,15 +189,14 @@ class _UserHomeViewState extends State<UserHomeView> {
                 }).toList(),
               );
             } else {
-              // Tampilan GRID untuk layar lebar (Landscape/Tablet)
               return GridView.builder(
-                shrinkWrap: true, // Wajib untuk GridView di dalam ListView
-                physics: const NeverScrollableScrollPhysics(), // Wajib untuk GridView di dalam ListView
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 400, // Lebar maksimal setiap item grid
-                  childAspectRatio: 0.85,   // Rasio lebar-tinggi kartu
-                  crossAxisSpacing: 16,   // Spasi horizontal
-                  mainAxisSpacing: 16,    // Spasi vertikal
+                  maxCrossAxisExtent: 400,
+                  childAspectRatio: 0.85,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
                 ),
                 itemCount: filteredRooms.length,
                 itemBuilder: (context, index) {
@@ -220,7 +220,7 @@ class _UserHomeViewState extends State<UserHomeView> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: GestureDetector(
-        onTap: () => context.push('/announcements'),
+        onTap: () => context.push(AppRoutes.announcements),
         child: Card(
           elevation: 3,
           color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.7),
@@ -250,40 +250,35 @@ class _UserHomeViewState extends State<UserHomeView> {
     );
   }
 
-  // === KARTU KAMAR MODERN ===
   Widget _buildRoomCard(Room room) {
-    final price = _formatCurrency(room.baseRent + room.wifi + room.water + room.electricity + room.acCost);
+    final price = _formatCurrency(room.totalPrice);
     final bool isAvailable = room.status == 'Kosong';
 
     return Card(
       elevation: 4,
-      margin: EdgeInsets.zero, // Margin diatur oleh GridView atau Column
+      margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () async {
-          await context.push('/room_detail', extra: room);
+          await context.push(AppRoutes.roomDetail, extra: room);
           if (mounted) context.read<UserHomeBloc>().add(const UserHomeEvent.loadData());
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Hero Animation untuk transisi gambar yang mulus
             Hero(
               tag: 'room-image-${room.code}',
               child: Stack(
                 alignment: Alignment.topRight,
                 children: [
-                  // Gambar Kamar
-                  CachedNetworkImage(
-                    imageUrl: room.imageUrls.isNotEmpty ? room.imageUrls.first : 'https://i.pravatar.cc/400?img=9', // Fallback image
+                  Image.asset(
+                    room.imageUrls.isNotEmpty ? room.imageUrls.first : 'assets/logo/logo.png',
                     height: 180,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(height: 180, color: Colors.grey[200]),
-                    errorWidget: (context, url, error) => Container(height: 180, color: Colors.grey[200], child: const Icon(Icons.broken_image)),
+                    errorBuilder: (context, error, stackTrace) => Container(height: 180, color: Colors.grey[200], child: const Icon(Icons.broken_image)),
                   ),
-                  // Chip Status di atas gambar
                   if (room.status.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -296,7 +291,6 @@ class _UserHomeViewState extends State<UserHomeView> {
                 ],
               ),
             ),
-            // Detail Teks di bawah gambar
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
@@ -341,7 +335,7 @@ class _UserHomeViewState extends State<UserHomeView> {
           label: Text(statusText, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           backgroundColor: statusColor,
         ),
-        onTap: () => context.push('/user_bills'),
+        onTap: () => context.push(AppRoutes.userBills),
       ),
     );
   }
@@ -360,7 +354,7 @@ class _UserHomeViewState extends State<UserHomeView> {
               backgroundColor: canPay ? Theme.of(context).colorScheme.primary : Colors.grey,
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
-            onPressed: canPay ? () => context.push('/user_bills') : null,
+            onPressed: canPay ? () => context.push(AppRoutes.userBills) : null,
           ),
         ),
         const SizedBox(width: 16),
@@ -369,7 +363,7 @@ class _UserHomeViewState extends State<UserHomeView> {
             icon: const Icon(Icons.report_problem_outlined),
             label: const Text('Lapor Kerusakan'),
             style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 12)),
-            onPressed: () => context.push('/report_issue'), // Arahkan ke halaman baru
+            onPressed: () => context.push(AppRoutes.reportIssue),
           ),
         ),
       ],

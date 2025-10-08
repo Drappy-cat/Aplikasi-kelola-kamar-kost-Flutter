@@ -1,17 +1,16 @@
-// ===== 3. HOME SCREEN (ROUTER) =====
 import 'package:flutter/material.dart';
 import 'package:tes/features/home/admin_panel.dart';
 import 'package:tes/features/home/user_home_page.dart';
 import 'package:tes/shared/services/auth_service.dart';
-
+import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
-    final bool isAdmin = AuthService.currentUser?.role == 'admin';
+    // Menggunakan instance AuthService dari GetIt
+    final bool isAdmin = getIt<AuthService>().currentUser?.role == 'admin';
 
     if (isAdmin) {
       return const AdminPanel();

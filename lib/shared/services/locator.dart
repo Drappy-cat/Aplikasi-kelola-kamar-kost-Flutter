@@ -1,22 +1,30 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tes/features/home/bloc/user_home_bloc.dart'; // <-- IMPORT BLOC
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
 import 'package:tes/shared/services/theme_service.dart';
 
-// Membuat instance global dari GetIt
 final getIt = GetIt.instance;
 
 Future<void> setupLocator() async {
-  // Daftarkan SharedPreferences sebagai singleton karena akan digunakan oleh service lain
+  // 1. Daftarkan SharedPreferences
   final prefs = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(prefs);
 
-  // Mendaftarkan service sebagai "Lazy Singleton".
-  // Artinya, service hanya akan dibuat sekali, yaitu saat pertama kali diminta.
-  getIt.registerLazySingleton(() => AuthService());
-  getIt.registerLazySingleton(() => DummyService());
+  // 2. Inisialisasi dan daftarkan DummyService
+  final dummyService = DummyService(prefs);
+  await dummyService.init();
+  getIt.registerSingleton<DummyService>(dummyService);
 
-  // Daftarkan ThemeService yang baru
-  getIt.registerLazySingleton(() => ThemeService(getIt<SharedPreferences>()));
+  // 3. Inisialisasi dan daftarkan AuthService
+  final authService = AuthService();
+  await authService.init();
+  getIt.registerSingleton<AuthService>(authService);
+
+  // 4. Daftarkan service dan BLoC lainnya
+  getIt.registerLazySingleton(() => ThemeService(prefs));
+
+  // PERBAIKAN: Mendaftarkan UserHomeBloc sebagai Factory
+  getIt.registerFactory(() => UserHomeBloc());
 }

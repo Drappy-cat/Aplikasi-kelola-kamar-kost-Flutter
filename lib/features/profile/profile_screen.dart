@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tes/app/app_routes.dart';
 import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/locator.dart';
@@ -14,6 +15,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // Mengambil instance service dari GetIt
+  final AuthService _authService = getIt<AuthService>();
+
   Future<void> _showChangePictureDialog() async {
     final List<String> avatarUrls = [
       'https://i.pravatar.cc/150?img=1',
@@ -35,8 +39,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: avatarUrls.map((url) {
             return InkWell(
               onTap: () async {
-                await AuthService.updateProfilePicture(url);
-                setState(() {}); // Refresh UI untuk menampilkan gambar baru
+                await _authService.updateProfilePicture(url);
+                setState(() {});
                 context.pop();
               },
               child: CircleAvatar(
@@ -52,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _showEditProfileDialog() async {
-    final nameController = TextEditingController(text: AuthService.currentUser?.fullName ?? '');
+    final nameController = TextEditingController(text: _authService.currentUser?.fullName ?? '');
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -73,8 +77,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ) ?? false;
 
     if (ok && nameController.text.isNotEmpty) {
-      await AuthService.updateProfile(fullName: nameController.text.trim());
-      setState(() {}); // Refresh UI untuk menampilkan nama baru
+      await _authService.updateProfile(fullName: nameController.text.trim());
+      setState(() {});
     }
   }
 
@@ -111,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 controller: confirmPasswordCtrl,
                 obscureText: true,
                 decoration: const InputDecoration(labelText: 'Konfirmasi Password Baru'),
-                validator: (v) => (v != newPasswordCtrl.text) ? 'Password tidak sama' : null,
+                validator: (v) => (v != newPasswordCtrl.text) ? 'Password tidak cocok' : null,
               ),
             ],
           ),
@@ -123,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () async {
               if (!formKey.currentState!.validate()) return;
               try {
-                await AuthService.changePassword(oldPassword: oldPasswordCtrl.text, newPassword: newPasswordCtrl.text);
+                await _authService.changePassword(oldPassword: oldPasswordCtrl.text, newPassword: newPasswordCtrl.text);
                 if (mounted) context.pop();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password berhasil diubah'), backgroundColor: Colors.green));
               } catch (e) {
@@ -138,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final AppUser? user = AuthService.currentUser;
+    final AppUser? user = _authService.currentUser;
     if (user == null) return const Scaffold(body: Center(child: Text('Pengguna tidak ditemukan.')));
 
     final colorScheme = Theme.of(context).colorScheme;
@@ -161,12 +165,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
         children: [
-          // --- BAGIAN HEADER PROFIL ---
           Column(
             children: [
               GestureDetector(
                 onTap: _showChangePictureDialog,
-                // GFAvatar diganti dengan CircleAvatar
                 child: CircleAvatar(
                   radius: 50,
                   backgroundImage: user.profileImageUrl != null ? CachedNetworkImageProvider(user.profileImageUrl!) : null,
@@ -189,7 +191,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             clipBehavior: Clip.antiAlias,
             child: Column(
               children: [
-                // GFListTile diganti dengan ListTile
                 ListTile(
                   leading: CircleAvatar(
                     backgroundColor: colorScheme.primaryContainer,
@@ -215,7 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   title: const Text('Riwayat Pembayaran', style: TextStyle(fontSize: 16)),
                   trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-                  onTap: () => context.push('/payment_history'),
+                  onTap: () => context.push(AppRoutes.paymentHistory),
                 ),
                 ListTile(
                   leading: CircleAvatar(
@@ -224,10 +225,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   title: const Text('Syarat & Ketentuan', style: TextStyle(fontSize: 16)),
                   trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-                  onTap: () => context.push('/terms'),
+                  onTap: () => context.push(AppRoutes.terms),
                 ),
                 const Divider(height: 1, indent: 16, endIndent: 16),
-                // Menambahkan toggle tema dengan widget standar
                 AnimatedBuilder(
                   animation: themeService,
                   builder: (context, child) {
@@ -257,7 +257,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 16),
 
-          // --- BAGIAN LOGOUT ---
           Card(
             elevation: 2,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -269,8 +268,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               title: const Text('Logout', style: TextStyle(color: Colors.red, fontSize: 16)),
               onTap: () async {
-                await AuthService.signOut();
-                if (mounted) context.go('/login');
+                await _authService.signOut();
+                if (mounted) context.go(AppRoutes.login);
               },
             ),
           ),

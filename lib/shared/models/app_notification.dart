@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:tes/shared/utils/json_converters.dart'; // <-- IMPORT PENERJEMAH
 
-class AppNotification {
-  final String title;
-  final String subtitle;
-  final DateTime date;
-  final IconData icon;
-  final Color iconColor;
-  bool isRead;
+part 'app_notification.freezed.dart';
+part 'app_notification.g.dart';
 
-  AppNotification({
-    required this.title,
-    required this.subtitle,
-    required this.date,
-    required this.icon,
-    this.iconColor = Colors.blue,
-    this.isRead = false,
-  });
+@freezed
+class AppNotification with _$AppNotification {
+  const factory AppNotification({
+    required String title,
+    required String subtitle,
+    required DateTime date,
+    
+    // Menggunakan converter untuk tipe data yang tidak didukung JSON secara default
+    @IconDataConverter() required IconData icon,
+    @ColorConverter() required Color iconColor,
+    
+    @Default(false) bool isRead,
+  }) = _AppNotification;
+
+  factory AppNotification.fromJson(Map<String, dynamic> json) => _$AppNotificationFromJson(json);
 }

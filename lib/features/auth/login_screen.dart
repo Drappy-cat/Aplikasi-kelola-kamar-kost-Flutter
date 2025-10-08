@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tes/app/app_routes.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
+import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool isRegistered;
@@ -19,6 +22,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _hide = true;
   bool _loading = false;
 
+  final _passwordFocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     _u.dispose();
     _p.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -43,12 +49,24 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
 
     try {
-      await AuthService.signIn(username: _u.text.trim(), password: _p.text.trim());
-      if (mounted) context.go('/home');
+      // Menggunakan instance AuthService dari GetIt
+      await getIt<AuthService>().signIn(username: _u.text.trim(), password: _p.text.trim());
+      if (mounted) context.go(AppRoutes.home);
     } catch (e) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _launchMapsUrl() async {
+    final Uri url = Uri.parse('https://maps.app.goo.gl/your_location_here');
+    if (!await launchUrl(url)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Tidak dapat membuka peta.')),
+        );
+      }
     }
   }
 
@@ -115,10 +133,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 labelText: 'Username',
               ),
               validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_passwordFocusNode);
+              },
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _p,
+              focusNode: _passwordFocusNode,
               obscureText: _hide,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.lock_outline),
@@ -129,6 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => _handleLogin(),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -151,10 +176,16 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const Text('Belum punya akun?'),
                 TextButton(
-                  onPressed: () => context.push('/register'),
+                  onPressed: () => context.push(AppRoutes.register),
                   child: const Text('Daftar di sini'),
                 ),
               ],
+            ),
+            const Divider(height: 32),
+            OutlinedButton.icon(
+              icon: const Icon(Icons.map_outlined),
+              label: const Text('Lihat Lokasi di Peta'),
+              onPressed: _launchMapsUrl,
             ),
           ],
         ),

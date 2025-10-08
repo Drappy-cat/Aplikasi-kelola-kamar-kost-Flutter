@@ -5,6 +5,9 @@ part 'room.g.dart';
 
 @freezed
 class Room with _$Room {
+  // Menambahkan private constructor agar bisa menambahkan method/getter
+  const Room._();
+
   const factory Room({
     required String code,
     required String status,
@@ -23,4 +26,11 @@ class Room with _$Room {
   }) = _Room;
 
   factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);
+
+  // GETTER BARU: Logika perhitungan harga sekarang menjadi milik model Room
+  int get totalPrice {
+    if (packageFull) return baseRent;
+    // Menggunakan logika yang lebih lengkap (termasuk AC)
+    return baseRent + wifi + water + electricity + acCost;
+  }
 }

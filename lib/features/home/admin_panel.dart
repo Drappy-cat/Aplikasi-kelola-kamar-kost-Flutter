@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tes/features/home/add_edit_screen.dart';
-import 'package:tes/features/home/room_detail_screen.dart';
+import 'package:tes/app/app_routes.dart';
+import 'package:tes/features/complaints/admin_complaint_screen.dart';
+import 'package:tes/shared/models/announcement.dart';
+import 'package:tes/shared/models/app_notification.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/request.dart';
 import 'package:tes/shared/models/room.dart';
-import 'package:tes/shared/models/complaint.dart';
-import 'package:tes/shared/models/announcement.dart';
 import 'package:tes/shared/services/dummy_service.dart';
-import 'package:tes/shared/models/app_notification.dart';
-import 'package:tes/features/complaints/admin_complaint_screen.dart'; // Import the new admin complaint screen
 import 'package:tes/shared/services/locator.dart';
 import 'package:tes/shared/services/theme_service.dart';
 
@@ -22,6 +20,7 @@ class AdminPanel extends StatefulWidget {
 
 class _AdminPanelState extends State<AdminPanel> {
   int _adminTab = 0;
+  final DummyService _dummyService = getIt<DummyService>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class _AdminPanelState extends State<AdminPanel> {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: () => context.push('/profile'), // Menggunakan GoRouter
+            onTap: () => context.push(AppRoutes.profile),
             child: const CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(Icons.person, color: Colors.pink),
@@ -51,10 +50,9 @@ class _AdminPanelState extends State<AdminPanel> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            onPressed: () => context.push('/notification'), // Menggunakan GoRouter
+            onPressed: () => context.push(AppRoutes.notification),
             icon: const Icon(Icons.notifications_outlined),
           ),
-          // Gunakan AnimatedBuilder agar icon-nya juga ikut berubah
           AnimatedBuilder(
             animation: themeService,
             builder: (context, child) {
@@ -72,7 +70,7 @@ class _AdminPanelState extends State<AdminPanel> {
           _roomsPage(),
           _billsPage(),
           _requestsPage(),
-          const AdminComplaintScreen(), // Use the AdminComplaintScreen directly
+          const AdminComplaintScreen(),
           _announcementsPage(),
         ],
       ),
@@ -93,17 +91,14 @@ class _AdminPanelState extends State<AdminPanel> {
 
   Widget? _getFabForTab(int index) {
     switch (index) {
-      case 0: // Kamar
+      case 0:
         return FloatingActionButton(
           onPressed: () async {
-            // Anda perlu membuat rute '/add_edit_room' di app_router.dart
-            // dan pastikan AddEditScreen bisa diakses dari sana.
-            await context.push('/add_edit_room'); 
             setState(() {});
           },
           child: const Icon(Icons.add),
         );
-      case 4: // Pengumuman
+      case 4:
         return FloatingActionButton(
           onPressed: _showAddAnnouncementDialog,
           child: const Icon(Icons.add_alert),
@@ -116,9 +111,9 @@ class _AdminPanelState extends State<AdminPanel> {
   Widget _roomsPage() {
     return ListView.builder(
       padding: const EdgeInsets.all(8),
-      itemCount: DummyService.rooms.length,
+      itemCount: _dummyService.rooms.length,
       itemBuilder: (context, index) {
-        final room = DummyService.rooms[index];
+        final room = _dummyService.rooms[index];
         return Hero(
           tag: 'room-card-${room.code}',
           child: Card(
@@ -137,7 +132,7 @@ class _AdminPanelState extends State<AdminPanel> {
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {
-                await context.push('/room_detail', extra: room);
+                await context.push(AppRoutes.roomDetail, extra: room);
                 setState(() {});
               },
             ),
@@ -148,7 +143,7 @@ class _AdminPanelState extends State<AdminPanel> {
   }
 
   Widget _billsPage() {
-    final pendingBills = DummyService.getPendingConfirmationBills();
+    final pendingBills = _dummyService.getPendingConfirmationBills();
     if (pendingBills.isEmpty) {
       return const Center(child: Text('Tidak ada tagihan yang menunggu konfirmasi.', style: TextStyle(color: Colors.grey)));
     }
@@ -173,9 +168,9 @@ class _AdminPanelState extends State<AdminPanel> {
   Widget _requestsPage() {
     return ListView.builder(
       padding: const EdgeInsets.all(8),
-      itemCount: DummyService.requests.length,
+      itemCount: _dummyService.requests.length,
       itemBuilder: (context, index) {
-        final req = DummyService.requests[index];
+        final req = _dummyService.requests[index];
         return Card(
           elevation: 2,
           margin: const EdgeInsets.symmetric(vertical: 8),
@@ -209,13 +204,11 @@ class _AdminPanelState extends State<AdminPanel> {
                       TextButton(
                         onPressed: () {
                           setState(() {
-                            final reqIndex = DummyService.requests.indexWhere((r) => r.id == req.id);
+                            final reqIndex = _dummyService.requests.indexWhere((r) => r.id == req.id);
                             if (reqIndex != -1) {
-                              // Membuat salinan objek dengan status baru
                               final updatedReq = req.copyWith(status: 'Ditolak');
-                              // Mengganti objek lama dengan yang baru di dalam list
-                              DummyService.requests[reqIndex] = updatedReq;
-                              DummyService.notifications.add(AppNotification(title: 'Pengajuan Ditolak', subtitle: 'Pengajuan ${req.type} untuk kamar ${req.roomCode ?? '-'} Anda telah ditolak.', date: DateTime.now(), icon: Icons.cancel, iconColor: Colors.red));
+                              _dummyService.requests[reqIndex] = updatedReq;
+                              _dummyService.notifications.add(AppNotification(title: 'Pengajuan Ditolak', subtitle: 'Pengajuan ${req.type} untuk kamar ${req.roomCode ?? '-'} Anda telah ditolak.', date: DateTime.now(), icon: Icons.cancel, iconColor: Colors.red));
                             }
                           });
                         },
@@ -225,21 +218,17 @@ class _AdminPanelState extends State<AdminPanel> {
                       FilledButton(
                         onPressed: () {
                           setState(() {
-                            final reqIndex = DummyService.requests.indexWhere((r) => r.id == req.id);
+                            final reqIndex = _dummyService.requests.indexWhere((r) => r.id == req.id);
                             if (reqIndex != -1) {
-                              // Membuat salinan objek dengan status baru
                               final updatedReq = req.copyWith(status: 'Disetujui');
-                              // Mengganti objek lama dengan yang baru
-                              DummyService.requests[reqIndex] = updatedReq;
+                              _dummyService.requests[reqIndex] = updatedReq;
 
                               if (updatedReq.type == 'Booking Kamar' && updatedReq.roomCode != null) {
-                                final room = DummyService.findRoom(updatedReq.roomCode!);
+                                final room = _dummyService.findRoom(updatedReq.roomCode!);
                                 if (room != null) {
-                                  // Membuat salinan objek Room dengan status baru
                                   final updatedRoom = room.copyWith(status: 'Dihuni');
-                                  // Memperbarui data kamar di service
-                                  DummyService.updateRoom(updatedRoom);
-                                  DummyService.notifications.add(AppNotification(title: 'Pengajuan Disetujui!', subtitle: 'Pengajuan sewa kamar ${room.code} Anda telah disetujui. Selamat datang!', date: DateTime.now(), icon: Icons.check_circle, iconColor: Colors.green));
+                                  _dummyService.updateRoom(updatedRoom);
+                                  _dummyService.notifications.add(AppNotification(title: 'Pengajuan Disetujui!', subtitle: 'Pengajuan sewa kamar ${room.code} Anda telah disetujui. Selamat datang!', date: DateTime.now(), icon: Icons.check_circle, iconColor: Colors.green));
                                 }
                               }
                             }
@@ -259,7 +248,7 @@ class _AdminPanelState extends State<AdminPanel> {
 
 
   Widget _announcementsPage() {
-    final announcements = DummyService.getLatestAnnouncements();
+    final announcements = _dummyService.getLatestAnnouncements();
     return ListView.builder(
       padding: const EdgeInsets.all(8),
       itemCount: announcements.length,
@@ -291,14 +280,14 @@ class _AdminPanelState extends State<AdminPanel> {
         actions: [
           TextButton(
             onPressed: () {
-              setState(() => DummyService.rejectBill(bill.id));
+              _dummyService.rejectBill(bill.id).then((_) => setState(() {}));
               context.pop();
             },
             child: const Text('Tolak', style: TextStyle(color: Colors.red)),
           ),
           ElevatedButton(
             onPressed: () {
-              setState(() => DummyService.approveBill(bill.id));
+              _dummyService.approveBill(bill.id).then((_) => setState(() {}));
               context.pop();
             },
             child: const Text('Setujui'),
@@ -318,7 +307,14 @@ class _AdminPanelState extends State<AdminPanel> {
       builder: (context) => AlertDialog(
         title: const Text('Buat Pengumuman Baru'),
         content: Form(key: formKey, child: Column(mainAxisSize: MainAxisSize.min, children: [TextFormField(controller: titleCtrl, decoration: const InputDecoration(labelText: 'Judul'), validator: (v) => v!.isEmpty ? 'Wajib diisi' : null), const SizedBox(height: 8), TextFormField(controller: contentCtrl, decoration: const InputDecoration(labelText: 'Isi Pengumuman'), maxLines: 3, validator: (v) => v!.isEmpty ? 'Wajib diisi' : null)])),
-        actions: [TextButton(onPressed: () => context.pop(), child: const Text('Batal')), ElevatedButton(onPressed: () {if (formKey.currentState!.validate()) {DummyService.addAnnouncement(title: titleCtrl.text, content: contentCtrl.text); setState(() {}); context.pop();}}, child: const Text('Publikasikan'))],
+        actions: [TextButton(onPressed: () => context.pop(), child: const Text('Batal')), ElevatedButton(onPressed: () {
+          if (formKey.currentState!.validate()) {
+            // PERBAIKAN: Tidak perlu .then() karena fungsi sekarang sync
+            _dummyService.addAnnouncement(title: titleCtrl.text, content: contentCtrl.text);
+            setState(() {});
+            context.pop();
+          }
+        }, child: const Text('Publikasikan'))],
       ),
     );
   }

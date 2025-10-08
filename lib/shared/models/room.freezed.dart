@@ -280,7 +280,7 @@ class __$$RoomImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$RoomImpl implements _Room {
+class _$RoomImpl extends _Room {
   const _$RoomImpl({
     required this.code,
     required this.status,
@@ -296,7 +296,8 @@ class _$RoomImpl implements _Room {
     this.tenantAddress,
     this.tenantPhone,
     this.rentStartDate,
-  }) : _imageUrls = imageUrls;
+  }) : _imageUrls = imageUrls,
+       super._();
 
   factory _$RoomImpl.fromJson(Map<String, dynamic> json) =>
       _$$RoomImplFromJson(json);
@@ -411,7 +412,7 @@ class _$RoomImpl implements _Room {
   }
 }
 
-abstract class _Room implements Room {
+abstract class _Room extends Room {
   const factory _Room({
     required final String code,
     required final String status,
@@ -428,6 +429,7 @@ abstract class _Room implements Room {
     final String? tenantPhone,
     final String? rentStartDate,
   }) = _$RoomImpl;
+  const _Room._() : super._();
 
   factory _Room.fromJson(Map<String, dynamic> json) = _$RoomImpl.fromJson;
 

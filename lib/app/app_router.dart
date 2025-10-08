@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:tes/app/app_routes.dart'; // <-- 1. IMPORT FILE RUTE BARU
 import 'package:tes/features/auth/login_screen.dart';
 import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
@@ -9,7 +10,7 @@ import 'package:tes/features/profile/profile_screen.dart';
 import 'package:tes/features/settings/settings_screen.dart';
 import 'package:tes/features/settings/terms_screen.dart';
 import 'package:tes/features/complaints/admin_complaint_screen.dart';
-import 'package:tes/features/complaints/report_issue_screen.dart'; // <-- Import halaman baru
+import 'package:tes/features/complaints/report_issue_screen.dart';
 import 'package:tes/features/announcements/announcement_screen.dart';
 import 'package:tes/features/billing/user_bill_screen.dart';
 import 'package:tes/features/billing/payment_history_screen.dart';
@@ -17,14 +18,15 @@ import 'package:tes/shared/models/room.dart';
 
 // Konfigurasi GoRouter
 final appRouter = GoRouter(
-  initialLocation: '/',
+  // 2. Gunakan konstanta untuk rute awal
+  initialLocation: AppRoutes.splash,
   routes: [
     GoRoute(
-      path: '/',
+      path: AppRoutes.splash,
       builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
-      path: '/login',
+      path: AppRoutes.login,
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>?;
         final isRegistered = extra?['registered'] as bool? ?? false;
@@ -32,58 +34,56 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: '/register',
+      path: AppRoutes.register,
       builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
-      path: '/home',
+      path: AppRoutes.home,
       builder: (context, state) => const HomeScreen(),
     ),
     GoRoute(
-      path: '/profile',
+      path: AppRoutes.profile,
       builder: (context, state) => const ProfileScreen(),
     ),
     GoRoute(
-      path: '/settings',
+      path: AppRoutes.settings,
       builder: (context, state) => const SettingsScreen(),
     ),
     GoRoute(
-      path: '/terms',
+      path: AppRoutes.terms,
       builder: (context, state) => const TermsScreen(),
     ),
     GoRoute(
-      path: '/notification',
+      path: AppRoutes.notification,
       builder: (context, state) => const NotificationScreen(),
     ),
     GoRoute(
-      path: '/admin_complaints',
+      path: AppRoutes.adminComplaints,
       builder: (context, state) => const AdminComplaintScreen(),
     ),
     GoRoute(
-      path: '/announcements',
+      path: AppRoutes.announcements,
       builder: (context, state) => const AnnouncementScreen(),
     ),
     GoRoute(
-      path: '/user_bills',
+      path: AppRoutes.userBills,
       builder: (context, state) => const UserBillScreen(),
     ),
     GoRoute(
-      path: '/payment_history',
+      path: AppRoutes.paymentHistory,
       builder: (context, state) => const PaymentHistoryScreen(),
     ),
-    // Rute baru untuk Lapor Kerusakan
     GoRoute(
-      path: '/report_issue',
+      path: AppRoutes.reportIssue,
       builder: (context, state) => const ReportIssueScreen(),
     ),
     GoRoute(
-      path: '/room_detail',
+      path: AppRoutes.roomDetail,
       builder: (context, state) {
         final room = state.extra as Room?;
         if (room != null) {
           return RoomDetailScreen(room: room);
         } else {
-          // Kembali ke home jika tidak ada data kamar
           return const HomeScreen();
         }
       },

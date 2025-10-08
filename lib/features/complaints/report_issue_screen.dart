@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
+import 'package:tes/shared/services/locator.dart';
 
 class ReportIssueScreen extends StatefulWidget {
   const ReportIssueScreen({super.key});
@@ -18,6 +19,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
   bool _isLoading = false;
 
+  final DummyService _dummyService = getIt<DummyService>();
+  final AuthService _authService = getIt<AuthService>();
+
   Future<void> _submitComplaint() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -26,21 +30,21 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final user = AuthService.currentUser;
+      final user = _authService.currentUser;
       if (user == null || user.roomId == null) {
         throw Exception('Anda harus menjadi penghuni untuk membuat laporan.');
       }
 
-      // Simulasi proses upload
-      await Future.delayed(const Duration(seconds: 2));
-
-      DummyService.addComplaint(
+      // PERBAIKAN: Tidak perlu await karena fungsi sekarang sync
+      _dummyService.addComplaint(
         userId: user.id,
         roomId: user.roomId!,
         title: _titleController.text,
         description: _descriptionController.text,
         category: _selectedCategory,
       );
+
+      await Future.delayed(const Duration(milliseconds: 500));
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tes/app/app_routes.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
+import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -9,6 +11,7 @@ class RegisterScreen extends StatefulWidget {
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
+
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _u = TextEditingController();
@@ -17,11 +20,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _hide = true;
   bool _loading = false;
 
+  final _passwordFocusNode = FocusNode();
+  final _confirmPasswordFocusNode = FocusNode();
+
   @override
   void dispose() {
     _u.dispose();
     _p.dispose();
     _p2.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
     super.dispose();
   }
 
@@ -30,20 +38,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => _loading = true);
 
     try {
-      // Panggil fungsi register dengan parameter yang sudah diperbaiki
-      await AuthService.register(
+      // Menggunakan instance AuthService dari GetIt
+      await getIt<AuthService>().register(
         username: _u.text.trim(),
         password: _p.text.trim(),
-        fullName: _u.text.trim(), // Default fullName diisi dengan username
+        fullName: _u.text.trim(),
       );
-      if (!mounted) return;
-
-      // Navigasi ke halaman login dengan GoRouter, menghapus stack sebelumnya
-      context.go('/login', extra: {'registered': true});
-
+      if (mounted) {
+        context.go(AppRoutes.login, extra: {'registered': true});
+      }
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -112,10 +119,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 labelText: 'Username',
               ),
               validator: (v) => (v == null || v.isEmpty) ? 'Wajib diisi' : null,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_passwordFocusNode);
+              },
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _p,
+              focusNode: _passwordFocusNode,
               obscureText: _hide,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.lock_outline),
@@ -126,10 +138,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               validator: (v) => (v == null || v.length < 6) ? 'Password minimal 6 karakter' : null,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
+              },
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _p2,
+              focusNode: _confirmPasswordFocusNode,
               obscureText: _hide,
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.lock_outline),
@@ -140,6 +157,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 if (v != _p.text) return 'Password tidak cocok';
                 return null;
               },
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => _handleRegister(),
             ),
             const SizedBox(height: 24),
             SizedBox(

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tes/features/billing/bloc/bill_bloc.dart';
 import 'package:tes/shared/models/bill.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class UserBillScreen extends StatelessWidget {
   const UserBillScreen({super.key});
@@ -11,7 +10,6 @@ class UserBillScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      // Menggunakan event freezed yang baru
       create: (context) => BillBloc()..add(const BillEvent.loadBills()),
       child: const UserBillView(),
     );
@@ -21,132 +19,40 @@ class UserBillScreen extends StatelessWidget {
 class UserBillView extends StatelessWidget {
   const UserBillView({super.key});
 
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'Lunas':
-        return Colors.green;
-      case 'Menunggu Konfirmasi':
-        return Colors.orange;
-      case 'Belum Lunas':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
-  }
+  Future<void> _showPaymentConfirmation(BuildContext context, Bill bill) async {
+    if (bill.status != 'Belum Lunas') return;
 
-  Future<void> _showPaymentOptionsDialog(BuildContext context, Bill bill) async {
+    final bloc = context.read<BillBloc>();
+
     await showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Pilih Metode Pembayaran'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.money),
-              title: const Text('Bayar Tunai'),
-              onTap: () {
-                // Menggunakan event freezed yang baru
-                context.read<BillBloc>().add(BillEvent.confirmCashPayment(bill.id));
-                Navigator.pop(dialogContext);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Konfirmasi pembayaran tunai berhasil. Menunggu persetujuan admin.')),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.transfer_within_a_station),
-              title: const Text('Transfer Bank'),
-              onTap: () {
-                Navigator.pop(dialogContext);
-                _showUploadPaymentProofDialog(context, bill);
-              },
-            ),
-          ],
-        ),
+        title: const Text('Konfirmasi Pembayaran'),
+        content: const Text('Pilih metode pembayaran Anda.'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              bloc.add(BillEvent.confirmCashPayment(bill.id));
+              Navigator.of(dialogContext).pop();
+            },
+            child: const Text('Bayar Tunai'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Di aplikasi nyata, ini akan membuka halaman upload bukti transfer
+              // Untuk sekarang, kita simulasi dengan URL dummy
+              final proofUrl = 'https://picsum.photos/seed/${bill.id}/400/600';
+              bloc.add(BillEvent.submitTransferProof(bill.id, proofUrl));
+              Navigator.of(dialogContext).pop();
+            },
+            child: const Text('Transfer Bank'),
           ),
         ],
       ),
-    );
-  }
-
-  Future<void> _showUploadPaymentProofDialog(BuildContext context, Bill bill) async {
-    final ImagePicker picker = ImagePicker();
-    XFile? pickedFile;
-
-    await showDialog(
-      context: context,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (stfContext, stfSetState) {
-            return AlertDialog(
-              title: const Text('Unggah Bukti Pembayaran'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () async {
-                          final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-                          if (image != null) {
-                            stfSetState(() {
-                              pickedFile = image;
-                            });
-                          }
-                        },
-                        icon: const Icon(Icons.photo_library),
-                        label: const Text('Galeri'),
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () async {
-                          final XFile? image = await picker.pickImage(source: ImageSource.camera);
-                          if (image != null) {
-                            stfSetState(() {
-                              pickedFile = image;
-                            });
-                          }
-                        },
-                        icon: const Icon(Icons.camera_alt),
-                        label: const Text('Kamera'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    pickedFile == null
-                        ? 'Belum ada gambar yang dipilih.'
-                        : 'File: ${pickedFile!.name}',
-                    style: const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Batal')),
-                ElevatedButton(
-                  onPressed: pickedFile == null
-                      ? null
-                      : () {
-                          // Menggunakan event freezed yang baru
-                          context.read<BillBloc>().add(BillEvent.submitTransferProof(bill.id, pickedFile!.path));
-                          Navigator.pop(dialogContext);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Bukti pembayaran berhasil diunggah!')),
-                          );
-                        },
-                  child: const Text('Unggah'),
-                ),
-              ],
-            );
-          },
-        );
-      },
     );
   }
 
@@ -155,17 +61,37 @@ class UserBillView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tagihan Saya'),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFF72585), Color(0xFF5B2EBC)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () => context.push('/payment_history'),
+            tooltip: 'Riwayat Pembayaran',
+          ),
+        ],
       ),
       body: BlocBuilder<BillBloc, BillState>(
         builder: (context, state) {
-          // Menggunakan state.when() untuk UI yang lebih bersih dan aman
           return state.when(
             initial: () => const Center(child: CircularProgressIndicator()),
             loading: () => const Center(child: CircularProgressIndicator()),
+            error: (message) => Center(child: Text(message)),
             loaded: (bills) {
               if (bills.isEmpty) {
                 return const Center(
-                  child: Text('Belum ada tagihan.', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  child: Text(
+                    'Tidak ada tagihan aktif.',
+                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                  ),
                 );
               }
               return ListView.builder(
@@ -173,57 +99,37 @@ class UserBillView extends StatelessWidget {
                 itemCount: bills.length,
                 itemBuilder: (context, index) {
                   final bill = bills[index];
+                  final bool isPaid = bill.status == 'Lunas';
+                  final bool isPending = bill.status == 'Menunggu Konfirmasi';
+
+                  final Color statusColor = isPaid
+                      ? Colors.green
+                      : isPending
+                          ? Colors.orange
+                          : Colors.red;
+
                   return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                    elevation: 2,
+                    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     child: ListTile(
-                      title: Text('Tagihan Periode ${bill.period}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Jumlah: Rp ${bill.amount}'),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Status: ${bill.status}',
-                            style: TextStyle(color: _getStatusColor(bill.status), fontWeight: FontWeight.bold),
-                          ),
-                          if (bill.paymentMethod != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
-                              child: Text('Metode: ${bill.paymentMethod}', style: TextStyle(color: Colors.grey.shade700)),
-                            ),
-                          if (bill.paymentProofUrl != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
-                              child: Text('Bukti Pembayaran: Diunggah', style: TextStyle(color: Colors.grey.shade700)),
-                            ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Dibuat: ${timeago.format(bill.createdAt, locale: 'id')}',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      leading: CircleAvatar(
+                        backgroundColor: statusColor.withOpacity(0.1),
+                        child: Icon(isPaid ? Icons.check_circle : Icons.receipt_long, color: statusColor),
                       ),
-                      trailing: bill.status == 'Belum Lunas'
-                          ? ElevatedButton(
-                              onPressed: () => _showPaymentOptionsDialog(context, bill),
-                              child: const Text('Bayar'),
-                            )
-                          : null,
+                      title: Text('Tagihan ${bill.period}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text('Rp ${bill.amount.toStringAsFixed(0)}'),
+                      trailing: Chip(
+                        label: Text(bill.status, style: const TextStyle(color: Colors.white)),
+                        backgroundColor: statusColor,
+                      ),
+                      onTap: () => _showPaymentConfirmation(context, bill),
                     ),
                   );
                 },
               );
             },
-            error: (message) => Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Terjadi Kesalahan: $message',
-                  style: const TextStyle(color: Colors.red),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
           );
         },
       ),

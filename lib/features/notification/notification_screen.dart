@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:tes/shared/models/app_notification.dart';
 import 'package:tes/shared/services/dummy_service.dart';
+import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -10,10 +13,12 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  // Mengambil instance service dari GetIt
+  final DummyService _dummyService = getIt<DummyService>();
+
   @override
   Widget build(BuildContext context) {
-    final notifications = DummyService.notifications;
-    notifications.sort((a, b) => b.date.compareTo(a.date));
+    final notifications = _dummyService.notifications;
 
     return Scaffold(
       appBar: AppBar(
@@ -31,27 +36,38 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ),
       body: notifications.isEmpty
           ? const Center(
-              child: Text('Tidak ada notifikasi saat ini.', style: TextStyle(color: Colors.grey)),
+              child: Text(
+                'Tidak ada notifikasi baru.',
+                style: TextStyle(color: Colors.grey, fontSize: 16),
+              ),
             )
           : ListView.builder(
               itemCount: notifications.length,
               itemBuilder: (context, index) {
                 final notif = notifications[index];
+                final bool isRead = notif.isRead;
+
                 return ListTile(
+                  tileColor: isRead ? null : Theme.of(context).colorScheme.primary.withOpacity(0.05),
                   leading: CircleAvatar(
                     backgroundColor: notif.iconColor.withOpacity(0.1),
                     child: Icon(notif.icon, color: notif.iconColor),
                   ),
-                  title: Text(notif.title, style: TextStyle(fontWeight: notif.isRead ? FontWeight.normal : FontWeight.bold)),
-                  subtitle: Text(notif.subtitle),
+                  title: Text(notif.title, style: TextStyle(fontWeight: isRead ? FontWeight.normal : FontWeight.bold)),
+                  subtitle: Text(notif.subtitle, maxLines: 2, overflow: TextOverflow.ellipsis),
                   trailing: Text(
-                    DateFormat('dd MMM').format(notif.date),
-                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    DateFormat.yMMMd().format(notif.date),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   onTap: () {
-                    setState(() {
-                      notif.isRead = true;
-                    });
+                    if (!isRead) {
+                      setState(() {
+                        final updatedNotif = notif.copyWith(isRead: true);
+                        _dummyService.notifications[index] = updatedNotif;
+                        // Perubahan notifikasi juga perlu disimpan
+                        // Kita akan menambahkan fungsi ini nanti di DummyService
+                      });
+                    }
                   },
                 );
               },

@@ -15,6 +15,7 @@ dependencies:
   intl: ^0.20.2
   google_fonts: ^6.2.1
   timeago: ^3.6.1
+  url_launcher: ^6.3.0
 
   # --- Paket Baru untuk Arsitektur & Fitur ---
   flutter_bloc: ^8.1.6
@@ -30,7 +31,9 @@ dependencies:
 
   # --- Library dari Tugas ---
   device_info_plus: ^10.1.0
-  webview_flutter: ^4.8.0
+  webview_flutter: ^4.8.0 # <-- DITAMBAHKAN KEMBALI
+  webview_flutter_android: ^3.16.0 # <-- DITAMBAHKAN KEMBALI
+  webview_flutter_wkwebview: ^3.13.0 # <-- DITAMBAHKAN KEMBALI
 
 dev_dependencies:
   flutter_test:

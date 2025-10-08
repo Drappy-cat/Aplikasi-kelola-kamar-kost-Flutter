@@ -554,6 +554,7 @@ abstract class _$$LoadedImplCopyWith<$Res> {
     List<Room> allRooms,
   });
 
+  $AnnouncementCopyWith<$Res>? get latestAnnouncement;
   $RoomCopyWith<$Res>? get userRoom;
   $BillCopyWith<$Res>? get latestBill;
 }
@@ -602,6 +603,20 @@ class __$$LoadedImplCopyWithImpl<$Res>
                   as List<Room>,
       ),
     );
+  }
+
+  /// Create a copy of UserHomeState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $AnnouncementCopyWith<$Res>? get latestAnnouncement {
+    if (_value.latestAnnouncement == null) {
+      return null;
+    }
+
+    return $AnnouncementCopyWith<$Res>(_value.latestAnnouncement!, (value) {
+      return _then(_value.copyWith(latestAnnouncement: value));
+    });
   }
 
   /// Create a copy of UserHomeState

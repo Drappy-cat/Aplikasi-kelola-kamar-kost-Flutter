@@ -1,23 +1,21 @@
-class Complaint {
-  final String id;
-  final String userId;
-  final String roomId;
-  final String title;
-  final String description;
-  final String category;
-  final String status;
-  final List<String> imageUrls;
-  final DateTime createdAt;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Complaint({
-    required this.id,
-    required this.userId,
-    required this.roomId,
-    required this.title,
-    required this.description,
-    required this.category,
-    required this.status,
-    this.imageUrls = const [],
-    required this.createdAt,
-  });
+part 'complaint.freezed.dart';
+part 'complaint.g.dart';
+
+@freezed
+class Complaint with _$Complaint {
+  const factory Complaint({
+    required String id,
+    required String userId,
+    required String roomId,
+    required String title,
+    required String description,
+    required String category,
+    required String status,
+    @Default([]) List<String> imageUrls,
+    required DateTime createdAt,
+  }) = _Complaint;
+
+  factory Complaint.fromJson(Map<String, dynamic> json) => _$ComplaintFromJson(json);
 }

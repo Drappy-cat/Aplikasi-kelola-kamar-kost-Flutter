@@ -1,13 +1,16 @@
-class Announcement {
-  final String id;
-  final String title;
-  final String content;
-  final DateTime createdAt;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Announcement({
-    required this.id,
-    required this.title,
-    required this.content,
-    required this.createdAt,
-  });
+part 'announcement.freezed.dart';
+part 'announcement.g.dart';
+
+@freezed
+class Announcement with _$Announcement {
+  const factory Announcement({
+    required String id,
+    required String title,
+    required String content,
+    required DateTime createdAt,
+  }) = _Announcement;
+
+  factory Announcement.fromJson(Map<String, dynamic> json) => _$AnnouncementFromJson(json);
 }
