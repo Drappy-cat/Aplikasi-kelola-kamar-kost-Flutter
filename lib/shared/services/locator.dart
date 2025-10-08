@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tes/features/home/bloc/user_home_bloc.dart'; // <-- IMPORT BLOC
+import 'package:tes/features/home/bloc/admin_panel_bloc.dart';
+import 'package:tes/features/home/bloc/user_home_bloc.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
 import 'package:tes/shared/services/theme_service.dart';
@@ -22,9 +23,10 @@ Future<void> setupLocator() async {
   await authService.init();
   getIt.registerSingleton<AuthService>(authService);
 
-  // 4. Daftarkan service dan BLoC lainnya
+  // 4. Daftarkan service lainnya
   getIt.registerLazySingleton(() => ThemeService(prefs));
 
-  // PERBAIKAN: Mendaftarkan UserHomeBloc sebagai Factory
+  // 5. Daftarkan BLoC sebagai Factory
   getIt.registerFactory(() => UserHomeBloc());
+  getIt.registerFactory(() => AdminPanelBloc());
 }

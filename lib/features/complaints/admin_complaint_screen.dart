@@ -35,6 +35,7 @@ class _AdminComplaintScreenState extends State<AdminComplaintScreen> {
           onChanged: (newStatus) {
             if (newStatus != null) {
               setState(() {
+                // PERBAIKAN: Tidak perlu .then() karena fungsi sekarang sync
                 _dummyService.updateComplaintStatus(complaint.id, newStatus);
               });
               Navigator.of(context).pop();

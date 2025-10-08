@@ -8,7 +8,10 @@ class AuthService {
 
   AppUser? _currentUser;
 
+  // Getter untuk membaca data user
   AppUser? get currentUser => _currentUser;
+
+  // PERBAIKAN: Menambahkan setter publik untuk memperbarui user dari luar
   set currentUser(AppUser? user) {
     _currentUser = user;
   }
@@ -44,21 +47,12 @@ class AuthService {
     await prefs.remove(_loggedInUserKey);
   }
 
-  // --- FUNGSI REGISTER YANG DIPERBAIKI ---
   Future<void> register({required String username, required String password, required String fullName}) async {
     await Future.delayed(const Duration(seconds: 1));
     if (_users.any((u) => u.username == username)) {
       throw 'Username sudah digunakan.';
     }
-    
-    // PERBAIKAN: Membuat dan menambahkan user baru ke dalam list
-    final newUser = AppUser(
-      id: 'user-${DateTime.now().millisecondsSinceEpoch}', 
-      username: username, 
-      password: password, // Di aplikasi nyata, password harus di-hash
-      fullName: fullName, 
-      role: 'user', // Role default untuk user baru
-    );
+    final newUser = AppUser(id: 'user-${DateTime.now().millisecondsSinceEpoch}', username: username, password: password, fullName: fullName, role: 'user');
     _users.add(newUser);
   }
 
@@ -81,7 +75,6 @@ class AuthService {
     _currentUser = _currentUser!.copyWith(password: newPassword);
   }
 
-  // Mengubah dari final menjadi non-final agar bisa ditambahkan
   static final List<AppUser> _users = [
     AppUser(id: 'admin', username: 'admin', password: 'admin', fullName: 'Admin Ri-Kost', role: 'admin'),
     AppUser(id: 'user1', username: 'budi', password: 'password', fullName: 'Budi Santoso', role: 'tenant', roomId: 'A-101'),
