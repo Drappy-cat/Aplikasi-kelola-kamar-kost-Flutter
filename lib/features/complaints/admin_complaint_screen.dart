@@ -34,9 +34,12 @@ class _AdminComplaintScreenState extends State<AdminComplaintScreen> {
               .toList(),
           onChanged: (newStatus) {
             if (newStatus != null) {
-              setState(() {
-                // PERBAIKAN: Tidak perlu .then() karena fungsi sekarang sync
-                _dummyService.updateComplaintStatus(complaint.id, newStatus);
+              // PERBAIKAN: Menggunakan .then() untuk refresh UI setelah async selesai
+              _dummyService.updateComplaintStatus(complaint.id, newStatus).then((_) {
+                setState(() {
+                  // Cukup refresh data dari service
+                  _allComplaints = _dummyService.getAllComplaints();
+                });
               });
               Navigator.of(context).pop();
             }

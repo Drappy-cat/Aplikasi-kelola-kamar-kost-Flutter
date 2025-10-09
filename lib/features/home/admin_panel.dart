@@ -76,15 +76,20 @@ class AdminPanelView extends StatelessWidget {
       ),
       body: state.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : IndexedStack(
-              index: state.activeTabIndex,
-              children: [
-                _RoomsPage(rooms: state.rooms),
-                _BillsPage(pendingBills: state.pendingBills),
-                _RequestsPage(requests: state.requests),
-                const AdminComplaintScreen(), // Ini sudah stateful sendiri
-                _AnnouncementsPage(announcements: state.announcements),
-              ],
+          : RefreshIndicator(
+              onRefresh: () async {
+                bloc.add(const AdminPanelEvent.loadData());
+              },
+              child: IndexedStack(
+                index: state.activeTabIndex,
+                children: [
+                  _RoomsPage(rooms: state.rooms),
+                  _BillsPage(pendingBills: state.pendingBills),
+                  _RequestsPage(requests: state.requests),
+                  const AdminComplaintScreen(),
+                  _AnnouncementsPage(announcements: state.announcements),
+                ],
+              ),
             ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: state.activeTabIndex,
@@ -159,7 +164,7 @@ class _RoomsPage extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () async {
               await context.push(AppRoutes.roomDetail, extra: room);
-              context.read<AdminPanelBloc>().add(const AdminPanelEvent.loadData()); // Refresh data setelah kembali
+              context.read<AdminPanelBloc>().add(const AdminPanelEvent.loadData());
             },
           ),
         );
@@ -248,12 +253,13 @@ class _RequestsPage extends StatelessWidget {
               const SizedBox(height: 8),
               if (req.status == 'Pending')
                 Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  // PERBAIKAN: Tombol sekarang hanya mengirim event
                   TextButton(onPressed: () {
-                    // Logika ini perlu dipindah ke BLoC/Service
+                    context.read<AdminPanelBloc>().add(AdminPanelEvent.processRequest(req, false));
                   }, child: const Text('Tolak', style: TextStyle(color: Colors.red))),
                   const SizedBox(width: 8),
                   FilledButton(onPressed: () {
-                    // Logika ini perlu dipindah ke BLoC/Service
+                    context.read<AdminPanelBloc>().add(AdminPanelEvent.processRequest(req, true));
                   }, child: const Text('Setujui')),
                 ]),
             ]),

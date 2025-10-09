@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/dummy_service.dart';
+import 'package:tes/shared/services/locator.dart'; // <-- IMPORT LOCATOR
 
 class AddEditScreen extends StatefulWidget {
   final Room? room;
@@ -27,6 +28,9 @@ class _AddEditScreenState extends State<AddEditScreen> {
   late bool _isPackageFull;
 
   bool get _isEditMode => widget.room != null;
+
+  // Dapatkan instance DummyService
+  final DummyService _dummyService = getIt<DummyService>();
 
   @override
   void initState() {
@@ -56,7 +60,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
     super.dispose();
   }
 
-  void _saveForm() {
+  void _saveForm() async { // Tambahkan async karena updateRoom adalah Future
     if (!_formKey.currentState!.validate()) return;
 
     final imageUrls = _imageUrlsCtrl.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
@@ -79,12 +83,12 @@ class _AddEditScreenState extends State<AddEditScreen> {
     );
 
     if (_isEditMode) {
-      DummyService.updateRoom(newRoom);
+      await _dummyService.updateRoom(newRoom);
     } else {
-      DummyService.addRoom(newRoom);
+      await _dummyService.addRoom(newRoom);
     }
 
-    context.pop();
+    if (mounted) context.pop();
   }
 
   @override
@@ -123,6 +127,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
+                // PERBAIKAN: Gunakan initialValue
                 value: _selectedStatus,
                 decoration: const InputDecoration(labelText: 'Status Kamar'),
                 items: const [

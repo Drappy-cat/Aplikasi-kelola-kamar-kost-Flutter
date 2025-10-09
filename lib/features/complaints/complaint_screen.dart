@@ -3,6 +3,7 @@ import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/models/complaint.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
+import 'package:tes/shared/services/locator.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ComplaintScreen extends StatefulWidget {
@@ -18,6 +19,9 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   final _searchController = TextEditingController();
   String? _selectedStatusFilter;
 
+  final AuthService _authService = getIt<AuthService>();
+  final DummyService _dummyService = getIt<DummyService>();
+
   @override
   void initState() {
     super.initState();
@@ -32,9 +36,9 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   }
 
   void _loadComplaints() {
-    final userId = AuthService.currentUser?.id ?? '';
+    final userId = _authService.currentUser?.id ?? '';
     setState(() {
-      _complaints = DummyService.getComplaintsForUser(userId);
+      _complaints = _dummyService.getComplaintsForUser(userId);
       _complaints.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       _filterComplaints(); // Initial filter
     });
@@ -145,11 +149,11 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
               actions: [
                 TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async { // Make onPressed async
                     if (formKey.currentState!.validate()) {
-                      final AppUser? user = AuthService.currentUser;
+                      final AppUser? user = _authService.currentUser;
                       if (user != null && user.roomId != null) {
-                        DummyService.addComplaint(
+                        await _dummyService.addComplaint(
                           userId: user.id,
                           roomId: user.roomId!,
                           title: titleController.text,
@@ -181,7 +185,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isTenant = AuthService.currentUser?.roomId != null;
+    final bool isTenant = _authService.currentUser?.roomId != null;
 
     return Scaffold(
       appBar: AppBar(

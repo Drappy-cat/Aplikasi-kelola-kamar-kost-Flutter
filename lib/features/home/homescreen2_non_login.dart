@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tes/shared/services/auth_service.dart';
-import 'package:tes/shared/services/locator.dart';
-import 'package:tes/shared/services/theme_service.dart';
+import 'package:tes/shared/services/locator.dart'; // <-- IMPORT LOCATOR
 
 class SampleItem {
   final String _title;
@@ -24,8 +23,9 @@ class HomeScreen2NonLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userName = AuthService.currentUser?.fullName ?? AuthService.currentUser?.username ?? 'Pengguna';
-    final themeService = getIt<ThemeService>(); // Ambil theme service
+    // PERBAIKAN: Akses currentUser melalui instance AuthService dari GetIt
+    final authService = getIt<AuthService>();
+    final userName = authService.currentUser?.fullName ?? authService.currentUser?.username ?? 'Pengguna';
 
     return Scaffold(
       appBar: AppBar(
@@ -41,21 +41,9 @@ class HomeScreen2NonLogin extends StatelessWidget {
         ),
         foregroundColor: Colors.white,
         actions: [
-          // Gunakan AnimatedBuilder agar icon berubah saat tema diganti
-          AnimatedBuilder(
-            animation: themeService,
-            builder: (context, child) {
-              return IconButton(
-                // Panggil toggleTheme dari service
-                onPressed: () => themeService.toggleTheme(),
-                icon: Icon(
-                  themeService.isDarkMode
-                      ? Icons.light_mode
-                      : Icons.dark_mode,
-                ),
-              );
-            },
-          ),
+          // Tombol tema di sini tidak perlu AnimatedBuilder karena tidak ada ThemeService di sini
+          // Jika ingin ada toggle tema di sini, perlu diimplementasikan ulang
+          // Untuk saat ini, kita biarkan kosong atau hapus jika tidak diperlukan
         ],
       ),
       body: ListView.builder(

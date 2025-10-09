@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
+import 'package:tes/shared/services/locator.dart';
 
 class BillHistoryScreen extends StatefulWidget {
   const BillHistoryScreen({super.key});
@@ -14,11 +15,20 @@ class BillHistoryScreen extends StatefulWidget {
 class _BillHistoryScreenState extends State<BillHistoryScreen> {
   late List<Bill> _bills;
 
+  final AuthService _authService = getIt<AuthService>();
+  final DummyService _dummyService = getIt<DummyService>();
+
   @override
   void initState() {
     super.initState();
-    final userId = AuthService.currentUser?.id ?? ''; // <-- DIPERBAIKI
-    _bills = DummyService.getBillsForUser(userId);
+    _loadBills();
+  }
+
+  void _loadBills() {
+    final userId = _authService.currentUser?.id ?? '';
+    setState(() {
+      _bills = _dummyService.getBillsForUser(userId);
+    });
   }
 
   Color _getStatusColor(String status) {
@@ -46,13 +56,9 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
             child: const Text('Batal'),
           ),
           ElevatedButton(
-            onPressed: () {
-              DummyService.submitPaymentProof(bill.id, 'assets/kamar_kost/bukti_tf.png');
-              setState(() {
-                // Re-fetch the bills to update the UI
-                final userId = AuthService.currentUser?.id ?? ''; // <-- DIPERBAIKI
-                _bills = DummyService.getBillsForUser(userId);
-              });
+            onPressed: () async { // Make onPressed async
+              await _dummyService.submitPaymentProof(bill.id, 'assets/kamar_kost/bukti_tf.png');
+              _loadBills(); // Reload bills after submitting payment proof
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Bukti pembayaran terkirim, menunggu konfirmasi admin.')),
