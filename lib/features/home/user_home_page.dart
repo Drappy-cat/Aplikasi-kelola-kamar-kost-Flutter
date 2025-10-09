@@ -190,7 +190,7 @@ class _UserHomeViewState extends State<UserHomeView> {
               );
             } else {
               return GridView.builder(
-                shrinkWrap: true,
+                shrinkWrap: true, // Perbaikan di sini: 'shrink' menjadi 'shrinkWrap'
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 400,
@@ -282,10 +282,13 @@ class _UserHomeViewState extends State<UserHomeView> {
                   if (room.status.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Chip(
-                        label: Text(room.status, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                        backgroundColor: isAvailable ? Colors.green.withOpacity(0.8) : Colors.black.withOpacity(0.5),
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      child: Material( // Added Material widget here
+                        color: Colors.transparent, // Make it transparent
+                        child: Chip(
+                          label: Text(room.status, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          backgroundColor: isAvailable ? Colors.green.withOpacity(0.8) : Colors.black.withOpacity(0.5),
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        ),
                       ),
                     ),
                 ],
