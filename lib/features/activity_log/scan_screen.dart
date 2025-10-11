@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:tes/features/activity_log/bloc/activity_log_bloc.dart';
 
-// Halaman wrapper yang menyediakan BLoC
 class ScanScreen extends StatelessWidget {
   const ScanScreen({super.key});
 
@@ -28,7 +27,6 @@ class ScanView extends StatefulWidget {
 class _ScanViewState extends State<ScanView> {
   bool _isProcessing = false;
 
-  // Fungsi untuk menampilkan dialog konfirmasi
   Future<void> _showConfirmationDialog(BuildContext context) async {
     final bloc = context.read<ActivityLogBloc>();
 
@@ -60,7 +58,6 @@ class _ScanViewState extends State<ScanView> {
   Widget build(BuildContext context) {
     return BlocListener<ActivityLogBloc, ActivityLogState>(
       listener: (context, state) {
-        // Tutup halaman scan setelah aksi berhasil atau gagal
         if (state.successMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.successMessage!), backgroundColor: Colors.green));
           context.pop();
@@ -74,23 +71,20 @@ class _ScanViewState extends State<ScanView> {
         appBar: AppBar(title: const Text('Scan QR Code Kehadiran')),
         body: MobileScanner(
           controller: MobileScannerController(
-            detectionSpeed: DetectionSpeed.noDuplicates, // Mencegah deteksi berulang
+            detectionSpeed: DetectionSpeed.noDuplicates,
           ),
           onDetect: (capture) {
-            if (_isProcessing) return; // Mencegah pemrosesan ganda
-
+            if (_isProcessing) return;
             final List<Barcode> barcodes = capture.barcodes;
             if (barcodes.isNotEmpty) {
               final String? code = barcodes.first.rawValue;
 
-              // Validasi QR Code
               if (code == 'RI-KOST-ATTENDANCE-SCAN-POINT') {
                 setState(() {
                   _isProcessing = true;
                 });
                 _showConfirmationDialog(context);
               } else {
-                // Jika QR code tidak valid, tampilkan pesan singkat
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('QR Code tidak valid.'), backgroundColor: Colors.orange),
                 );

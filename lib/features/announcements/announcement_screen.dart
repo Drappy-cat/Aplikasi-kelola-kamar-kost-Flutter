@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tes/shared/models/announcement.dart';
 import 'package:tes/shared/services/dummy_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
+import 'package:tes/shared/services/locator.dart';
 
 class AnnouncementScreen extends StatelessWidget {
   const AnnouncementScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Menggunakan instance DummyService dari GetIt
     final announcements = getIt<DummyService>().getLatestAnnouncements();
 
     return Scaffold(

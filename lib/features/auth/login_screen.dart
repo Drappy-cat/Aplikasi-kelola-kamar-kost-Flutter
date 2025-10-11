@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:map_launcher/map_launcher.dart';
 import 'package:tes/app/app_routes.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
-import 'package:url_launcher/url_launcher.dart';
+import 'package:tes/shared/services/locator.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool isRegistered;
@@ -49,7 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
 
     try {
-      // Menggunakan instance AuthService dari GetIt
       await getIt<AuthService>().signIn(username: _u.text.trim(), password: _p.text.trim());
       if (mounted) context.go(AppRoutes.home);
     } catch (e) {
@@ -59,14 +58,49 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> _launchMapsUrl() async {
-    final Uri url = Uri.parse('https://maps.app.goo.gl/your_location_here');
-    if (!await launchUrl(url)) {
-      if (mounted) {
+  Future<void> _launchMaps() async {
+    final coords = Coords(-6.2088, 106.8456);
+    const title = "Lokasi Ri-Kost";
+
+    try {
+      final availableMaps = await MapLauncher.getAvailableMaps();
+
+      if (availableMaps.isNotEmpty) {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return SafeArea(
+              child: SingleChildScrollView(
+                child: Wrap(
+                  children: <Widget>[
+                    for (var map in availableMaps)
+                      ListTile(
+                        onTap: () => map.showMarker(
+                          coords: coords,
+                          title: title,
+                        ),
+                        title: Text(map.mapName),
+                        leading: Image.asset(
+                          map.icon,
+                          height: 30.0,
+                          width: 30.0,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Tidak dapat membuka peta.')),
+          const SnackBar(content: Text('Tidak ada aplikasi peta yang tersedia.')),
         );
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
     }
   }
 
@@ -185,7 +219,8 @@ class _LoginScreenState extends State<LoginScreen> {
             OutlinedButton.icon(
               icon: const Icon(Icons.map_outlined),
               label: const Text('Lihat Lokasi di Peta'),
-              onPressed: _launchMapsUrl,
+              // PERBAIKAN: Memanggil metode map_launcher yang baru
+              onPressed: _launchMaps,
             ),
           ],
         ),

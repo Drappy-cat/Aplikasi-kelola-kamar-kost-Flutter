@@ -43,8 +43,6 @@ class UserBillView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // Di aplikasi nyata, ini akan membuka halaman upload bukti transfer
-              // Untuk sekarang, kita simulasi dengan URL dummy
               final proofUrl = 'https://picsum.photos/seed/${bill.id}/400/600';
               bloc.add(BillEvent.submitTransferProof(bill.id, proofUrl));
               Navigator.of(dialogContext).pop();

@@ -34,7 +34,7 @@ class PaymentProofDetailScreen extends StatelessWidget {
               child: Center(
                 child: bill.paymentProofUrl != null
                     ? InteractiveViewer(
-                        panEnabled: false, // Set it to false to prevent panning.
+                        panEnabled: false,
                         boundaryMargin: const EdgeInsets.all(100),
                         minScale: 0.5,
                         maxScale: 2,

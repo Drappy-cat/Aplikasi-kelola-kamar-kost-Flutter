@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tes/shared/models/activity_log.dart';
 import 'package:tes/shared/models/app_notification.dart';
+import 'package:tes/shared/models/chat_conversation.dart'; // <-- IMPORT BARU
+import 'package:tes/shared/models/chat_message.dart'; // <-- IMPORT BARU
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/request.dart';
@@ -17,6 +19,7 @@ const String _kAnnouncementsKey = 'announcements_data';
 const String _kRequestsKey = 'requests_data';
 const String _kNotificationsKey = 'notifications_data';
 const String _kActivityLogsKey = 'activity_logs_data';
+const String _kConversationsKey = 'conversations_data'; // <-- KUNCI BARU
 
 class DummyService {
   final SharedPreferences _prefs;
@@ -28,6 +31,7 @@ class DummyService {
   late List<Request> requests;
   late List<AppNotification> notifications;
   late List<ActivityLog> activityLogs;
+  late List<ChatConversation> conversations; // <-- LIST BARU
 
   DummyService(this._prefs);
 
@@ -43,6 +47,7 @@ class DummyService {
     requests = _loadList(_prefs.getString(_kRequestsKey), (json) => Request.fromJson(json), _createInitialRequests);
     notifications = _loadList(_prefs.getString(_kNotificationsKey), (json) => AppNotification.fromJson(json), _createInitialNotifications);
     activityLogs = _loadList(_prefs.getString(_kActivityLogsKey), (json) => ActivityLog.fromJson(json), _createInitialActivityLogs);
+    conversations = _loadList(_prefs.getString(_kConversationsKey), (json) => ChatConversation.fromJson(json), _createInitialConversations); // <-- LOAD DATA BARU
 
     if (_prefs.getString(_kRoomsKey) == null) {
       await _saveData();
@@ -57,6 +62,7 @@ class DummyService {
     await _prefs.setString(_kRequestsKey, jsonEncode(requests.map((e) => e.toJson()).toList()));
     await _prefs.setString(_kNotificationsKey, jsonEncode(notifications.map((e) => e.toJson()).toList()));
     await _prefs.setString(_kActivityLogsKey, jsonEncode(activityLogs.map((e) => e.toJson()).toList()));
+    await _prefs.setString(_kConversationsKey, jsonEncode(conversations.map((e) => e.toJson()).toList())); // <-- SAVE DATA BARU
   }
 
   List<T> _loadList<T>(String? jsonString, T Function(Map<String, dynamic>) fromJson, List<T> Function() defaultCreator) {
@@ -72,7 +78,34 @@ class DummyService {
     }
   }
 
-  // --- Metode Terpusat untuk Notifikasi ---
+  // --- Metode untuk Chat ---
+  ChatConversation getConversationForUser(String userId, String userName) {
+    try {
+      // Cari percakapan yang sudah ada
+      return conversations.firstWhere((c) => c.userId == userId);
+    } catch (e) {
+      // Jika tidak ada, buat percakapan baru dan tambahkan ke list
+      final newConversation = ChatConversation(
+        id: userId,
+        userId: userId,
+        userName: userName,
+        messages: [],
+      );
+      conversations.add(newConversation);
+      return newConversation;
+    }
+  }
+
+  Future<void> addMessage(String userId, ChatMessage message) async {
+    final convIndex = conversations.indexWhere((c) => c.userId == userId);
+    if (convIndex != -1) {
+      conversations[convIndex].messages.insert(0, message);
+      await _saveData();
+    }
+  }
+
+  // ... (metode-metode lain yang sudah ada)
+
   Future<void> addNotification({
     required String title,
     required String subtitle,
@@ -96,8 +129,6 @@ class DummyService {
       await _saveData();
     }
   }
-
-  // ... (metode-metode lain)
 
   Future<void> addActivityLog({required String userId, required String userName, required String action}) async {
     final newLog = ActivityLog(
@@ -207,6 +238,7 @@ class DummyService {
 }
 
 // Data awal untuk setiap list
+List<ChatConversation> _createInitialConversations() => []; // <-- DATA AWAL BARU
 List<ActivityLog> _createInitialActivityLogs() => [];
 List<AppNotification> _createInitialNotifications() => [AppNotification(title: 'Selamat Datang di Ri-Kost!', subtitle: 'Jelajahi semua fitur yang tersedia untuk Anda.', date: DateTime.now().subtract(const Duration(days: 2)), icon: Icons.waving_hand, iconColor: Colors.orange)];
 List<Request> _createInitialRequests() => [];

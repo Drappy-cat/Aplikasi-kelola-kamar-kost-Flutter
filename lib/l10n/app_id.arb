@@ -1,0 +1,43 @@
+{
+  "@@locale": "id",
+
+  "settings": "Pengaturan",
+  "@settings": {
+    "description": "Judul untuk halaman Pengaturan"
+  },
+
+  "appearance": "Tampilan",
+  "@appearance": {
+    "description": "Judul bagian untuk pengaturan tampilan"
+  },
+
+  "darkMode": "Mode Gelap",
+  "@darkMode": {
+    "description": "Label untuk saklar mode gelap"
+  },
+
+  "deviceInformation": "Informasi Perangkat",
+  "@deviceInformation": {
+    "description": "Judul bagian untuk informasi perangkat"
+  },
+
+  "application": "Aplikasi",
+  "@application": {
+    "description": "Judul bagian untuk pengaturan aplikasi"
+  },
+
+  "aboutApp": "Tentang Aplikasi",
+  "@aboutApp": {
+    "description": "Item menu untuk menampilkan detail aplikasi"
+  },
+
+  "termsAndConditions": "Syarat & Ketentuan",
+  "@termsAndConditions": {
+    "description": "Item menu untuk syarat dan ketentuan"
+  },
+
+  "language": "Bahasa",
+  "@language": {
+    "description": "Label untuk pengaturan pilihan bahasa"
+  }
+}

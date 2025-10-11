@@ -1,0 +1,43 @@
+{
+  "@@locale": "en",
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Title for the Settings page"
+  },
+
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Section header for appearance settings"
+  },
+
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Label for the dark mode switch"
+  },
+
+  "deviceInformation": "Device Information",
+  "@deviceInformation": {
+    "description": "Section header for device information"
+  },
+
+  "application": "Application",
+  "@application": {
+    "description": "Section header for application settings"
+  },
+
+  "aboutApp": "About App",
+  "@aboutApp": {
+    "description": "Menu item to show app details"
+  },
+
+  "termsAndConditions": "Terms & Conditions",
+  "@termsAndConditions": {
+    "description": "Menu item for terms and conditions"
+  },
+
+  "language": "Language",
+  "@language": {
+    "description": "Label for the language selection setting"
+  }
+}

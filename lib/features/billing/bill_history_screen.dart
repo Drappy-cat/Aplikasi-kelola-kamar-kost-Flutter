@@ -56,7 +56,7 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
             child: const Text('Batal'),
           ),
           ElevatedButton(
-            onPressed: () async { // Make onPressed async
+            onPressed: () async {
               await _dummyService.submitPaymentProof(bill.id, 'assets/kamar_kost/bukti_tf.png');
               _loadBills(); // Reload bills after submitting payment proof
               Navigator.pop(context);

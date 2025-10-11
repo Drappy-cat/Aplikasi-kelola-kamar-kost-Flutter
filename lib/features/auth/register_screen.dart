@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tes/app/app_routes.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
+import 'package:tes/shared/services/locator.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

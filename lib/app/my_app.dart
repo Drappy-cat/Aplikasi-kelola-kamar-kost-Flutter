@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:tes/app/app_router.dart'; // Import router baru
+import 'package:tes/app/app_router.dart';
+import 'package:tes/l10n/app_localizations.dart';
+import 'package:tes/shared/services/language_service.dart';
 import 'package:tes/shared/services/locator.dart';
 import 'package:tes/shared/services/theme_service.dart';
 
@@ -10,15 +13,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Dapatkan instance ThemeService dari locator
     final themeService = getIt<ThemeService>();
+    final languageService = getIt<LanguageService>();
 
-    // Gunakan AnimatedBuilder untuk mendengarkan perubahan pada ThemeService
     return AnimatedBuilder(
-      animation: themeService,
+      animation: Listenable.merge([themeService, languageService]),
       builder: (context, child) {
-        // PERUBAHAN: Mengganti seed color ke Opsi 2 (Hijau Sage/Mint)
-        final seed = const Color(0xFF3D9970); // Hijau Sage/Mint
+        final seed = const Color(0xFF3D9970);
 
         final inputDecorationTheme = InputDecorationTheme(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -32,7 +33,6 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.light,
           ),
           inputDecorationTheme: inputDecorationTheme,
-          // Tambahan: Kustomisasi kecil untuk konsistensi
           filledButtonTheme: FilledButtonThemeData(
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          // PERBAIKAN: Menggunakan CardThemeData, bukan CardTheme
           cardTheme: CardThemeData(
             elevation: 2,
             shape: RoundedRectangleBorder(
@@ -57,7 +56,6 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.dark,
           ),
           inputDecorationTheme: inputDecorationTheme,
-          // Tambahan: Kustomisasi kecil untuk konsistensi
           filledButtonTheme: FilledButtonThemeData(
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -66,7 +64,6 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          // PERBAIKAN: Menggunakan CardThemeData, bukan CardTheme
           cardTheme: CardThemeData(
             elevation: 2,
             shape: RoundedRectangleBorder(
@@ -81,7 +78,6 @@ class MyApp extends StatelessWidget {
               routerConfig: appRouter,
               debugShowCheckedModeBanner: false,
               title: 'Aplikasi Kost',
-              // Gunakan themeMode dari ThemeService
               themeMode: themeService.themeMode,
               theme: lightTheme.copyWith(
                 textTheme: GoogleFonts.poppinsTextTheme(lightTheme.textTheme),
@@ -89,6 +85,17 @@ class MyApp extends StatelessWidget {
               darkTheme: darkTheme.copyWith(
                 textTheme: GoogleFonts.poppinsTextTheme(darkTheme.textTheme),
               ),
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en', ''), // English
+                Locale('id', ''), // Indonesian
+              ],
+              locale: languageService.locale,
             );
           },
         );

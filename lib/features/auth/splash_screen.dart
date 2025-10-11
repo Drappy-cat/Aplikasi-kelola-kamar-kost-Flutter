@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:go_router/go_router.dart';
 import 'package:tes/app/app_routes.dart';
 import 'package:tes/shared/services/auth_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT LOCATOR
+import 'package:tes/shared/services/locator.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

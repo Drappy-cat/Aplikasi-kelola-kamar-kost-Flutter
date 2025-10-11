@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-const Color gradStart = Color(0xFF5B2EBC); // ungu
-const Color gradEnd   = Color(0xFFF72585); // pink
+// PERBAIKAN: Konstanta warna yang tidak lagi digunakan dihapus.
 const double cardRadius = 12.0;
 
 class AnimatedLeftPanel extends StatelessWidget {
@@ -16,10 +15,14 @@ class AnimatedLeftPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Mengambil warna dari tema aplikasi saat ini untuk konsistensi.
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
+        // Menggunakan gradasi dari warna primer dan sekunder tema.
         gradient: LinearGradient(
-          colors: [gradStart, gradEnd],
+          colors: [colorScheme.primary, colorScheme.secondary],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -44,15 +47,15 @@ class AnimatedLeftPanel extends StatelessWidget {
                 title,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
+                      color: Colors.white, // Teks tetap putih agar kontras
+                      fontWeight: FontWeight.w700,
+                    ),
               ),
               const SizedBox(height: 8),
               Text(
                 subtitle,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white70),
+                style: const TextStyle(color: Colors.white70), // Teks tetap putih agar kontras
               ),
             ],
           ),

@@ -6,7 +6,7 @@ import 'package:tes/app/app_routes.dart';
 import 'package:tes/features/home/bloc/user_home_bloc.dart';
 import 'package:tes/features/home/widgets/announcement_widget.dart';
 import 'package:tes/features/home/widgets/bill_summary_card.dart';
-import 'package:tes/features/home/widgets/quick_action_buttons.dart'; // <-- PERBAIKAN: Import widget baru
+import 'package:tes/features/home/widgets/quick_action_buttons.dart';
 import 'package:tes/features/home/widgets/room_card.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/room.dart';
@@ -41,25 +41,28 @@ class _UserHomeViewState extends State<UserHomeView> {
   Widget build(BuildContext context) {
     final authService = getIt<AuthService>();
     final userName = authService.currentUser?.fullName ?? authService.currentUser?.username ?? 'User';
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
             onTap: () => context.push(AppRoutes.profile),
             child: CircleAvatar(
-              backgroundColor: Colors.white,
+              backgroundColor: colorScheme.onPrimary.withOpacity(0.1),
               backgroundImage: authService.currentUser?.profileImageUrl != null
                   ? NetworkImage(authService.currentUser!.profileImageUrl!)
                   : null,
               child: authService.currentUser?.profileImageUrl == null
-                  ? const Icon(Icons.person)
+                  ? Icon(Icons.person, color: colorScheme.onPrimary)
                   : null,
             ),
           ),
         ),
-        title: Text('$userName, selamat datang'),
+        title: Text('Hai, $userName'),
         actions: [
           IconButton(
             onPressed: () => context.push(AppRoutes.notification),
@@ -87,14 +90,34 @@ class _UserHomeViewState extends State<UserHomeView> {
                 onRefresh: () async {
                   context.read<UserHomeBloc>().add(const UserHomeEvent.loadData());
                 },
-                child: ListView(
-                  padding: const EdgeInsets.all(16.0),
+                child: Stack( // Gunakan Stack untuk menumpuk FAB di atas ListView
                   children: [
-                    if (latestAnnouncement != null) AnnouncementWidget(latestAnnouncement: latestAnnouncement),
+                    ListView(
+                      padding: const EdgeInsets.all(16.0),
+                      children: [
+                        if (latestAnnouncement != null) AnnouncementWidget(latestAnnouncement: latestAnnouncement),
+                        if (isTenant)
+                          _buildTenantContent(userRoom, latestBill)
+                        else
+                          _buildGuestContent(allRooms),
+                        // Beri ruang di bawah agar tidak tertutup FAB
+                        const SizedBox(height: 80),
+                      ],
+                    ),
+                    // PERBAIKAN: Tambahkan FAB untuk chat jika pengguna adalah penghuni
                     if (isTenant)
-                      _buildTenantContent(userRoom, latestBill)
-                    else
-                      _buildGuestContent(allRooms),
+                      Positioned(
+                        bottom: 16,
+                        right: 16,
+                        child: FloatingActionButton.extended(
+                          onPressed: () {
+                            // Saat penghuni chat, lawan bicaranya adalah admin
+                            context.push('${AppRoutes.chat}/admin');
+                          },
+                          label: const Text('Hubungi Admin'),
+                          icon: const Icon(Icons.chat_bubble_outline),
+                        ),
+                      ),
                   ],
                 ),
               );
@@ -126,7 +149,6 @@ class _UserHomeViewState extends State<UserHomeView> {
         const SizedBox(height: 8),
         BillSummaryCard(latestBill: latestBill),
         const SizedBox(height: 24),
-        // PERBAIKAN: Menggunakan widget QuickActionButtons yang baru
         QuickActionButtons(latestBill: latestBill),
       ],
     ).animate().fade();

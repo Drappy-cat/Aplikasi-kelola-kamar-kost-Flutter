@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:tes/features/activity_log/bloc/activity_log_bloc.dart';
 
-// Halaman wrapper yang menyediakan BLoC
 class ActivityLogScreen extends StatelessWidget {
   const ActivityLogScreen({super.key});
 
@@ -16,14 +15,12 @@ class ActivityLogScreen extends StatelessWidget {
   }
 }
 
-// Widget yang membangun UI
 class ActivityLogView extends StatelessWidget {
   const ActivityLogView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AppBar tidak diperlukan karena halaman ini akan menjadi bagian dari AdminPanel
       body: BlocBuilder<ActivityLogBloc, ActivityLogState>(
         builder: (context, state) {
           if (state.isLoading) {

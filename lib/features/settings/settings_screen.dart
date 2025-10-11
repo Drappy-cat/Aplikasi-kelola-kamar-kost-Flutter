@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tes/app/app_routes.dart';
 import 'package:tes/features/settings/bloc/settings_bloc.dart';
+import 'package:tes/l10n/app_localizations.dart'; // <-- IMPORT BARU
+import 'package:tes/shared/services/language_service.dart'; // <-- IMPORT BARU
 import 'package:tes/shared/services/locator.dart';
 import 'package:tes/shared/services/theme_service.dart';
 
@@ -23,37 +25,85 @@ class SettingsScreen extends StatelessWidget {
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
 
+  // Dialog untuk memilih bahasa
+  void _showLanguageDialog(BuildContext context) {
+    final languageService = getIt<LanguageService>();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.language),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<Locale>(
+              title: const Text('English'),
+              value: const Locale('en'),
+              groupValue: languageService.locale,
+              onChanged: (locale) {
+                if (locale != null) languageService.setLocale(locale);
+                Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<Locale>(
+              title: const Text('Bahasa Indonesia'),
+              value: const Locale('id'),
+              groupValue: languageService.locale,
+              onChanged: (locale) {
+                if (locale != null) languageService.setLocale(locale);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeService = getIt<ThemeService>();
+    // Mengambil teks terjemahan
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pengaturan'),
+        // Menggunakan teks dari lokalisasi
+        title: Text(l10n.settings),
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
           return ListView(
             padding: const EdgeInsets.all(16.0),
             children: [
-              _buildSectionHeader(context, 'Tampilan'),
+              _buildSectionHeader(context, l10n.appearance),
               _buildSettingsCard(
-                child: AnimatedBuilder(
-                  animation: themeService,
-                  builder: (context, child) {
-                    return ListTile(
-                      leading: const Icon(Icons.brightness_6_outlined),
-                      title: const Text('Mode Gelap'),
-                      trailing: Switch(
-                        value: themeService.isDarkMode,
-                        onChanged: (value) => themeService.toggleTheme(),
-                      ),
-                      onTap: () => themeService.toggleTheme(),
-                    );
-                  },
+                child: Column(
+                  children: [
+                    AnimatedBuilder(
+                      animation: themeService,
+                      builder: (context, child) {
+                        return ListTile(
+                          leading: const Icon(Icons.brightness_6_outlined),
+                          title: Text(l10n.darkMode),
+                          trailing: Switch(
+                            value: themeService.isDarkMode,
+                            onChanged: (value) => themeService.toggleTheme(),
+                          ),
+                          onTap: () => themeService.toggleTheme(),
+                        );
+                      },
+                    ),
+                    const Divider(height: 1, indent: 16, endIndent: 16),
+                    ListTile(
+                      leading: const Icon(Icons.language_outlined),
+                      title: Text(l10n.language),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => _showLanguageDialog(context),
+                    ),
+                  ],
                 ),
               ),
-              _buildSectionHeader(context, 'Informasi Perangkat'),
+              _buildSectionHeader(context, l10n.deviceInformation),
               _buildSettingsCard(
                 child: state.isLoading
                     ? const Padding(
@@ -71,13 +121,13 @@ class SettingsView extends StatelessWidget {
                             }).toList(),
                           ),
               ),
-              _buildSectionHeader(context, 'Aplikasi'),
+              _buildSectionHeader(context, l10n.application),
               _buildSettingsCard(
                 child: Column(
                   children: [
                     ListTile(
                       leading: const Icon(Icons.info_outline),
-                      title: const Text('Tentang Aplikasi'),
+                      title: Text(l10n.aboutApp),
                       subtitle: const Text('Versi 1.0.0'),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () {
@@ -98,7 +148,7 @@ class SettingsView extends StatelessWidget {
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     ListTile(
                       leading: const Icon(Icons.description_outlined),
-                      title: const Text('Syarat & Ketentuan'),
+                      title: Text(l10n.termsAndConditions),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () => context.push(AppRoutes.terms),
                     ),

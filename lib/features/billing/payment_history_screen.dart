@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
+import 'package:tes/shared/services/locator.dart';
 
 class PaymentHistoryScreen extends StatefulWidget {
   const PaymentHistoryScreen({super.key});
@@ -13,7 +13,6 @@ class PaymentHistoryScreen extends StatefulWidget {
 }
 
 class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
-  // Mengambil instance service dari GetIt
   final DummyService _dummyService = getIt<DummyService>();
   final AuthService _authService = getIt<AuthService>();
 

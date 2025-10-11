@@ -1,9 +1,10 @@
 import 'package:go_router/go_router.dart';
 import 'package:tes/app/app_routes.dart';
-import 'package:tes/features/activity_log/scan_screen.dart'; // <-- IMPORT BARU
+import 'package:tes/features/activity_log/scan_screen.dart';
 import 'package:tes/features/auth/login_screen.dart';
 import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
+import 'package:tes/features/chat/chat_screen.dart'; // <-- IMPORT BARU
 import 'package:tes/features/home/home_screen.dart';
 import 'package:tes/features/home/room_detail_screen.dart';
 import 'package:tes/features/notification/notification_screen.dart';
@@ -88,10 +89,17 @@ final appRouter = GoRouter(
         }
       },
     ),
-    // PERBAIKAN: Mendaftarkan rute baru untuk halaman scan
     GoRoute(
       path: AppRoutes.scanActivity,
       builder: (context, state) => const ScanScreen(),
+    ),
+    // PERBAIKAN: Mendaftarkan rute baru untuk halaman chat
+    GoRoute(
+      path: '${AppRoutes.chat}/:userId', // Menggunakan parameter userId
+      builder: (context, state) {
+        final userId = state.pathParameters['userId']!;
+        return ChatScreen(recipientUserId: userId);
+      },
     ),
   ],
 );
