@@ -3,14 +3,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
+import 'package:tes/shared/services/locator.dart';
 
 part 'bill_event.dart';
 part 'bill_state.dart';
 part 'bill_bloc.freezed.dart';
 
 class BillBloc extends Bloc<BillEvent, BillState> {
-  // Mengambil instance service dari GetIt
   final AuthService _authService = getIt<AuthService>();
   final DummyService _dummyService = getIt<DummyService>();
 
@@ -28,8 +27,8 @@ class BillBloc extends Bloc<BillEvent, BillState> {
         emit(const BillState.error('Pengguna tidak ditemukan. Silakan login kembali.'));
         return;
       }
+      // PERBAIKAN: Logika pengurutan dihapus karena sudah ditangani oleh DummyService
       final bills = _dummyService.getBillsForUser(userId);
-      bills.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       emit(BillState.loaded(bills));
     } catch (e) {
       emit(BillState.error('Gagal memuat tagihan: ${e.toString()}'));

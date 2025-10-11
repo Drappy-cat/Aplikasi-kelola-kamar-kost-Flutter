@@ -11,6 +11,10 @@ abstract class AdminPanelState with _$AdminPanelState {
     required List<Announcement> announcements,
     required bool isLoading,
     String? error,
+
+    // PERBAIKAN: State baru untuk manajemen keluhan admin
+    @Default([]) List<Complaint> filteredComplaints,
+    @Default('Semua') String complaintStatusFilter,
   }) = _AdminPanelState;
 
   factory AdminPanelState.initial() => const AdminPanelState(
@@ -22,5 +26,8 @@ abstract class AdminPanelState with _$AdminPanelState {
         announcements: [],
         isLoading: true,
         error: null,
+        // Inisialisasi state baru
+        filteredComplaints: [],
+        complaintStatusFilter: 'Semua',
       );
 }

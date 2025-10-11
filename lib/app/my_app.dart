@@ -17,21 +17,62 @@ class MyApp extends StatelessWidget {
     return AnimatedBuilder(
       animation: themeService,
       builder: (context, child) {
-        final seed = Colors.pink;
+        // PERUBAHAN: Mengganti seed color ke Opsi 2 (Hijau Sage/Mint)
+        final seed = const Color(0xFF3D9970); // Hijau Sage/Mint
+
         final inputDecorationTheme = InputDecorationTheme(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          filled: true,
         );
 
         final lightTheme = ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.light),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: seed,
+            brightness: Brightness.light,
+          ),
           inputDecorationTheme: inputDecorationTheme,
+          // Tambahan: Kustomisasi kecil untuk konsistensi
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          // PERBAIKAN: Menggunakan CardThemeData, bukan CardTheme
+          cardTheme: CardThemeData(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
         );
 
         final darkTheme = ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.dark),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: seed,
+            brightness: Brightness.dark,
+          ),
           inputDecorationTheme: inputDecorationTheme,
+          // Tambahan: Kustomisasi kecil untuk konsistensi
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          // PERBAIKAN: Menggunakan CardThemeData, bukan CardTheme
+          cardTheme: CardThemeData(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
         );
 
         return ResponsiveSizer(

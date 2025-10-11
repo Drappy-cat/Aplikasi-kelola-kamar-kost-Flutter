@@ -1,77 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:tes/shared/models/app_notification.dart';
-import 'package:tes/shared/services/dummy_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
+import 'package:tes/features/notification/bloc/notification_bloc.dart';
 
-class NotificationScreen extends StatefulWidget {
+// Halaman wrapper yang menyediakan BLoC
+class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
 
   @override
-  State<NotificationScreen> createState() => _NotificationScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => NotificationBloc()..add(const NotificationEvent.load()),
+      child: const NotificationView(),
+    );
+  }
 }
 
-class _NotificationScreenState extends State<NotificationScreen> {
-  // Mengambil instance service dari GetIt
-  final DummyService _dummyService = getIt<DummyService>();
+// Widget yang membangun UI
+class NotificationView extends StatelessWidget {
+  const NotificationView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final notifications = _dummyService.notifications;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifikasi'),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFF72585), Color(0xFF5B2EBC)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        foregroundColor: Colors.white,
       ),
-      body: notifications.isEmpty
-          ? const Center(
+      body: BlocBuilder<NotificationBloc, NotificationState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.error != null) {
+            return Center(child: Text(state.error!));
+          }
+          if (state.notifications.isEmpty) {
+            return const Center(
               child: Text(
                 'Tidak ada notifikasi baru.',
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
-            )
-          : ListView.builder(
-              itemCount: notifications.length,
-              itemBuilder: (context, index) {
-                final notif = notifications[index];
-                final bool isRead = notif.isRead;
+            );
+          }
 
-                return ListTile(
-                  tileColor: isRead ? null : Theme.of(context).colorScheme.primary.withOpacity(0.05),
-                  leading: CircleAvatar(
-                    backgroundColor: notif.iconColor.withOpacity(0.1),
-                    child: Icon(notif.icon, color: notif.iconColor),
-                  ),
-                  title: Text(notif.title, style: TextStyle(fontWeight: isRead ? FontWeight.normal : FontWeight.bold)),
-                  subtitle: Text(notif.subtitle, maxLines: 2, overflow: TextOverflow.ellipsis),
-                  trailing: Text(
-                    DateFormat.yMMMd().format(notif.date),
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                  onTap: () {
-                    if (!isRead) {
-                      setState(() {
-                        final updatedNotif = notif.copyWith(isRead: true);
-                        _dummyService.notifications[index] = updatedNotif;
-                        // Perubahan notifikasi juga perlu disimpan
-                        // Kita akan menambahkan fungsi ini nanti di DummyService
-                      });
-                    }
-                  },
-                );
-              },
-            ),
+          return ListView.builder(
+            itemCount: state.notifications.length,
+            itemBuilder: (context, index) {
+              final notif = state.notifications[index];
+              final bool isRead = notif.isRead;
+
+              return ListTile(
+                tileColor: isRead ? null : Theme.of(context).colorScheme.primary.withOpacity(0.05),
+                leading: CircleAvatar(
+                  backgroundColor: notif.iconColor.withOpacity(0.1),
+                  child: Icon(notif.icon, color: notif.iconColor),
+                ),
+                title: Text(
+                  notif.title,
+                  style: TextStyle(fontWeight: isRead ? FontWeight.normal : FontWeight.bold),
+                ),
+                subtitle: Text(notif.subtitle, maxLines: 2, overflow: TextOverflow.ellipsis),
+                trailing: Text(
+                  DateFormat.yMMMd().format(notif.date),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                onTap: () {
+                  // Kirim event ke BLoC untuk menandai sebagai telah dibaca
+                  if (!isRead) {
+                    context.read<NotificationBloc>().add(NotificationEvent.markAsRead(index));
+                  }
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

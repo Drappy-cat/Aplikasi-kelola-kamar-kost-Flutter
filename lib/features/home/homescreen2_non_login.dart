@@ -23,7 +23,6 @@ class HomeScreen2NonLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // PERBAIKAN: Akses currentUser melalui instance AuthService dari GetIt
     final authService = getIt<AuthService>();
     final userName = authService.currentUser?.fullName ?? authService.currentUser?.username ?? 'Pengguna';
 

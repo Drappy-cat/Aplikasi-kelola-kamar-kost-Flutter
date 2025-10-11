@@ -39,13 +39,8 @@ class UserHomeBloc extends Bloc<UserHomeEvent, UserHomeState> {
 
       if (isTenant) {
         userRoom = _dummyService.findRoom(user.roomId!);
-        if (userRoom != null) {
-          final userBills = _dummyService.getBillsForUser(user.id);
-          if (userBills.isNotEmpty) {
-            userBills.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-            latestBill = userBills.first;
-          }
-        }
+        // PERBAIKAN: Menggunakan metode baru dari DummyService
+        latestBill = _dummyService.getLatestBillForUser(user.id);
       } else {
         allRooms = _dummyService.rooms;
       }

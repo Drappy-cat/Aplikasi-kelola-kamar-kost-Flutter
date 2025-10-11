@@ -67,8 +67,18 @@ class DummyService {
     }
   }
 
-  List<Bill> getBillsForUser(String userId) => bills.where((b) => b.userId == userId).toList();
+  List<Bill> getBillsForUser(String userId) {
+    final userBills = bills.where((b) => b.userId == userId).toList();
+    userBills.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return userBills;
+  }
+
   List<Bill> getPendingConfirmationBills() => bills.where((b) => b.status == 'Menunggu Konfirmasi').toList();
+
+  Bill? getLatestBillForUser(String userId) {
+    final userBills = getBillsForUser(userId);
+    return userBills.isNotEmpty ? userBills.first : null;
+  }
 
   Future<void> confirmCashPayment(String billId) async {
     final index = bills.indexWhere((bill) => bill.id == billId);
@@ -119,7 +129,6 @@ class DummyService {
   List<Complaint> getAllComplaints() => complaints;
   List<Complaint> getComplaintsForUser(String userId) => complaints.where((c) => c.userId == userId).toList();
 
-
   List<Announcement> getLatestAnnouncements() {
     announcements.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return announcements.where((a) => a.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30)))).toList();
@@ -129,6 +138,14 @@ class DummyService {
     final newAnnouncement = Announcement(id: 'ann-${DateTime.now().millisecondsSinceEpoch}', title: title, content: content, createdAt: DateTime.now());
     announcements.insert(0, newAnnouncement);
     await _saveData();
+  }
+
+  // PERBAIKAN: Metode baru untuk memperbarui dan menyimpan notifikasi
+  Future<void> updateNotification(int index, AppNotification notification) async {
+    if (index >= 0 && index < notifications.length) {
+      notifications[index] = notification;
+      await _saveData();
+    }
   }
 
   Room? findRoom(String code) {

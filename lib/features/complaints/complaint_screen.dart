@@ -1,73 +1,166 @@
 import 'package:flutter/material.dart';
-import 'package:tes/shared/models/app_user.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tes/features/complaints/bloc/complaint_bloc.dart';
 import 'package:tes/shared/models/complaint.dart';
 import 'package:tes/shared/services/auth_service.dart';
-import 'package:tes/shared/services/dummy_service.dart';
 import 'package:tes/shared/services/locator.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class ComplaintScreen extends StatefulWidget {
+// Halaman wrapper yang menyediakan BLoC
+class ComplaintScreen extends StatelessWidget {
   const ComplaintScreen({super.key});
 
   @override
-  State<ComplaintScreen> createState() => _ComplaintScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ComplaintBloc()..add(const ComplaintEvent.load()),
+      child: const ComplaintView(),
+    );
+  }
 }
 
-class _ComplaintScreenState extends State<ComplaintScreen> {
-  late List<Complaint> _complaints;
-  List<Complaint> _filteredComplaints = [];
+// Widget yang membangun UI
+class ComplaintView extends StatefulWidget {
+  const ComplaintView({super.key});
+
+  @override
+  State<ComplaintView> createState() => _ComplaintViewState();
+}
+
+class _ComplaintViewState extends State<ComplaintView> {
   final _searchController = TextEditingController();
   String? _selectedStatusFilter;
-
-  final AuthService _authService = getIt<AuthService>();
-  final DummyService _dummyService = getIt<DummyService>();
 
   @override
   void initState() {
     super.initState();
-    _loadComplaints();
-    _searchController.addListener(_filterComplaints);
+    _searchController.addListener(_onFilterChanged);
   }
 
   @override
   void dispose() {
+    _searchController.removeListener(_onFilterChanged);
     _searchController.dispose();
     super.dispose();
   }
 
-  void _loadComplaints() {
-    final userId = _authService.currentUser?.id ?? '';
-    setState(() {
-      _complaints = _dummyService.getComplaintsForUser(userId);
-      _complaints.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      _filterComplaints(); // Initial filter
-    });
+  void _onFilterChanged() {
+    context.read<ComplaintBloc>().add(ComplaintEvent.filterChanged(
+          searchQuery: _searchController.text,
+          statusFilter: _selectedStatusFilter,
+        ));
   }
 
-  void _filterComplaints() {
-    setState(() {
-      _filteredComplaints = _complaints.where((c) {
-        final titleMatches = c.title.toLowerCase().contains(_searchController.text.toLowerCase());
-        final statusMatches = _selectedStatusFilter == null || c.status == _selectedStatusFilter;
-        return titleMatches && statusMatches;
-      }).toList();
-    });
+  @override
+  Widget build(BuildContext context) {
+    final bool isTenant = getIt<AuthService>().currentUser?.roomId != null;
+
+    return BlocListener<ComplaintBloc, ComplaintState>(
+      listener: (context, state) {
+        if (state.submissionSuccess != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.submissionSuccess!), backgroundColor: Colors.green),
+          );
+        }
+        if (state.submissionError != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.submissionError!), backgroundColor: Colors.red),
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Pengaduan Saya'),
+          actions: [_buildFilterMenu(context)],
+        ),
+        body: Column(
+          children: [
+            _buildSearchBar(context),
+            Expanded(
+              child: BlocBuilder<ComplaintBloc, ComplaintState>(
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (state.error != null) {
+                    return Center(child: Text(state.error!));
+                  }
+                  if (state.filteredComplaints.isEmpty) {
+                    return const Center(
+                      child: Text('Tidak ada pengaduan yang cocok.', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                    );
+                  }
+                  return _buildComplaintList(state.filteredComplaints);
+                },
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: isTenant
+            ? FloatingActionButton.extended(
+                onPressed: () => _showAddComplaintDialog(context),
+                icon: const Icon(Icons.add),
+                label: const Text('Buat Pengaduan'),
+              )
+            : null,
+      ),
+    );
   }
 
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'Resolved':
-        return Colors.green;
-      case 'In Progress':
-        return Colors.blue;
-      case 'Pending':
-        return Colors.orange;
-      default:
-        return Colors.grey;
-    }
+  Widget _buildFilterMenu(BuildContext context) {
+    return PopupMenuButton<String>(
+      onSelected: (String result) {
+        setState(() {
+          _selectedStatusFilter = result == 'All' ? null : result;
+        });
+        _onFilterChanged(); // Trigger filter change
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        const PopupMenuItem<String>(value: 'All', child: Text('Semua Status')),
+        const PopupMenuDivider(),
+        const PopupMenuItem<String>(value: 'Pending', child: Text('Pending')),
+        const PopupMenuItem<String>(value: 'In Progress', child: Text('In Progress')),
+        const PopupMenuItem<String>(value: 'Resolved', child: Text('Resolved')),
+      ],
+      icon: const Icon(Icons.filter_list),
+    );
   }
 
-  Future<void> _showAddComplaintDialog() async {
+  Widget _buildSearchBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          labelText: 'Cari berdasarkan judul',
+          prefixIcon: const Icon(Icons.search),
+          border: const OutlineInputBorder(),
+          suffixIcon: _searchController.text.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                  },
+                )
+              : null,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildComplaintList(List<Complaint> complaints) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(8.0),
+      itemCount: complaints.length,
+      itemBuilder: (context, index) {
+        final complaint = complaints[index];
+        return _ComplaintCard(complaint: complaint);
+      },
+    );
+  }
+
+  Future<void> _showAddComplaintDialog(BuildContext context) async {
+    // The dialog can be extracted to its own widget for even cleaner code
     final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
@@ -77,7 +170,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
 
     await showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
@@ -95,19 +188,12 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
-                        initialValue: selectedCategory,
+                        value: selectedCategory,
                         decoration: const InputDecoration(labelText: 'Kategori', border: OutlineInputBorder()),
                         items: categories.map((String category) {
-                          return DropdownMenuItem<String>(
-                            value: category,
-                            child: Text(category),
-                          );
+                          return DropdownMenuItem<String>(value: category, child: Text(category));
                         }).toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedCategory = newValue;
-                          });
-                        },
+                        onChanged: (newValue) => setState(() => selectedCategory = newValue),
                         validator: (v) => (v == null) ? 'Kategori harus dipilih' : null,
                       ),
                       const SizedBox(height: 16),
@@ -118,28 +204,21 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                         validator: (v) => (v == null || v.isEmpty) ? 'Deskripsi tidak boleh kosong' : null,
                       ),
                       const SizedBox(height: 16),
+                      // Image picking simulation can be improved
                       OutlinedButton.icon(
-                        onPressed: () {
-                          // Simulate image picking
-                          setState(() {
-                            final imageId = DateTime.now().millisecondsSinceEpoch;
-                            selectedImageUrls.add('https://picsum.photos/seed/$imageId/200/300');
-                          });
-                        },
+                        onPressed: () => setState(() {
+                          final imageId = DateTime.now().millisecondsSinceEpoch;
+                          selectedImageUrls.add('https://picsum.photos/seed/$imageId/200/300');
+                        }),
                         icon: const Icon(Icons.add_a_photo),
                         label: const Text("Tambah Foto"),
                       ),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8.0,
-                        runSpacing: 4.0,
                         children: selectedImageUrls.map((url) => Chip(
                           label: Text('Image ${selectedImageUrls.indexOf(url) + 1}'),
-                          onDeleted: () {
-                            setState(() {
-                              selectedImageUrls.remove(url);
-                            });
-                          },
+                          onDeleted: () => setState(() => selectedImageUrls.remove(url)),
                         )).toList(),
                       ),
                     ],
@@ -148,32 +227,28 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
               ),
               actions: [
                 TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
-                ElevatedButton(
-                  onPressed: () async { // Make onPressed async
-                    if (formKey.currentState!.validate()) {
-                      final AppUser? user = _authService.currentUser;
-                      if (user != null && user.roomId != null) {
-                        await _dummyService.addComplaint(
-                          userId: user.id,
-                          roomId: user.roomId!,
-                          title: titleController.text,
-                          description: descriptionController.text,
-                          category: selectedCategory!,
-                          imageUrls: selectedImageUrls,
-                        );
-                        _loadComplaints(); // Refresh the list
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Pengaduan berhasil dikirim!')),
-                        );
-                      } else {
-                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Gagal mengirim: Anda harus menjadi penghuni untuk membuat pengaduan.'), backgroundColor: Colors.red),
-                        );
-                      }
-                    }
+                BlocBuilder<ComplaintBloc, ComplaintState>(
+                  bloc: context.read<ComplaintBloc>(),
+                  builder: (context, state) {
+                    return FilledButton(
+                      onPressed: state.isSubmitting
+                          ? null
+                          : () {
+                              if (formKey.currentState!.validate()) {
+                                context.read<ComplaintBloc>().add(ComplaintEvent.add(
+                                      title: titleController.text,
+                                      description: descriptionController.text,
+                                      category: selectedCategory!,
+                                      imageUrls: selectedImageUrls,
+                                    ));
+                                Navigator.pop(context);
+                              }
+                            },
+                      child: state.isSubmitting
+                          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                          : const Text('Kirim'),
+                    );
                   },
-                  child: const Text('Kirim'),
                 ),
               ],
             );
@@ -182,148 +257,90 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       },
     );
   }
+}
+
+// Extracted widget for a single complaint card
+class _ComplaintCard extends StatelessWidget {
+  final Complaint complaint;
+
+  const _ComplaintCard({required this.complaint});
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'Resolved': return Colors.green;
+      case 'In Progress': return Colors.blue;
+      case 'Pending': return Colors.orange;
+      default: return Colors.grey;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bool isTenant = _authService.currentUser?.roomId != null;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pengaduan Saya'),
-        actions: [
-          PopupMenuButton<String>(
-            onSelected: (String result) {
-              setState(() {
-                _selectedStatusFilter = result == 'All' ? null : result;
-                _filterComplaints();
-              });
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(value: 'All', child: Text('Semua Status')),
-              const PopupMenuDivider(),
-              const PopupMenuItem<String>(value: 'Pending', child: Text('Pending')),
-              const PopupMenuItem<String>(value: 'In Progress', child: Text('In Progress')),
-              const PopupMenuItem<String>(value: 'Resolved', child: Text('Resolved')),
-            ],
-            icon: const Icon(Icons.filter_list),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Cari berdasarkan judul',
-                prefixIcon: const Icon(Icons.search),
-                border: const OutlineInputBorder(),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                        },
-                      )
-                    : null,
-              ),
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(complaint.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                ),
+                const SizedBox(width: 8),
+                Chip(
+                  label: Text(complaint.status, style: const TextStyle(color: Colors.white)),
+                  backgroundColor: _getStatusColor(complaint.status),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
+                ),
+              ],
             ),
-          ),
-          Expanded(
-            child: _filteredComplaints.isEmpty
-                ? const Center(
-                    child: Text('Tidak ada pengaduan yang cocok.', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(8.0),
-                    itemCount: _filteredComplaints.length,
-                    itemBuilder: (context, index) {
-                      final complaint = _filteredComplaints[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                        clipBehavior: Clip.antiAlias,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      complaint.title,
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Chip(
-                                    label: Text(complaint.status, style: const TextStyle(color: Colors.white)),
-                                    backgroundColor: _getStatusColor(complaint.status),
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    visualDensity: VisualDensity.compact,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(complaint.category, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey.shade700)),
-                              const SizedBox(height: 8),
-                              Text(complaint.description),
-                              if (complaint.imageUrls.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 12.0),
-                                  child: SizedBox(
-                                    height: 100,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: complaint.imageUrls.length,
-                                      itemBuilder: (context, imgIndex) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(right: 8.0),
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(8.0),
-                                            child: Image.network(
-                                              complaint.imageUrls[imgIndex],
-                                              width: 100,
-                                              height: 100,
-                                              fit: BoxFit.cover,
-                                              loadingBuilder: (context, child, progress) =>
-                                                  progress == null ? child : const Center(child: CircularProgressIndicator()),
-                                              errorBuilder: (context, error, stack) =>
-                                                  const Icon(Icons.broken_image, size: 50, color: Colors.grey),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              const SizedBox(height: 12),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  'Dikirim: ${timeago.format(complaint.createdAt, locale: 'id')}',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ),
-                            ],
+            const SizedBox(height: 4),
+            Text(complaint.category, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey.shade700)),
+            const SizedBox(height: 8),
+            Text(complaint.description),
+            if (complaint.imageUrls.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: SizedBox(
+                  height: 100,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: complaint.imageUrls.length,
+                    itemBuilder: (context, imgIndex) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            complaint.imageUrls[imgIndex],
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stack) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
                           ),
                         ),
                       );
                     },
                   ),
-          ),
-        ],
+                ),
+              ),
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                'Dikirim: ${timeago.format(complaint.createdAt, locale: 'id')}',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          ],
+        ),
       ),
-      floatingActionButton: isTenant
-          ? FloatingActionButton.extended(
-              onPressed: _showAddComplaintDialog,
-              icon: const Icon(Icons.add),
-              label: const Text('Buat Pengaduan'),
-            )
-          : null,
     );
   }
 }
