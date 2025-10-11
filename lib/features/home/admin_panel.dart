@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tes/app/app_routes.dart';
+import 'package:tes/features/activity_log/activity_log_screen.dart'; // <-- IMPORT BARU
 import 'package:tes/features/complaints/admin_complaint_screen.dart';
 import 'package:tes/features/home/admin_widgets/announcements_page.dart';
 import 'package:tes/features/home/admin_widgets/bills_page.dart';
@@ -73,12 +74,12 @@ class AdminPanelView extends StatelessWidget {
               child: IndexedStack(
                 index: state.activeTabIndex,
                 children: [
-                  // PERBAIKAN: Menggunakan widget yang sudah diekstrak
                   RoomsPage(rooms: state.rooms),
                   BillsPage(pendingBills: state.pendingBills),
                   RequestsPage(requests: state.requests),
-                  const AdminComplaintScreen(), // Ini sudah menjadi widget terpisah, jadi kita biarkan
+                  const AdminComplaintScreen(),
                   AnnouncementsPage(announcements: state.announcements),
+                  const ActivityLogScreen(), // <-- HALAMAN BARU
                 ],
               ),
             ),
@@ -91,6 +92,7 @@ class AdminPanelView extends StatelessWidget {
           NavigationDestination(icon: Icon(Icons.inbox_outlined), label: 'Pengajuan'),
           NavigationDestination(icon: Icon(Icons.report_problem_outlined), label: 'Pengaduan'),
           NavigationDestination(icon: Icon(Icons.campaign_outlined), label: 'Pengumuman'),
+          NavigationDestination(icon: Icon(Icons.history_toggle_off_outlined), label: 'Log'), // <-- TAB BARU
         ],
       ),
       floatingActionButton: _getFabForTab(context, state.activeTabIndex),
@@ -131,7 +133,6 @@ class AdminPanelView extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                // Memanggil service dan refresh data melalui BLoC
                 getIt<DummyService>().addAnnouncement(title: titleCtrl.text, content: contentCtrl.text).then((_) {
                   context.read<AdminPanelBloc>().add(const AdminPanelEvent.loadData());
                 });
@@ -145,5 +146,3 @@ class AdminPanelView extends StatelessWidget {
     );
   }
 }
-
-// PERBAIKAN: Semua kelas widget privat (_RoomsPage, _BillsPage, dll.) telah dihapus dari file ini.

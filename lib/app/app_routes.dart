@@ -18,4 +18,7 @@ class AppRoutes {
   static const String paymentHistory = '/payment_history';
   static const String reportIssue = '/report_issue';
   static const String roomDetail = '/room_detail';
+
+  // Rute baru untuk fitur scan
+  static const String scanActivity = '/scan_activity';
 }

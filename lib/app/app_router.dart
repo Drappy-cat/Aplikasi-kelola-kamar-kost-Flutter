@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:tes/app/app_routes.dart'; // <-- 1. IMPORT FILE RUTE BARU
+import 'package:tes/app/app_routes.dart';
+import 'package:tes/features/activity_log/scan_screen.dart'; // <-- IMPORT BARU
 import 'package:tes/features/auth/login_screen.dart';
 import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
@@ -18,7 +19,6 @@ import 'package:tes/shared/models/room.dart';
 
 // Konfigurasi GoRouter
 final appRouter = GoRouter(
-  // 2. Gunakan konstanta untuk rute awal
   initialLocation: AppRoutes.splash,
   routes: [
     GoRoute(
@@ -87,6 +87,11 @@ final appRouter = GoRouter(
           return const HomeScreen();
         }
       },
+    ),
+    // PERBAIKAN: Mendaftarkan rute baru untuk halaman scan
+    GoRoute(
+      path: AppRoutes.scanActivity,
+      builder: (context, state) => const ScanScreen(),
     ),
   ],
 );

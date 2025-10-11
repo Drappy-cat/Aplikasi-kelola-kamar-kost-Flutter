@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tes/shared/models/activity_log.dart';
 import 'package:tes/shared/models/app_notification.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/models/bill.dart';
@@ -15,6 +16,7 @@ const String _kComplaintsKey = 'complaints_data';
 const String _kAnnouncementsKey = 'announcements_data';
 const String _kRequestsKey = 'requests_data';
 const String _kNotificationsKey = 'notifications_data';
+const String _kActivityLogsKey = 'activity_logs_data';
 
 class DummyService {
   final SharedPreferences _prefs;
@@ -25,6 +27,7 @@ class DummyService {
   late List<Announcement> announcements;
   late List<Request> requests;
   late List<AppNotification> notifications;
+  late List<ActivityLog> activityLogs;
 
   DummyService(this._prefs);
 
@@ -39,6 +42,7 @@ class DummyService {
     announcements = _loadList(_prefs.getString(_kAnnouncementsKey), (json) => Announcement.fromJson(json), _createInitialAnnouncements);
     requests = _loadList(_prefs.getString(_kRequestsKey), (json) => Request.fromJson(json), _createInitialRequests);
     notifications = _loadList(_prefs.getString(_kNotificationsKey), (json) => AppNotification.fromJson(json), _createInitialNotifications);
+    activityLogs = _loadList(_prefs.getString(_kActivityLogsKey), (json) => ActivityLog.fromJson(json), _createInitialActivityLogs);
 
     if (_prefs.getString(_kRoomsKey) == null) {
       await _saveData();
@@ -52,6 +56,7 @@ class DummyService {
     await _prefs.setString(_kAnnouncementsKey, jsonEncode(announcements.map((e) => e.toJson()).toList()));
     await _prefs.setString(_kRequestsKey, jsonEncode(requests.map((e) => e.toJson()).toList()));
     await _prefs.setString(_kNotificationsKey, jsonEncode(notifications.map((e) => e.toJson()).toList()));
+    await _prefs.setString(_kActivityLogsKey, jsonEncode(activityLogs.map((e) => e.toJson()).toList()));
   }
 
   List<T> _loadList<T>(String? jsonString, T Function(Map<String, dynamic>) fromJson, List<T> Function() defaultCreator) {
@@ -65,6 +70,45 @@ class DummyService {
     } else {
       return defaultCreator();
     }
+  }
+
+  // --- Metode Terpusat untuk Notifikasi ---
+  Future<void> addNotification({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color iconColor,
+  }) async {
+    final newNotification = AppNotification(
+      title: title,
+      subtitle: subtitle,
+      date: DateTime.now(),
+      icon: icon,
+      iconColor: iconColor,
+    );
+    notifications.insert(0, newNotification);
+    await _saveData();
+  }
+
+  Future<void> updateNotification(int index, AppNotification notification) async {
+    if (index >= 0 && index < notifications.length) {
+      notifications[index] = notification;
+      await _saveData();
+    }
+  }
+
+  // ... (metode-metode lain)
+
+  Future<void> addActivityLog({required String userId, required String userName, required String action}) async {
+    final newLog = ActivityLog(
+      id: 'log-${DateTime.now().millisecondsSinceEpoch}',
+      userId: userId,
+      userName: userName,
+      action: action,
+      timestamp: DateTime.now(),
+    );
+    activityLogs.insert(0, newLog);
+    await _saveData();
   }
 
   List<Bill> getBillsForUser(String userId) {
@@ -140,14 +184,6 @@ class DummyService {
     await _saveData();
   }
 
-  // PERBAIKAN: Metode baru untuk memperbarui dan menyimpan notifikasi
-  Future<void> updateNotification(int index, AppNotification notification) async {
-    if (index >= 0 && index < notifications.length) {
-      notifications[index] = notification;
-      await _saveData();
-    }
-  }
-
   Room? findRoom(String code) {
     try {
       return rooms.firstWhere((r) => r.code == code);
@@ -170,6 +206,8 @@ class DummyService {
   }
 }
 
+// Data awal untuk setiap list
+List<ActivityLog> _createInitialActivityLogs() => [];
 List<AppNotification> _createInitialNotifications() => [AppNotification(title: 'Selamat Datang di Ri-Kost!', subtitle: 'Jelajahi semua fitur yang tersedia untuk Anda.', date: DateTime.now().subtract(const Duration(days: 2)), icon: Icons.waving_hand, iconColor: Colors.orange)];
 List<Request> _createInitialRequests() => [];
 List<Bill> _createInitialBills() => [Bill(id: 'bill-001', userId: 'user1', roomId: 'A-101', period: 'Juli 2024', amount: 1150000, status: 'Belum Lunas', createdAt: DateTime(2024, 7, 1))];
@@ -181,7 +219,7 @@ List<Room> _createInitialRooms() {
 
   for (int i = 1; i <= 16; i++) {
     final String roomCode = 'A-${i.toString().padLeft(2, '0')}';
-    final bool isOccupied = i % 3 == 0; // Make some rooms occupied
+    final bool isOccupied = i % 3 == 0;
     final String status = isOccupied ? 'Dihuni' : 'Kosong';
     final String? tenantName = isOccupied ? 'Tenant ${i}' : null;
     final String? rentStartDate = isOccupied ? '2024-07-01' : null;
@@ -190,13 +228,13 @@ List<Room> _createInitialRooms() {
       Room(
         code: roomCode,
         status: status,
-        baseRent: 700000 + (i * 10000), // Vary rent slightly
+        baseRent: 700000 + (i * 10000),
         wifi: 100000,
         water: 50000,
         electricity: 150000,
-        acCost: i % 2 == 0 ? 200000 : 0, // Some rooms with AC cost
-        dimensions: i % 4 == 0 ? "3x4 m" : "3x3.5 m", // Vary dimensions
-        imageUrls: [localImagePaths[i % localImagePaths.length]], // Cycle through images
+        acCost: i % 2 == 0 ? 200000 : 0,
+        dimensions: i % 4 == 0 ? "3x4 m" : "3x3.5 m",
+        imageUrls: [localImagePaths[i % localImagePaths.length]],
         tenantName: tenantName,
         tenantAddress: isOccupied ? 'Jl. Contoh No. ${i}' : null,
         tenantPhone: isOccupied ? '0812345678${i.toString().padLeft(2, '0')}' : null,
