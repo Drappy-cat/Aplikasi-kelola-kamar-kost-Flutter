@@ -12,47 +12,45 @@ part of 'settings_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$SettingsEvent {
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({required TResult Function() loadDeviceInfo,}) =>
-      throw _privateConstructorUsedError;
+  TResult when<TResult extends Object?>({
+    required TResult Function() loadDeviceInfo,
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadDeviceInfo,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadDeviceInfo,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadDeviceInfo value) loadDeviceInfo,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadDeviceInfo value)? loadDeviceInfo,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadDeviceInfo value)? loadDeviceInfo,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $SettingsEventCopyWith<$Res> {
   factory $SettingsEventCopyWith(
-          SettingsEvent value, $Res Function(SettingsEvent) then) =
-      _$SettingsEventCopyWithImpl<$Res, SettingsEvent>;
+    SettingsEvent value,
+    $Res Function(SettingsEvent) then,
+  ) = _$SettingsEventCopyWithImpl<$Res, SettingsEvent>;
 }
 
 /// @nodoc
@@ -64,13 +62,17 @@ class _$SettingsEventCopyWithImpl<$Res, $Val extends SettingsEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of SettingsEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 abstract class _$$LoadDeviceInfoImplCopyWith<$Res> {
-  factory _$$LoadDeviceInfoImplCopyWith(_$LoadDeviceInfoImpl value,
-          $Res Function(_$LoadDeviceInfoImpl) then) =
-      __$$LoadDeviceInfoImplCopyWithImpl<$Res>;
+  factory _$$LoadDeviceInfoImplCopyWith(
+    _$LoadDeviceInfoImpl value,
+    $Res Function(_$LoadDeviceInfoImpl) then,
+  ) = __$$LoadDeviceInfoImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -78,8 +80,12 @@ class __$$LoadDeviceInfoImplCopyWithImpl<$Res>
     extends _$SettingsEventCopyWithImpl<$Res, _$LoadDeviceInfoImpl>
     implements _$$LoadDeviceInfoImplCopyWith<$Res> {
   __$$LoadDeviceInfoImplCopyWithImpl(
-      _$LoadDeviceInfoImpl _value, $Res Function(_$LoadDeviceInfoImpl) _then)
-      : super(_value, _then);
+    _$LoadDeviceInfoImpl _value,
+    $Res Function(_$LoadDeviceInfoImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of SettingsEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -168,7 +174,9 @@ mixin _$SettingsState {
   Map<String, String> get deviceInfo => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SettingsState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SettingsStateCopyWith<SettingsState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -176,8 +184,9 @@ mixin _$SettingsState {
 /// @nodoc
 abstract class $SettingsStateCopyWith<$Res> {
   factory $SettingsStateCopyWith(
-          SettingsState value, $Res Function(SettingsState) then) =
-      _$SettingsStateCopyWithImpl<$Res, SettingsState>;
+    SettingsState value,
+    $Res Function(SettingsState) then,
+  ) = _$SettingsStateCopyWithImpl<$Res, SettingsState>;
   @useResult
   $Res call({bool isLoading, Map<String, String> deviceInfo, String? error});
 }
@@ -192,6 +201,8 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -199,20 +210,23 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
     Object? deviceInfo = null,
     Object? error = freezed,
   }) {
-    return _then(_value.copyWith(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      deviceInfo: null == deviceInfo
-          ? _value.deviceInfo
-          : deviceInfo // ignore: cast_nullable_to_non_nullable
-              as Map<String, String>,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            isLoading: null == isLoading
+                ? _value.isLoading
+                : isLoading // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            deviceInfo: null == deviceInfo
+                ? _value.deviceInfo
+                : deviceInfo // ignore: cast_nullable_to_non_nullable
+                      as Map<String, String>,
+            error: freezed == error
+                ? _value.error
+                : error // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -220,8 +234,9 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
 abstract class _$$SettingsStateImplCopyWith<$Res>
     implements $SettingsStateCopyWith<$Res> {
   factory _$$SettingsStateImplCopyWith(
-          _$SettingsStateImpl value, $Res Function(_$SettingsStateImpl) then) =
-      __$$SettingsStateImplCopyWithImpl<$Res>;
+    _$SettingsStateImpl value,
+    $Res Function(_$SettingsStateImpl) then,
+  ) = __$$SettingsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isLoading, Map<String, String> deviceInfo, String? error});
@@ -232,9 +247,12 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
     extends _$SettingsStateCopyWithImpl<$Res, _$SettingsStateImpl>
     implements _$$SettingsStateImplCopyWith<$Res> {
   __$$SettingsStateImplCopyWithImpl(
-      _$SettingsStateImpl _value, $Res Function(_$SettingsStateImpl) _then)
-      : super(_value, _then);
+    _$SettingsStateImpl _value,
+    $Res Function(_$SettingsStateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of SettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -242,31 +260,33 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
     Object? deviceInfo = null,
     Object? error = freezed,
   }) {
-    return _then(_$SettingsStateImpl(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      deviceInfo: null == deviceInfo
-          ? _value._deviceInfo
-          : deviceInfo // ignore: cast_nullable_to_non_nullable
-              as Map<String, String>,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$SettingsStateImpl(
+        isLoading: null == isLoading
+            ? _value.isLoading
+            : isLoading // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        deviceInfo: null == deviceInfo
+            ? _value._deviceInfo
+            : deviceInfo // ignore: cast_nullable_to_non_nullable
+                  as Map<String, String>,
+        error: freezed == error
+            ? _value.error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$SettingsStateImpl implements _SettingsState {
-  const _$SettingsStateImpl(
-      {this.isLoading = true,
-      final Map<String, String> deviceInfo = const {},
-      this.error})
-      : _deviceInfo = deviceInfo;
+  const _$SettingsStateImpl({
+    this.isLoading = true,
+    final Map<String, String> deviceInfo = const {},
+    this.error,
+  }) : _deviceInfo = deviceInfo;
 
   @override
   @JsonKey()
@@ -295,16 +315,24 @@ class _$SettingsStateImpl implements _SettingsState {
             other is _$SettingsStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
-            const DeepCollectionEquality()
-                .equals(other._deviceInfo, _deviceInfo) &&
+            const DeepCollectionEquality().equals(
+              other._deviceInfo,
+              _deviceInfo,
+            ) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading,
-      const DeepCollectionEquality().hash(_deviceInfo), error);
+  int get hashCode => Object.hash(
+    runtimeType,
+    isLoading,
+    const DeepCollectionEquality().hash(_deviceInfo),
+    error,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SettingsState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SettingsStateImplCopyWith<_$SettingsStateImpl> get copyWith =>
@@ -312,10 +340,11 @@ class _$SettingsStateImpl implements _SettingsState {
 }
 
 abstract class _SettingsState implements SettingsState {
-  const factory _SettingsState(
-      {final bool isLoading,
-      final Map<String, String> deviceInfo,
-      final String? error}) = _$SettingsStateImpl;
+  const factory _SettingsState({
+    final bool isLoading,
+    final Map<String, String> deviceInfo,
+    final String? error,
+  }) = _$SettingsStateImpl;
 
   @override
   bool get isLoading;
@@ -323,8 +352,11 @@ abstract class _SettingsState implements SettingsState {
   Map<String, String> get deviceInfo;
   @override
   String? get error;
+
+  /// Create a copy of SettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SettingsStateImplCopyWith<_$SettingsStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

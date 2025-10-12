@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tes/shared/services/auth_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT LOCATOR
+import 'package:tes/shared/services/locator.dart';
 
 class SampleItem {
   final String _title;
@@ -25,25 +25,14 @@ class HomeScreen2NonLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     final authService = getIt<AuthService>();
     final userName = authService.currentUser?.fullName ?? authService.currentUser?.username ?? 'Pengguna';
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Selamat Datang, $userName'),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFF72585), Color(0xFF5B2EBC)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        foregroundColor: Colors.white,
-        actions: [
-          // Tombol tema di sini tidak perlu AnimatedBuilder karena tidak ada ThemeService di sini
-          // Jika ingin ada toggle tema di sini, perlu diimplementasikan ulang
-          // Untuk saat ini, kita biarkan kosong atau hapus jika tidak diperlukan
-        ],
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+        actions: const [],
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16.0),

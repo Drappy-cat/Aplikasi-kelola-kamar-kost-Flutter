@@ -12,7 +12,8 @@ part of 'activity_log_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$ActivityLogEvent {
@@ -20,47 +21,42 @@ mixin _$ActivityLogEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String action) add,
     required TResult Function() load,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String action)? add,
     TResult? Function()? load,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String action)? add,
     TResult Function()? load,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(AddActivityLog value) add,
     required TResult Function(LoadActivityLogs value) load,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AddActivityLog value)? add,
     TResult? Function(LoadActivityLogs value)? load,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AddActivityLog value)? add,
     TResult Function(LoadActivityLogs value)? load,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ActivityLogEventCopyWith<$Res> {
   factory $ActivityLogEventCopyWith(
-          ActivityLogEvent value, $Res Function(ActivityLogEvent) then) =
-      _$ActivityLogEventCopyWithImpl<$Res, ActivityLogEvent>;
+    ActivityLogEvent value,
+    $Res Function(ActivityLogEvent) then,
+  ) = _$ActivityLogEventCopyWithImpl<$Res, ActivityLogEvent>;
 }
 
 /// @nodoc
@@ -72,13 +68,17 @@ class _$ActivityLogEventCopyWithImpl<$Res, $Val extends ActivityLogEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of ActivityLogEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 abstract class _$$AddActivityLogImplCopyWith<$Res> {
-  factory _$$AddActivityLogImplCopyWith(_$AddActivityLogImpl value,
-          $Res Function(_$AddActivityLogImpl) then) =
-      __$$AddActivityLogImplCopyWithImpl<$Res>;
+  factory _$$AddActivityLogImplCopyWith(
+    _$AddActivityLogImpl value,
+    $Res Function(_$AddActivityLogImpl) then,
+  ) = __$$AddActivityLogImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String action});
 }
@@ -88,20 +88,23 @@ class __$$AddActivityLogImplCopyWithImpl<$Res>
     extends _$ActivityLogEventCopyWithImpl<$Res, _$AddActivityLogImpl>
     implements _$$AddActivityLogImplCopyWith<$Res> {
   __$$AddActivityLogImplCopyWithImpl(
-      _$AddActivityLogImpl _value, $Res Function(_$AddActivityLogImpl) _then)
-      : super(_value, _then);
+    _$AddActivityLogImpl _value,
+    $Res Function(_$AddActivityLogImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ActivityLogEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? action = null,
-  }) {
-    return _then(_$AddActivityLogImpl(
-      null == action
-          ? _value.action
-          : action // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? action = null}) {
+    return _then(
+      _$AddActivityLogImpl(
+        null == action
+            ? _value.action
+            : action // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -129,12 +132,16 @@ class _$AddActivityLogImpl implements AddActivityLog {
   @override
   int get hashCode => Object.hash(runtimeType, action);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ActivityLogEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AddActivityLogImplCopyWith<_$AddActivityLogImpl> get copyWith =>
       __$$AddActivityLogImplCopyWithImpl<_$AddActivityLogImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -203,25 +210,33 @@ abstract class AddActivityLog implements ActivityLogEvent {
   const factory AddActivityLog(final String action) = _$AddActivityLogImpl;
 
   String get action;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ActivityLogEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddActivityLogImplCopyWith<_$AddActivityLogImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class _$$LoadActivityLogsImplCopyWith<$Res> {
-  factory _$$LoadActivityLogsImplCopyWith(_$LoadActivityLogsImpl value,
-          $Res Function(_$LoadActivityLogsImpl) then) =
-      __$$LoadActivityLogsImplCopyWithImpl<$Res>;
+  factory _$$LoadActivityLogsImplCopyWith(
+    _$LoadActivityLogsImpl value,
+    $Res Function(_$LoadActivityLogsImpl) then,
+  ) = __$$LoadActivityLogsImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$LoadActivityLogsImplCopyWithImpl<$Res>
     extends _$ActivityLogEventCopyWithImpl<$Res, _$LoadActivityLogsImpl>
     implements _$$LoadActivityLogsImplCopyWith<$Res> {
-  __$$LoadActivityLogsImplCopyWithImpl(_$LoadActivityLogsImpl _value,
-      $Res Function(_$LoadActivityLogsImpl) _then)
-      : super(_value, _then);
+  __$$LoadActivityLogsImplCopyWithImpl(
+    _$LoadActivityLogsImpl _value,
+    $Res Function(_$LoadActivityLogsImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of ActivityLogEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -318,7 +333,9 @@ mixin _$ActivityLogState {
   String? get error => throw _privateConstructorUsedError;
   String? get successMessage => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ActivityLogState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ActivityLogStateCopyWith<ActivityLogState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -326,15 +343,17 @@ mixin _$ActivityLogState {
 /// @nodoc
 abstract class $ActivityLogStateCopyWith<$Res> {
   factory $ActivityLogStateCopyWith(
-          ActivityLogState value, $Res Function(ActivityLogState) then) =
-      _$ActivityLogStateCopyWithImpl<$Res, ActivityLogState>;
+    ActivityLogState value,
+    $Res Function(ActivityLogState) then,
+  ) = _$ActivityLogStateCopyWithImpl<$Res, ActivityLogState>;
   @useResult
-  $Res call(
-      {bool isLoading,
-      bool isSubmitting,
-      List<ActivityLog> logs,
-      String? error,
-      String? successMessage});
+  $Res call({
+    bool isLoading,
+    bool isSubmitting,
+    List<ActivityLog> logs,
+    String? error,
+    String? successMessage,
+  });
 }
 
 /// @nodoc
@@ -347,6 +366,8 @@ class _$ActivityLogStateCopyWithImpl<$Res, $Val extends ActivityLogState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ActivityLogState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -356,55 +377,63 @@ class _$ActivityLogStateCopyWithImpl<$Res, $Val extends ActivityLogState>
     Object? error = freezed,
     Object? successMessage = freezed,
   }) {
-    return _then(_value.copyWith(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isSubmitting: null == isSubmitting
-          ? _value.isSubmitting
-          : isSubmitting // ignore: cast_nullable_to_non_nullable
-              as bool,
-      logs: null == logs
-          ? _value.logs
-          : logs // ignore: cast_nullable_to_non_nullable
-              as List<ActivityLog>,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-      successMessage: freezed == successMessage
-          ? _value.successMessage
-          : successMessage // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            isLoading: null == isLoading
+                ? _value.isLoading
+                : isLoading // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isSubmitting: null == isSubmitting
+                ? _value.isSubmitting
+                : isSubmitting // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            logs: null == logs
+                ? _value.logs
+                : logs // ignore: cast_nullable_to_non_nullable
+                      as List<ActivityLog>,
+            error: freezed == error
+                ? _value.error
+                : error // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            successMessage: freezed == successMessage
+                ? _value.successMessage
+                : successMessage // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ActivityLogStateImplCopyWith<$Res>
     implements $ActivityLogStateCopyWith<$Res> {
-  factory _$$ActivityLogStateImplCopyWith(_$ActivityLogStateImpl value,
-          $Res Function(_$ActivityLogStateImpl) then) =
-      __$$ActivityLogStateImplCopyWithImpl<$Res>;
+  factory _$$ActivityLogStateImplCopyWith(
+    _$ActivityLogStateImpl value,
+    $Res Function(_$ActivityLogStateImpl) then,
+  ) = __$$ActivityLogStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool isLoading,
-      bool isSubmitting,
-      List<ActivityLog> logs,
-      String? error,
-      String? successMessage});
+  $Res call({
+    bool isLoading,
+    bool isSubmitting,
+    List<ActivityLog> logs,
+    String? error,
+    String? successMessage,
+  });
 }
 
 /// @nodoc
 class __$$ActivityLogStateImplCopyWithImpl<$Res>
     extends _$ActivityLogStateCopyWithImpl<$Res, _$ActivityLogStateImpl>
     implements _$$ActivityLogStateImplCopyWith<$Res> {
-  __$$ActivityLogStateImplCopyWithImpl(_$ActivityLogStateImpl _value,
-      $Res Function(_$ActivityLogStateImpl) _then)
-      : super(_value, _then);
+  __$$ActivityLogStateImplCopyWithImpl(
+    _$ActivityLogStateImpl _value,
+    $Res Function(_$ActivityLogStateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ActivityLogState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -414,41 +443,43 @@ class __$$ActivityLogStateImplCopyWithImpl<$Res>
     Object? error = freezed,
     Object? successMessage = freezed,
   }) {
-    return _then(_$ActivityLogStateImpl(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isSubmitting: null == isSubmitting
-          ? _value.isSubmitting
-          : isSubmitting // ignore: cast_nullable_to_non_nullable
-              as bool,
-      logs: null == logs
-          ? _value._logs
-          : logs // ignore: cast_nullable_to_non_nullable
-              as List<ActivityLog>,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-      successMessage: freezed == successMessage
-          ? _value.successMessage
-          : successMessage // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$ActivityLogStateImpl(
+        isLoading: null == isLoading
+            ? _value.isLoading
+            : isLoading // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isSubmitting: null == isSubmitting
+            ? _value.isSubmitting
+            : isSubmitting // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        logs: null == logs
+            ? _value._logs
+            : logs // ignore: cast_nullable_to_non_nullable
+                  as List<ActivityLog>,
+        error: freezed == error
+            ? _value.error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        successMessage: freezed == successMessage
+            ? _value.successMessage
+            : successMessage // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ActivityLogStateImpl implements _ActivityLogState {
-  const _$ActivityLogStateImpl(
-      {this.isLoading = false,
-      this.isSubmitting = false,
-      final List<ActivityLog> logs = const [],
-      this.error,
-      this.successMessage})
-      : _logs = logs;
+  const _$ActivityLogStateImpl({
+    this.isLoading = false,
+    this.isSubmitting = false,
+    final List<ActivityLog> logs = const [],
+    this.error,
+    this.successMessage,
+  }) : _logs = logs;
 
   @override
   @JsonKey()
@@ -492,28 +523,34 @@ class _$ActivityLogStateImpl implements _ActivityLogState {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      isLoading,
-      isSubmitting,
-      const DeepCollectionEquality().hash(_logs),
-      error,
-      successMessage);
+    runtimeType,
+    isLoading,
+    isSubmitting,
+    const DeepCollectionEquality().hash(_logs),
+    error,
+    successMessage,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ActivityLogState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ActivityLogStateImplCopyWith<_$ActivityLogStateImpl> get copyWith =>
       __$$ActivityLogStateImplCopyWithImpl<_$ActivityLogStateImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _ActivityLogState implements ActivityLogState {
-  const factory _ActivityLogState(
-      {final bool isLoading,
-      final bool isSubmitting,
-      final List<ActivityLog> logs,
-      final String? error,
-      final String? successMessage}) = _$ActivityLogStateImpl;
+  const factory _ActivityLogState({
+    final bool isLoading,
+    final bool isSubmitting,
+    final List<ActivityLog> logs,
+    final String? error,
+    final String? successMessage,
+  }) = _$ActivityLogStateImpl;
 
   @override
   bool get isLoading;
@@ -525,8 +562,11 @@ abstract class _ActivityLogState implements ActivityLogState {
   String? get error;
   @override
   String? get successMessage;
+
+  /// Create a copy of ActivityLogState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ActivityLogStateImplCopyWith<_$ActivityLogStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

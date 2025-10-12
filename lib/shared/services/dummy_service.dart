@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tes/shared/models/activity_log.dart';
 import 'package:tes/shared/models/app_notification.dart';
@@ -10,6 +11,8 @@ import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/request.dart';
 import 'package:tes/shared/models/complaint.dart';
 import 'package:tes/shared/models/announcement.dart';
+import 'package:tes/shared/services/auth_service.dart';
+import 'package:tes/shared/services/locator.dart';
 
 // Kunci untuk menyimpan data di SharedPreferences
 const String _kRoomsKey = 'rooms_data';
@@ -81,10 +84,8 @@ class DummyService {
   // --- Metode untuk Chat ---
   ChatConversation getConversationForUser(String userId, String userName) {
     try {
-      // Cari percakapan yang sudah ada
       return conversations.firstWhere((c) => c.userId == userId);
     } catch (e) {
-      // Jika tidak ada, buat percakapan baru dan tambahkan ke list
       final newConversation = ChatConversation(
         id: userId,
         userId: userId,
@@ -102,6 +103,33 @@ class DummyService {
       conversations[convIndex].messages.insert(0, message);
       await _saveData();
     }
+  }
+
+  // --- Metode untuk Request ---
+  Future<void> addRequest({
+    required String type,
+    required String note,
+    required String status,
+    String? roomCode,
+    String? paymentMethod,
+    DateTime? paymentDueDate,
+    String? virtualAccountNumber,
+  }) async {
+    final authService = getIt<AuthService>();
+    final newRequest = Request(
+      id: 'req-${DateTime.now().millisecondsSinceEpoch}',
+      type: type,
+      date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      note: note,
+      status: status,
+      roomCode: roomCode,
+      userName: authService.currentUser?.fullName ?? 'System',
+      paymentMethod: paymentMethod,
+      paymentDueDate: paymentDueDate,
+      virtualAccountNumber: virtualAccountNumber,
+    );
+    requests.insert(0, newRequest);
+    await _saveData();
   }
 
   // ... (metode-metode lain yang sudah ada)
@@ -246,7 +274,24 @@ List<Bill> _createInitialBills() => [Bill(id: 'bill-001', userId: 'user1', roomI
 List<Complaint> _createInitialComplaints() => [Complaint(id: 'comp-001', userId: 'user1', roomId: 'A-101', title: 'Keran Bocor', description: 'Keran di kamar mandi bocor terus.', category: 'Kerusakan Fasilitas', status: 'In Progress', createdAt: DateTime.now().subtract(const Duration(days: 2)), imageUrls: ['https://picsum.photos/seed/comp-001/200/300'])];
 List<Announcement> _createInitialAnnouncements() => [Announcement(id: 'ann-001', title: 'Perbaikan Listrik', content: 'Akan ada pemadaman listrik sementara pada hari Sabtu, 20 Juli 2024.', createdAt: DateTime.now().subtract(const Duration(days: 1)))];
 List<Room> _createInitialRooms() {
-  final localImagePaths = ['assets/kamar_kost/kamar1.png', 'assets/kamar_kost/kamar2.png', 'assets/kamar_kost/kamar3.png', 'assets/kamar_kost/kamar 4.png'];
+  final localImagePaths = [
+    'assets/kamar_kost/kamar1.png',
+    'assets/kamar_kost/kamar2.png',
+    'assets/kamar_kost/kamar3.png',
+    'assets/kamar_kost/kamar4.png',
+    'assets/kamar_kost/kamar5.png',
+    'assets/kamar_kost/kamar6.png',
+    'assets/kamar_kost/kamar7.png',
+    'assets/kamar_kost/kamar8.png',
+    'assets/kamar_kost/kamar9.png',
+    'assets/kamar_kost/kamar10.png',
+    'assets/kamar_kost/kamar11.png',
+    'assets/kamar_kost/kamar12.png',
+    'assets/kamar_kost/kamar13.png',
+    'assets/kamar_kost/kamar14.png',
+    'assets/kamar_kost/kamar15.png',
+    'assets/kamar_kost/kamar16.png',
+  ];
   final List<Room> initialRooms = [];
 
   for (int i = 1; i <= 16; i++) {
@@ -255,6 +300,24 @@ List<Room> _createInitialRooms() {
     final String status = isOccupied ? 'Dihuni' : 'Kosong';
     final String? tenantName = isOccupied ? 'Tenant ${i}' : null;
     final String? rentStartDate = isOccupied ? '2024-07-01' : null;
+
+    String fasilitasTambahan;
+    bool isFurnished;
+    int jumlahKasur;
+
+    if (i % 2 == 0) {
+      fasilitasTambahan = 'Meja belajar, Lemari pakaian';
+      isFurnished = true;
+      jumlahKasur = 1;
+    } else if (i % 3 == 0) {
+      fasilitasTambahan = 'Meja belajar, Lemari pakaian, Kulkas mini';
+      isFurnished = true;
+      jumlahKasur = 2;
+    } else {
+      fasilitasTambahan = 'Lemari pakaian';
+      isFurnished = false;
+      jumlahKasur = 1;
+    }
 
     initialRooms.add(
       Room(
@@ -265,12 +328,16 @@ List<Room> _createInitialRooms() {
         water: 50000,
         electricity: 150000,
         acCost: i % 2 == 0 ? 200000 : 0,
+        packageFull: i % 4 == 0,
         dimensions: i % 4 == 0 ? "3x4 m" : "3x3.5 m",
-        imageUrls: [localImagePaths[i % localImagePaths.length]],
+        imageUrls: [localImagePaths[i - 1]], // Menggunakan indeks i-1 untuk gambar berurutan
         tenantName: tenantName,
         tenantAddress: isOccupied ? 'Jl. Contoh No. ${i}' : null,
         tenantPhone: isOccupied ? '0812345678${i.toString().padLeft(2, '0')}' : null,
         rentStartDate: rentStartDate,
+        fasilitasTambahan: fasilitasTambahan,
+        isFurnished: isFurnished,
+        jumlahKasur: jumlahKasur,
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/locator.dart';

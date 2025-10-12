@@ -15,6 +15,11 @@ _$RequestImpl _$$RequestImplFromJson(Map<String, dynamic> json) =>
       status: json['status'] as String,
       roomCode: json['roomCode'] as String?,
       userName: json['userName'] as String?,
+      paymentMethod: json['paymentMethod'] as String?,
+      paymentDueDate: json['paymentDueDate'] == null
+          ? null
+          : DateTime.parse(json['paymentDueDate'] as String),
+      virtualAccountNumber: json['virtualAccountNumber'] as String?,
     );
 
 Map<String, dynamic> _$$RequestImplToJson(_$RequestImpl instance) =>
@@ -26,4 +31,7 @@ Map<String, dynamic> _$$RequestImplToJson(_$RequestImpl instance) =>
       'status': instance.status,
       'roomCode': instance.roomCode,
       'userName': instance.userName,
+      'paymentMethod': instance.paymentMethod,
+      'paymentDueDate': instance.paymentDueDate?.toIso8601String(),
+      'virtualAccountNumber': instance.virtualAccountNumber,
     };

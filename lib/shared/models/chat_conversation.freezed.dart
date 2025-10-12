@@ -12,7 +12,8 @@ part of 'chat_conversation.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ChatConversation _$ChatConversationFromJson(Map<String, dynamic> json) {
   return _ChatConversation.fromJson(json);
@@ -20,13 +21,18 @@ ChatConversation _$ChatConversationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ChatConversation {
-  String get id => throw _privateConstructorUsedError; // Usually the same as userId for simplicity
+  String get id =>
+      throw _privateConstructorUsedError; // Usually the same as userId for simplicity
   String get userId => throw _privateConstructorUsedError;
   String get userName => throw _privateConstructorUsedError;
   List<ChatMessage> get messages => throw _privateConstructorUsedError;
 
+  /// Serializes this ChatConversation to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ChatConversation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ChatConversationCopyWith<ChatConversation> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -34,11 +40,16 @@ mixin _$ChatConversation {
 /// @nodoc
 abstract class $ChatConversationCopyWith<$Res> {
   factory $ChatConversationCopyWith(
-          ChatConversation value, $Res Function(ChatConversation) then) =
-      _$ChatConversationCopyWithImpl<$Res, ChatConversation>;
+    ChatConversation value,
+    $Res Function(ChatConversation) then,
+  ) = _$ChatConversationCopyWithImpl<$Res, ChatConversation>;
   @useResult
-  $Res call(
-      {String id, String userId, String userName, List<ChatMessage> messages});
+  $Res call({
+    String id,
+    String userId,
+    String userName,
+    List<ChatMessage> messages,
+  });
 }
 
 /// @nodoc
@@ -51,6 +62,8 @@ class _$ChatConversationCopyWithImpl<$Res, $Val extends ChatConversation>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ChatConversation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -59,47 +72,58 @@ class _$ChatConversationCopyWithImpl<$Res, $Val extends ChatConversation>
     Object? userName = null,
     Object? messages = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      messages: null == messages
-          ? _value.messages
-          : messages // ignore: cast_nullable_to_non_nullable
-              as List<ChatMessage>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userName: null == userName
+                ? _value.userName
+                : userName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            messages: null == messages
+                ? _value.messages
+                : messages // ignore: cast_nullable_to_non_nullable
+                      as List<ChatMessage>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ChatConversationImplCopyWith<$Res>
     implements $ChatConversationCopyWith<$Res> {
-  factory _$$ChatConversationImplCopyWith(_$ChatConversationImpl value,
-          $Res Function(_$ChatConversationImpl) then) =
-      __$$ChatConversationImplCopyWithImpl<$Res>;
+  factory _$$ChatConversationImplCopyWith(
+    _$ChatConversationImpl value,
+    $Res Function(_$ChatConversationImpl) then,
+  ) = __$$ChatConversationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id, String userId, String userName, List<ChatMessage> messages});
+  $Res call({
+    String id,
+    String userId,
+    String userName,
+    List<ChatMessage> messages,
+  });
 }
 
 /// @nodoc
 class __$$ChatConversationImplCopyWithImpl<$Res>
     extends _$ChatConversationCopyWithImpl<$Res, _$ChatConversationImpl>
     implements _$$ChatConversationImplCopyWith<$Res> {
-  __$$ChatConversationImplCopyWithImpl(_$ChatConversationImpl _value,
-      $Res Function(_$ChatConversationImpl) _then)
-      : super(_value, _then);
+  __$$ChatConversationImplCopyWithImpl(
+    _$ChatConversationImpl _value,
+    $Res Function(_$ChatConversationImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ChatConversation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -108,42 +132,45 @@ class __$$ChatConversationImplCopyWithImpl<$Res>
     Object? userName = null,
     Object? messages = null,
   }) {
-    return _then(_$ChatConversationImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      messages: null == messages
-          ? _value._messages
-          : messages // ignore: cast_nullable_to_non_nullable
-              as List<ChatMessage>,
-    ));
+    return _then(
+      _$ChatConversationImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userName: null == userName
+            ? _value.userName
+            : userName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        messages: null == messages
+            ? _value._messages
+            : messages // ignore: cast_nullable_to_non_nullable
+                  as List<ChatMessage>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ChatConversationImpl implements _ChatConversation {
-  const _$ChatConversationImpl(
-      {required this.id,
-      required this.userId,
-      required this.userName,
-      required final List<ChatMessage> messages})
-      : _messages = messages;
+  const _$ChatConversationImpl({
+    required this.id,
+    required this.userId,
+    required this.userName,
+    required final List<ChatMessage> messages,
+  }) : _messages = messages;
 
   factory _$ChatConversationImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatConversationImplFromJson(json);
 
   @override
-  final String id; // Usually the same as userId for simplicity
+  final String id;
+  // Usually the same as userId for simplicity
   @override
   final String userId;
   @override
@@ -173,46 +200,57 @@ class _$ChatConversationImpl implements _ChatConversation {
             const DeepCollectionEquality().equals(other._messages, _messages));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, userId, userName,
-      const DeepCollectionEquality().hash(_messages));
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    userId,
+    userName,
+    const DeepCollectionEquality().hash(_messages),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChatConversation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChatConversationImplCopyWith<_$ChatConversationImpl> get copyWith =>
       __$$ChatConversationImplCopyWithImpl<_$ChatConversationImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ChatConversationImplToJson(
-      this,
-    );
+    return _$$ChatConversationImplToJson(this);
   }
 }
 
 abstract class _ChatConversation implements ChatConversation {
-  const factory _ChatConversation(
-      {required final String id,
-      required final String userId,
-      required final String userName,
-      required final List<ChatMessage> messages}) = _$ChatConversationImpl;
+  const factory _ChatConversation({
+    required final String id,
+    required final String userId,
+    required final String userName,
+    required final List<ChatMessage> messages,
+  }) = _$ChatConversationImpl;
 
   factory _ChatConversation.fromJson(Map<String, dynamic> json) =
       _$ChatConversationImpl.fromJson;
 
   @override
-  String get id;
+  String get id; // Usually the same as userId for simplicity
   @override
   String get userId;
   @override
   String get userName;
   @override
   List<ChatMessage> get messages;
+
+  /// Create a copy of ChatConversation
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChatConversationImplCopyWith<_$ChatConversationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

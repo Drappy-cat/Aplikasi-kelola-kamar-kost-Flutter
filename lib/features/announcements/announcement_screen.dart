@@ -10,20 +10,14 @@ class AnnouncementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final announcements = getIt<DummyService>().getLatestAnnouncements();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pengumuman'),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFF72585), Color(0xFF5B2EBC)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        foregroundColor: Colors.white,
+        // PERBAIKAN: Menggunakan warna primer dari tema
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
       ),
       body: announcements.isEmpty
           ? const Center(child: Text('Tidak ada pengumuman.'))

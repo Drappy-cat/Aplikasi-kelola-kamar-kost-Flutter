@@ -12,7 +12,8 @@ part of 'activity_log.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ActivityLog _$ActivityLogFromJson(Map<String, dynamic> json) {
   return _ActivityLog.fromJson(json);
@@ -23,11 +24,16 @@ mixin _$ActivityLog {
   String get id => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
   String get userName => throw _privateConstructorUsedError;
-  String get action => throw _privateConstructorUsedError; // "Berangkat" atau "Pulang"
+  String get action =>
+      throw _privateConstructorUsedError; // "Berangkat" atau "Pulang"
   DateTime get timestamp => throw _privateConstructorUsedError;
 
+  /// Serializes this ActivityLog to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ActivityLog
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ActivityLogCopyWith<ActivityLog> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -35,15 +41,17 @@ mixin _$ActivityLog {
 /// @nodoc
 abstract class $ActivityLogCopyWith<$Res> {
   factory $ActivityLogCopyWith(
-          ActivityLog value, $Res Function(ActivityLog) then) =
-      _$ActivityLogCopyWithImpl<$Res, ActivityLog>;
+    ActivityLog value,
+    $Res Function(ActivityLog) then,
+  ) = _$ActivityLogCopyWithImpl<$Res, ActivityLog>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String userName,
-      String action,
-      DateTime timestamp});
+  $Res call({
+    String id,
+    String userId,
+    String userName,
+    String action,
+    DateTime timestamp,
+  });
 }
 
 /// @nodoc
@@ -56,6 +64,8 @@ class _$ActivityLogCopyWithImpl<$Res, $Val extends ActivityLog>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ActivityLog
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -65,28 +75,31 @@ class _$ActivityLogCopyWithImpl<$Res, $Val extends ActivityLog>
     Object? action = null,
     Object? timestamp = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      action: null == action
-          ? _value.action
-          : action // ignore: cast_nullable_to_non_nullable
-              as String,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userName: null == userName
+                ? _value.userName
+                : userName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            action: null == action
+                ? _value.action
+                : action // ignore: cast_nullable_to_non_nullable
+                      as String,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -94,16 +107,18 @@ class _$ActivityLogCopyWithImpl<$Res, $Val extends ActivityLog>
 abstract class _$$ActivityLogImplCopyWith<$Res>
     implements $ActivityLogCopyWith<$Res> {
   factory _$$ActivityLogImplCopyWith(
-          _$ActivityLogImpl value, $Res Function(_$ActivityLogImpl) then) =
-      __$$ActivityLogImplCopyWithImpl<$Res>;
+    _$ActivityLogImpl value,
+    $Res Function(_$ActivityLogImpl) then,
+  ) = __$$ActivityLogImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String userName,
-      String action,
-      DateTime timestamp});
+  $Res call({
+    String id,
+    String userId,
+    String userName,
+    String action,
+    DateTime timestamp,
+  });
 }
 
 /// @nodoc
@@ -111,9 +126,12 @@ class __$$ActivityLogImplCopyWithImpl<$Res>
     extends _$ActivityLogCopyWithImpl<$Res, _$ActivityLogImpl>
     implements _$$ActivityLogImplCopyWith<$Res> {
   __$$ActivityLogImplCopyWithImpl(
-      _$ActivityLogImpl _value, $Res Function(_$ActivityLogImpl) _then)
-      : super(_value, _then);
+    _$ActivityLogImpl _value,
+    $Res Function(_$ActivityLogImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ActivityLog
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -123,40 +141,43 @@ class __$$ActivityLogImplCopyWithImpl<$Res>
     Object? action = null,
     Object? timestamp = null,
   }) {
-    return _then(_$ActivityLogImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      action: null == action
-          ? _value.action
-          : action // ignore: cast_nullable_to_non_nullable
-              as String,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$ActivityLogImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userName: null == userName
+            ? _value.userName
+            : userName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        action: null == action
+            ? _value.action
+            : action // ignore: cast_nullable_to_non_nullable
+                  as String,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ActivityLogImpl implements _ActivityLog {
-  const _$ActivityLogImpl(
-      {required this.id,
-      required this.userId,
-      required this.userName,
-      required this.action,
-      required this.timestamp});
+  const _$ActivityLogImpl({
+    required this.id,
+    required this.userId,
+    required this.userName,
+    required this.action,
+    required this.timestamp,
+  });
 
   factory _$ActivityLogImpl.fromJson(Map<String, dynamic> json) =>
       _$$ActivityLogImplFromJson(json);
@@ -168,7 +189,8 @@ class _$ActivityLogImpl implements _ActivityLog {
   @override
   final String userName;
   @override
-  final String action; // "Berangkat" atau "Pulang"
+  final String action;
+  // "Berangkat" atau "Pulang"
   @override
   final DateTime timestamp;
 
@@ -191,12 +213,14 @@ class _$ActivityLogImpl implements _ActivityLog {
                 other.timestamp == timestamp));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, userId, userName, action, timestamp);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ActivityLog
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ActivityLogImplCopyWith<_$ActivityLogImpl> get copyWith =>
@@ -204,19 +228,18 @@ class _$ActivityLogImpl implements _ActivityLog {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ActivityLogImplToJson(
-      this,
-    );
+    return _$$ActivityLogImplToJson(this);
   }
 }
 
 abstract class _ActivityLog implements ActivityLog {
-  const factory _ActivityLog(
-      {required final String id,
-      required final String userId,
-      required final String userName,
-      required final String action,
-      required final DateTime timestamp}) = _$ActivityLogImpl;
+  const factory _ActivityLog({
+    required final String id,
+    required final String userId,
+    required final String userName,
+    required final String action,
+    required final DateTime timestamp,
+  }) = _$ActivityLogImpl;
 
   factory _ActivityLog.fromJson(Map<String, dynamic> json) =
       _$ActivityLogImpl.fromJson;
@@ -231,8 +254,11 @@ abstract class _ActivityLog implements ActivityLog {
   String get action; // "Berangkat" atau "Pulang"
   @override
   DateTime get timestamp;
+
+  /// Create a copy of ActivityLog
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ActivityLogImplCopyWith<_$ActivityLogImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

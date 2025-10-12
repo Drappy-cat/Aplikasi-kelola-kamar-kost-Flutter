@@ -22,4 +22,6 @@ class AppRoutes {
 
   // Rute baru untuk fitur chat
   static const String chat = '/chat';
+  // Rute baru untuk halaman bantuan
+  static const String help = '/help';
 }

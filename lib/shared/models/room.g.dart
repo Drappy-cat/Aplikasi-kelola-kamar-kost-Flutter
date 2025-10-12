@@ -23,6 +23,9 @@ _$RoomImpl _$$RoomImplFromJson(Map<String, dynamic> json) => _$RoomImpl(
   tenantAddress: json['tenantAddress'] as String?,
   tenantPhone: json['tenantPhone'] as String?,
   rentStartDate: json['rentStartDate'] as String?,
+  fasilitasTambahan: json['fasilitasTambahan'] as String?,
+  isFurnished: json['isFurnished'] as bool? ?? false,
+  jumlahKasur: (json['jumlahKasur'] as num?)?.toInt() ?? 1,
 );
 
 Map<String, dynamic> _$$RoomImplToJson(_$RoomImpl instance) =>
@@ -41,4 +44,7 @@ Map<String, dynamic> _$$RoomImplToJson(_$RoomImpl instance) =>
       'tenantAddress': instance.tenantAddress,
       'tenantPhone': instance.tenantPhone,
       'rentStartDate': instance.rentStartDate,
+      'fasilitasTambahan': instance.fasilitasTambahan,
+      'isFurnished': instance.isFurnished,
+      'jumlahKasur': instance.jumlahKasur,
     };

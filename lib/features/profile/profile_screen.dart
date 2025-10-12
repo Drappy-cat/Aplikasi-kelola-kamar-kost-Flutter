@@ -100,6 +100,12 @@ class ProfileView extends StatelessWidget {
                 title: 'Syarat & Ketentuan',
                 onTap: () => context.push(AppRoutes.terms),
               ),
+              // ITEM MENU BARU: Pusat Bantuan
+              _ProfileMenuTile(
+                icon: Icons.help_outline,
+                title: 'Pusat Bantuan',
+                onTap: () => context.push(AppRoutes.help),
+              ),
               const Divider(height: 1, indent: 16, endIndent: 16),
               AnimatedBuilder(
                 animation: themeService,

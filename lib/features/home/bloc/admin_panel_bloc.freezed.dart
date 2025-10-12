@@ -12,7 +12,8 @@ part of 'admin_panel_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$AdminPanelEvent {
@@ -25,9 +26,8 @@ mixin _$AdminPanelEvent {
     required TResult Function(String billId) rejectBill,
     required TResult Function(String status) filterComplaints,
     required TResult Function(String complaintId, String newStatus)
-        updateComplaintStatus,
-  }) =>
-      throw _privateConstructorUsedError;
+    updateComplaintStatus,
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadData,
@@ -37,9 +37,8 @@ mixin _$AdminPanelEvent {
     TResult? Function(String billId)? rejectBill,
     TResult? Function(String status)? filterComplaints,
     TResult? Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
-  }) =>
-      throw _privateConstructorUsedError;
+    updateComplaintStatus,
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadData,
@@ -49,10 +48,9 @@ mixin _$AdminPanelEvent {
     TResult Function(String billId)? rejectBill,
     TResult Function(String status)? filterComplaints,
     TResult Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadAdminData value) loadData,
@@ -61,9 +59,9 @@ mixin _$AdminPanelEvent {
     required TResult Function(ApproveBill value) approveBill,
     required TResult Function(RejectBill value) rejectBill,
     required TResult Function(FilterComplaints value) filterComplaints,
-    required TResult Function(UpdateComplaintStatus value) updateComplaintStatus,
-  }) =>
-      throw _privateConstructorUsedError;
+    required TResult Function(UpdateComplaintStatus value)
+    updateComplaintStatus,
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadAdminData value)? loadData,
@@ -73,8 +71,7 @@ mixin _$AdminPanelEvent {
     TResult? Function(RejectBill value)? rejectBill,
     TResult? Function(FilterComplaints value)? filterComplaints,
     TResult? Function(UpdateComplaintStatus value)? updateComplaintStatus,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadAdminData value)? loadData,
@@ -85,15 +82,15 @@ mixin _$AdminPanelEvent {
     TResult Function(FilterComplaints value)? filterComplaints,
     TResult Function(UpdateComplaintStatus value)? updateComplaintStatus,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $AdminPanelEventCopyWith<$Res> {
   factory $AdminPanelEventCopyWith(
-          AdminPanelEvent value, $Res Function(AdminPanelEvent) then) =
-      _$AdminPanelEventCopyWithImpl<$Res, AdminPanelEvent>;
+    AdminPanelEvent value,
+    $Res Function(AdminPanelEvent) then,
+  ) = _$AdminPanelEventCopyWithImpl<$Res, AdminPanelEvent>;
 }
 
 /// @nodoc
@@ -105,13 +102,17 @@ class _$AdminPanelEventCopyWithImpl<$Res, $Val extends AdminPanelEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 abstract class _$$LoadAdminDataImplCopyWith<$Res> {
   factory _$$LoadAdminDataImplCopyWith(
-          _$LoadAdminDataImpl value, $Res Function(_$LoadAdminDataImpl) then) =
-      __$$LoadAdminDataImplCopyWithImpl<$Res>;
+    _$LoadAdminDataImpl value,
+    $Res Function(_$LoadAdminDataImpl) then,
+  ) = __$$LoadAdminDataImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -119,8 +120,12 @@ class __$$LoadAdminDataImplCopyWithImpl<$Res>
     extends _$AdminPanelEventCopyWithImpl<$Res, _$LoadAdminDataImpl>
     implements _$$LoadAdminDataImplCopyWith<$Res> {
   __$$LoadAdminDataImplCopyWithImpl(
-      _$LoadAdminDataImpl _value, $Res Function(_$LoadAdminDataImpl) _then)
-      : super(_value, _then);
+    _$LoadAdminDataImpl _value,
+    $Res Function(_$LoadAdminDataImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -152,7 +157,7 @@ class _$LoadAdminDataImpl implements LoadAdminData {
     required TResult Function(String billId) rejectBill,
     required TResult Function(String status) filterComplaints,
     required TResult Function(String complaintId, String newStatus)
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return loadData();
   }
@@ -167,7 +172,7 @@ class _$LoadAdminDataImpl implements LoadAdminData {
     TResult? Function(String billId)? rejectBill,
     TResult? Function(String status)? filterComplaints,
     TResult? Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return loadData?.call();
   }
@@ -182,7 +187,7 @@ class _$LoadAdminDataImpl implements LoadAdminData {
     TResult Function(String billId)? rejectBill,
     TResult Function(String status)? filterComplaints,
     TResult Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
     required TResult orElse(),
   }) {
     if (loadData != null) {
@@ -200,7 +205,8 @@ class _$LoadAdminDataImpl implements LoadAdminData {
     required TResult Function(ApproveBill value) approveBill,
     required TResult Function(RejectBill value) rejectBill,
     required TResult Function(FilterComplaints value) filterComplaints,
-    required TResult Function(UpdateComplaintStatus value) updateComplaintStatus,
+    required TResult Function(UpdateComplaintStatus value)
+    updateComplaintStatus,
   }) {
     return loadData(this);
   }
@@ -244,9 +250,10 @@ abstract class LoadAdminData implements AdminPanelEvent {
 
 /// @nodoc
 abstract class _$$ChangeAdminTabImplCopyWith<$Res> {
-  factory _$$ChangeAdminTabImplCopyWith(_$ChangeAdminTabImpl value,
-          $Res Function(_$ChangeAdminTabImpl) then) =
-      __$$ChangeAdminTabImplCopyWithImpl<$Res>;
+  factory _$$ChangeAdminTabImplCopyWith(
+    _$ChangeAdminTabImpl value,
+    $Res Function(_$ChangeAdminTabImpl) then,
+  ) = __$$ChangeAdminTabImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int newIndex});
 }
@@ -256,20 +263,23 @@ class __$$ChangeAdminTabImplCopyWithImpl<$Res>
     extends _$AdminPanelEventCopyWithImpl<$Res, _$ChangeAdminTabImpl>
     implements _$$ChangeAdminTabImplCopyWith<$Res> {
   __$$ChangeAdminTabImplCopyWithImpl(
-      _$ChangeAdminTabImpl _value, $Res Function(_$ChangeAdminTabImpl) _then)
-      : super(_value, _then);
+    _$ChangeAdminTabImpl _value,
+    $Res Function(_$ChangeAdminTabImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? newIndex = null,
-  }) {
-    return _then(_$ChangeAdminTabImpl(
-      null == newIndex
-          ? _value.newIndex
-          : newIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? newIndex = null}) {
+    return _then(
+      _$ChangeAdminTabImpl(
+        null == newIndex
+            ? _value.newIndex
+            : newIndex // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -298,12 +308,16 @@ class _$ChangeAdminTabImpl implements ChangeAdminTab {
   @override
   int get hashCode => Object.hash(runtimeType, newIndex);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChangeAdminTabImplCopyWith<_$ChangeAdminTabImpl> get copyWith =>
       __$$ChangeAdminTabImplCopyWithImpl<_$ChangeAdminTabImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -315,7 +329,7 @@ class _$ChangeAdminTabImpl implements ChangeAdminTab {
     required TResult Function(String billId) rejectBill,
     required TResult Function(String status) filterComplaints,
     required TResult Function(String complaintId, String newStatus)
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return changeTab(newIndex);
   }
@@ -330,7 +344,7 @@ class _$ChangeAdminTabImpl implements ChangeAdminTab {
     TResult? Function(String billId)? rejectBill,
     TResult? Function(String status)? filterComplaints,
     TResult? Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return changeTab?.call(newIndex);
   }
@@ -345,7 +359,7 @@ class _$ChangeAdminTabImpl implements ChangeAdminTab {
     TResult Function(String billId)? rejectBill,
     TResult Function(String status)? filterComplaints,
     TResult Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
     required TResult orElse(),
   }) {
     if (changeTab != null) {
@@ -363,7 +377,8 @@ class _$ChangeAdminTabImpl implements ChangeAdminTab {
     required TResult Function(ApproveBill value) approveBill,
     required TResult Function(RejectBill value) rejectBill,
     required TResult Function(FilterComplaints value) filterComplaints,
-    required TResult Function(UpdateComplaintStatus value) updateComplaintStatus,
+    required TResult Function(UpdateComplaintStatus value)
+    updateComplaintStatus,
   }) {
     return changeTab(this);
   }
@@ -405,16 +420,20 @@ abstract class ChangeAdminTab implements AdminPanelEvent {
   const factory ChangeAdminTab(final int newIndex) = _$ChangeAdminTabImpl;
 
   int get newIndex;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChangeAdminTabImplCopyWith<_$ChangeAdminTabImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class _$$ProcessRequestImplCopyWith<$Res> {
-  factory _$$ProcessRequestImplCopyWith(_$ProcessRequestImpl value,
-          $Res Function(_$ProcessRequestImpl) then) =
-      __$$ProcessRequestImplCopyWithImpl<$Res>;
+  factory _$$ProcessRequestImplCopyWith(
+    _$ProcessRequestImpl value,
+    $Res Function(_$ProcessRequestImpl) then,
+  ) = __$$ProcessRequestImplCopyWithImpl<$Res>;
   @useResult
   $Res call({Request request, bool isApproved});
 
@@ -426,27 +445,31 @@ class __$$ProcessRequestImplCopyWithImpl<$Res>
     extends _$AdminPanelEventCopyWithImpl<$Res, _$ProcessRequestImpl>
     implements _$$ProcessRequestImplCopyWith<$Res> {
   __$$ProcessRequestImplCopyWithImpl(
-      _$ProcessRequestImpl _value, $Res Function(_$ProcessRequestImpl) _then)
-      : super(_value, _then);
+    _$ProcessRequestImpl _value,
+    $Res Function(_$ProcessRequestImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? request = null,
-    Object? isApproved = null,
-  }) {
-    return _then(_$ProcessRequestImpl(
-      null == request
-          ? _value.request
-          : request // ignore: cast_nullable_to_non_nullable
-              as Request,
-      null == isApproved
-          ? _value.isApproved
-          : isApproved // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+  $Res call({Object? request = null, Object? isApproved = null}) {
+    return _then(
+      _$ProcessRequestImpl(
+        null == request
+            ? _value.request
+            : request // ignore: cast_nullable_to_non_nullable
+                  as Request,
+        null == isApproved
+            ? _value.isApproved
+            : isApproved // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $RequestCopyWith<$Res> get request {
@@ -484,12 +507,16 @@ class _$ProcessRequestImpl implements ProcessRequest {
   @override
   int get hashCode => Object.hash(runtimeType, request, isApproved);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ProcessRequestImplCopyWith<_$ProcessRequestImpl> get copyWith =>
       __$$ProcessRequestImplCopyWithImpl<_$ProcessRequestImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -501,7 +528,7 @@ class _$ProcessRequestImpl implements ProcessRequest {
     required TResult Function(String billId) rejectBill,
     required TResult Function(String status) filterComplaints,
     required TResult Function(String complaintId, String newStatus)
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return processRequest(request, isApproved);
   }
@@ -516,7 +543,7 @@ class _$ProcessRequestImpl implements ProcessRequest {
     TResult? Function(String billId)? rejectBill,
     TResult? Function(String status)? filterComplaints,
     TResult? Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return processRequest?.call(request, isApproved);
   }
@@ -531,7 +558,7 @@ class _$ProcessRequestImpl implements ProcessRequest {
     TResult Function(String billId)? rejectBill,
     TResult Function(String status)? filterComplaints,
     TResult Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
     required TResult orElse(),
   }) {
     if (processRequest != null) {
@@ -549,7 +576,8 @@ class _$ProcessRequestImpl implements ProcessRequest {
     required TResult Function(ApproveBill value) approveBill,
     required TResult Function(RejectBill value) rejectBill,
     required TResult Function(FilterComplaints value) filterComplaints,
-    required TResult Function(UpdateComplaintStatus value) updateComplaintStatus,
+    required TResult Function(UpdateComplaintStatus value)
+    updateComplaintStatus,
   }) {
     return processRequest(this);
   }
@@ -593,7 +621,10 @@ abstract class ProcessRequest implements AdminPanelEvent {
 
   Request get request;
   bool get isApproved;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ProcessRequestImplCopyWith<_$ProcessRequestImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -601,8 +632,9 @@ abstract class ProcessRequest implements AdminPanelEvent {
 /// @nodoc
 abstract class _$$ApproveBillImplCopyWith<$Res> {
   factory _$$ApproveBillImplCopyWith(
-          _$ApproveBillImpl value, $Res Function(_$ApproveBillImpl) then) =
-      __$$ApproveBillImplCopyWithImpl<$Res>;
+    _$ApproveBillImpl value,
+    $Res Function(_$ApproveBillImpl) then,
+  ) = __$$ApproveBillImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String billId});
 }
@@ -612,20 +644,23 @@ class __$$ApproveBillImplCopyWithImpl<$Res>
     extends _$AdminPanelEventCopyWithImpl<$Res, _$ApproveBillImpl>
     implements _$$ApproveBillImplCopyWith<$Res> {
   __$$ApproveBillImplCopyWithImpl(
-      _$ApproveBillImpl _value, $Res Function(_$ApproveBillImpl) _then)
-      : super(_value, _then);
+    _$ApproveBillImpl _value,
+    $Res Function(_$ApproveBillImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? billId = null,
-  }) {
-    return _then(_$ApproveBillImpl(
-      null == billId
-          ? _value.billId
-          : billId // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? billId = null}) {
+    return _then(
+      _$ApproveBillImpl(
+        null == billId
+            ? _value.billId
+            : billId // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -653,7 +688,9 @@ class _$ApproveBillImpl implements ApproveBill {
   @override
   int get hashCode => Object.hash(runtimeType, billId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ApproveBillImplCopyWith<_$ApproveBillImpl> get copyWith =>
@@ -669,7 +706,7 @@ class _$ApproveBillImpl implements ApproveBill {
     required TResult Function(String billId) rejectBill,
     required TResult Function(String status) filterComplaints,
     required TResult Function(String complaintId, String newStatus)
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return approveBill(billId);
   }
@@ -684,7 +721,7 @@ class _$ApproveBillImpl implements ApproveBill {
     TResult? Function(String billId)? rejectBill,
     TResult? Function(String status)? filterComplaints,
     TResult? Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return approveBill?.call(billId);
   }
@@ -699,7 +736,7 @@ class _$ApproveBillImpl implements ApproveBill {
     TResult Function(String billId)? rejectBill,
     TResult Function(String status)? filterComplaints,
     TResult Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
     required TResult orElse(),
   }) {
     if (approveBill != null) {
@@ -717,7 +754,8 @@ class _$ApproveBillImpl implements ApproveBill {
     required TResult Function(ApproveBill value) approveBill,
     required TResult Function(RejectBill value) rejectBill,
     required TResult Function(FilterComplaints value) filterComplaints,
-    required TResult Function(UpdateComplaintStatus value) updateComplaintStatus,
+    required TResult Function(UpdateComplaintStatus value)
+    updateComplaintStatus,
   }) {
     return approveBill(this);
   }
@@ -759,7 +797,10 @@ abstract class ApproveBill implements AdminPanelEvent {
   const factory ApproveBill(final String billId) = _$ApproveBillImpl;
 
   String get billId;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ApproveBillImplCopyWith<_$ApproveBillImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -767,8 +808,9 @@ abstract class ApproveBill implements AdminPanelEvent {
 /// @nodoc
 abstract class _$$RejectBillImplCopyWith<$Res> {
   factory _$$RejectBillImplCopyWith(
-          _$RejectBillImpl value, $Res Function(_$RejectBillImpl) then) =
-      __$$RejectBillImplCopyWithImpl<$Res>;
+    _$RejectBillImpl value,
+    $Res Function(_$RejectBillImpl) then,
+  ) = __$$RejectBillImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String billId});
 }
@@ -778,20 +820,23 @@ class __$$RejectBillImplCopyWithImpl<$Res>
     extends _$AdminPanelEventCopyWithImpl<$Res, _$RejectBillImpl>
     implements _$$RejectBillImplCopyWith<$Res> {
   __$$RejectBillImplCopyWithImpl(
-      _$RejectBillImpl _value, $Res Function(_$RejectBillImpl) _then)
-      : super(_value, _then);
+    _$RejectBillImpl _value,
+    $Res Function(_$RejectBillImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? billId = null,
-  }) {
-    return _then(_$RejectBillImpl(
-      null == billId
-          ? _value.billId
-          : billId // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? billId = null}) {
+    return _then(
+      _$RejectBillImpl(
+        null == billId
+            ? _value.billId
+            : billId // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -819,7 +864,9 @@ class _$RejectBillImpl implements RejectBill {
   @override
   int get hashCode => Object.hash(runtimeType, billId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RejectBillImplCopyWith<_$RejectBillImpl> get copyWith =>
@@ -835,7 +882,7 @@ class _$RejectBillImpl implements RejectBill {
     required TResult Function(String billId) rejectBill,
     required TResult Function(String status) filterComplaints,
     required TResult Function(String complaintId, String newStatus)
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return rejectBill(billId);
   }
@@ -850,7 +897,7 @@ class _$RejectBillImpl implements RejectBill {
     TResult? Function(String billId)? rejectBill,
     TResult? Function(String status)? filterComplaints,
     TResult? Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return rejectBill?.call(billId);
   }
@@ -865,7 +912,7 @@ class _$RejectBillImpl implements RejectBill {
     TResult Function(String billId)? rejectBill,
     TResult Function(String status)? filterComplaints,
     TResult Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
     required TResult orElse(),
   }) {
     if (rejectBill != null) {
@@ -883,7 +930,8 @@ class _$RejectBillImpl implements RejectBill {
     required TResult Function(ApproveBill value) approveBill,
     required TResult Function(RejectBill value) rejectBill,
     required TResult Function(FilterComplaints value) filterComplaints,
-    required TResult Function(UpdateComplaintStatus value) updateComplaintStatus,
+    required TResult Function(UpdateComplaintStatus value)
+    updateComplaintStatus,
   }) {
     return rejectBill(this);
   }
@@ -925,16 +973,20 @@ abstract class RejectBill implements AdminPanelEvent {
   const factory RejectBill(final String billId) = _$RejectBillImpl;
 
   String get billId;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RejectBillImplCopyWith<_$RejectBillImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class _$$FilterComplaintsImplCopyWith<$Res> {
-  factory _$$FilterComplaintsImplCopyWith(_$FilterComplaintsImpl value,
-          $Res Function(_$FilterComplaintsImpl) then) =
-      __$$FilterComplaintsImplCopyWithImpl<$Res>;
+  factory _$$FilterComplaintsImplCopyWith(
+    _$FilterComplaintsImpl value,
+    $Res Function(_$FilterComplaintsImpl) then,
+  ) = __$$FilterComplaintsImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String status});
 }
@@ -943,21 +995,24 @@ abstract class _$$FilterComplaintsImplCopyWith<$Res> {
 class __$$FilterComplaintsImplCopyWithImpl<$Res>
     extends _$AdminPanelEventCopyWithImpl<$Res, _$FilterComplaintsImpl>
     implements _$$FilterComplaintsImplCopyWith<$Res> {
-  __$$FilterComplaintsImplCopyWithImpl(_$FilterComplaintsImpl _value,
-      $Res Function(_$FilterComplaintsImpl) _then)
-      : super(_value, _then);
+  __$$FilterComplaintsImplCopyWithImpl(
+    _$FilterComplaintsImpl _value,
+    $Res Function(_$FilterComplaintsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? status = null,
-  }) {
-    return _then(_$FilterComplaintsImpl(
-      null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? status = null}) {
+    return _then(
+      _$FilterComplaintsImpl(
+        null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -985,12 +1040,16 @@ class _$FilterComplaintsImpl implements FilterComplaints {
   @override
   int get hashCode => Object.hash(runtimeType, status);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FilterComplaintsImplCopyWith<_$FilterComplaintsImpl> get copyWith =>
       __$$FilterComplaintsImplCopyWithImpl<_$FilterComplaintsImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -1002,7 +1061,7 @@ class _$FilterComplaintsImpl implements FilterComplaints {
     required TResult Function(String billId) rejectBill,
     required TResult Function(String status) filterComplaints,
     required TResult Function(String complaintId, String newStatus)
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return filterComplaints(status);
   }
@@ -1017,7 +1076,7 @@ class _$FilterComplaintsImpl implements FilterComplaints {
     TResult? Function(String billId)? rejectBill,
     TResult? Function(String status)? filterComplaints,
     TResult? Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return filterComplaints?.call(status);
   }
@@ -1032,7 +1091,7 @@ class _$FilterComplaintsImpl implements FilterComplaints {
     TResult Function(String billId)? rejectBill,
     TResult Function(String status)? filterComplaints,
     TResult Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
     required TResult orElse(),
   }) {
     if (filterComplaints != null) {
@@ -1050,7 +1109,8 @@ class _$FilterComplaintsImpl implements FilterComplaints {
     required TResult Function(ApproveBill value) approveBill,
     required TResult Function(RejectBill value) rejectBill,
     required TResult Function(FilterComplaints value) filterComplaints,
-    required TResult Function(UpdateComplaintStatus value) updateComplaintStatus,
+    required TResult Function(UpdateComplaintStatus value)
+    updateComplaintStatus,
   }) {
     return filterComplaints(this);
   }
@@ -1092,16 +1152,20 @@ abstract class FilterComplaints implements AdminPanelEvent {
   const factory FilterComplaints(final String status) = _$FilterComplaintsImpl;
 
   String get status;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FilterComplaintsImplCopyWith<_$FilterComplaintsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class _$$UpdateComplaintStatusImplCopyWith<$Res> {
-  factory _$$UpdateComplaintStatusImplCopyWith(_$UpdateComplaintStatusImpl value,
-          $Res Function(_$UpdateComplaintStatusImpl) then) =
-      __$$UpdateComplaintStatusImplCopyWithImpl<$Res>;
+  factory _$$UpdateComplaintStatusImplCopyWith(
+    _$UpdateComplaintStatusImpl value,
+    $Res Function(_$UpdateComplaintStatusImpl) then,
+  ) = __$$UpdateComplaintStatusImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String complaintId, String newStatus});
 }
@@ -1110,34 +1174,38 @@ abstract class _$$UpdateComplaintStatusImplCopyWith<$Res> {
 class __$$UpdateComplaintStatusImplCopyWithImpl<$Res>
     extends _$AdminPanelEventCopyWithImpl<$Res, _$UpdateComplaintStatusImpl>
     implements _$$UpdateComplaintStatusImplCopyWith<$Res> {
-  __$$UpdateComplaintStatusImplCopyWithImpl(_$UpdateComplaintStatusImpl _value,
-      $Res Function(_$UpdateComplaintStatusImpl) _then)
-      : super(_value, _then);
+  __$$UpdateComplaintStatusImplCopyWithImpl(
+    _$UpdateComplaintStatusImpl _value,
+    $Res Function(_$UpdateComplaintStatusImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? complaintId = null,
-    Object? newStatus = null,
-  }) {
-    return _then(_$UpdateComplaintStatusImpl(
-      complaintId: null == complaintId
-          ? _value.complaintId
-          : complaintId // ignore: cast_nullable_to_non_nullable
-              as String,
-      newStatus: null == newStatus
-          ? _value.newStatus
-          : newStatus // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? complaintId = null, Object? newStatus = null}) {
+    return _then(
+      _$UpdateComplaintStatusImpl(
+        complaintId: null == complaintId
+            ? _value.complaintId
+            : complaintId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        newStatus: null == newStatus
+            ? _value.newStatus
+            : newStatus // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$UpdateComplaintStatusImpl implements UpdateComplaintStatus {
-  const _$UpdateComplaintStatusImpl(
-      {required this.complaintId, required this.newStatus});
+  const _$UpdateComplaintStatusImpl({
+    required this.complaintId,
+    required this.newStatus,
+  });
 
   @override
   final String complaintId;
@@ -1163,12 +1231,17 @@ class _$UpdateComplaintStatusImpl implements UpdateComplaintStatus {
   @override
   int get hashCode => Object.hash(runtimeType, complaintId, newStatus);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$UpdateComplaintStatusImplCopyWith<_$UpdateComplaintStatusImpl> get copyWith =>
+  _$$UpdateComplaintStatusImplCopyWith<_$UpdateComplaintStatusImpl>
+  get copyWith =>
       __$$UpdateComplaintStatusImplCopyWithImpl<_$UpdateComplaintStatusImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -1180,7 +1253,7 @@ class _$UpdateComplaintStatusImpl implements UpdateComplaintStatus {
     required TResult Function(String billId) rejectBill,
     required TResult Function(String status) filterComplaints,
     required TResult Function(String complaintId, String newStatus)
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return updateComplaintStatus(complaintId, newStatus);
   }
@@ -1195,7 +1268,7 @@ class _$UpdateComplaintStatusImpl implements UpdateComplaintStatus {
     TResult? Function(String billId)? rejectBill,
     TResult? Function(String status)? filterComplaints,
     TResult? Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
   }) {
     return updateComplaintStatus?.call(complaintId, newStatus);
   }
@@ -1210,7 +1283,7 @@ class _$UpdateComplaintStatusImpl implements UpdateComplaintStatus {
     TResult Function(String billId)? rejectBill,
     TResult Function(String status)? filterComplaints,
     TResult Function(String complaintId, String newStatus)?
-        updateComplaintStatus,
+    updateComplaintStatus,
     required TResult orElse(),
   }) {
     if (updateComplaintStatus != null) {
@@ -1228,7 +1301,8 @@ class _$UpdateComplaintStatusImpl implements UpdateComplaintStatus {
     required TResult Function(ApproveBill value) approveBill,
     required TResult Function(RejectBill value) rejectBill,
     required TResult Function(FilterComplaints value) filterComplaints,
-    required TResult Function(UpdateComplaintStatus value) updateComplaintStatus,
+    required TResult Function(UpdateComplaintStatus value)
+    updateComplaintStatus,
   }) {
     return updateComplaintStatus(this);
   }
@@ -1267,15 +1341,19 @@ class _$UpdateComplaintStatusImpl implements UpdateComplaintStatus {
 }
 
 abstract class UpdateComplaintStatus implements AdminPanelEvent {
-  const factory UpdateComplaintStatus(
-      {required final String complaintId,
-      required final String newStatus}) = _$UpdateComplaintStatusImpl;
+  const factory UpdateComplaintStatus({
+    required final String complaintId,
+    required final String newStatus,
+  }) = _$UpdateComplaintStatusImpl;
 
   String get complaintId;
   String get newStatus;
-  @JsonKey(ignore: true)
-  _$$UpdateComplaintStatusImplCopyWith<_$UpdateComplaintStatusImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+
+  /// Create a copy of AdminPanelEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UpdateComplaintStatusImplCopyWith<_$UpdateComplaintStatusImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1287,12 +1365,17 @@ mixin _$AdminPanelState {
   List<Complaint> get complaints => throw _privateConstructorUsedError;
   List<Announcement> get announcements => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
-  String? get error => throw _privateConstructorUsedError;
+  String? get error =>
+      throw _privateConstructorUsedError; // State untuk manajemen keluhan admin
   List<Complaint> get filteredComplaints => throw _privateConstructorUsedError;
-  String get complaintStatusFilter => throw _privateConstructorUsedError;
-  List<ChatConversation> get conversations => throw _privateConstructorUsedError;
+  String get complaintStatusFilter =>
+      throw _privateConstructorUsedError; // State baru untuk daftar percakapan chat
+  List<ChatConversation> get conversations =>
+      throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdminPanelState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AdminPanelStateCopyWith<AdminPanelState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1300,21 +1383,23 @@ mixin _$AdminPanelState {
 /// @nodoc
 abstract class $AdminPanelStateCopyWith<$Res> {
   factory $AdminPanelStateCopyWith(
-          AdminPanelState value, $Res Function(AdminPanelState) then) =
-      _$AdminPanelStateCopyWithImpl<$Res, AdminPanelState>;
+    AdminPanelState value,
+    $Res Function(AdminPanelState) then,
+  ) = _$AdminPanelStateCopyWithImpl<$Res, AdminPanelState>;
   @useResult
-  $Res call(
-      {int activeTabIndex,
-      List<Room> rooms,
-      List<Bill> pendingBills,
-      List<Request> requests,
-      List<Complaint> complaints,
-      List<Announcement> announcements,
-      bool isLoading,
-      String? error,
-      List<Complaint> filteredComplaints,
-      String complaintStatusFilter,
-      List<ChatConversation> conversations});
+  $Res call({
+    int activeTabIndex,
+    List<Room> rooms,
+    List<Bill> pendingBills,
+    List<Request> requests,
+    List<Complaint> complaints,
+    List<Announcement> announcements,
+    bool isLoading,
+    String? error,
+    List<Complaint> filteredComplaints,
+    String complaintStatusFilter,
+    List<ChatConversation> conversations,
+  });
 }
 
 /// @nodoc
@@ -1327,6 +1412,8 @@ class _$AdminPanelStateCopyWithImpl<$Res, $Val extends AdminPanelState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AdminPanelState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1342,75 +1429,80 @@ class _$AdminPanelStateCopyWithImpl<$Res, $Val extends AdminPanelState>
     Object? complaintStatusFilter = null,
     Object? conversations = null,
   }) {
-    return _then(_value.copyWith(
-      activeTabIndex: null == activeTabIndex
-          ? _value.activeTabIndex
-          : activeTabIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-      rooms: null == rooms
-          ? _value.rooms
-          : rooms // ignore: cast_nullable_to_non_nullable
-              as List<Room>,
-      pendingBills: null == pendingBills
-          ? _value.pendingBills
-          : pendingBills // ignore: cast_nullable_to_non_nullable
-              as List<Bill>,
-      requests: null == requests
-          ? _value.requests
-          : requests // ignore: cast_nullable_to_non_nullable
-              as List<Request>,
-      complaints: null == complaints
-          ? _value.complaints
-          : complaints // ignore: cast_nullable_to_non_nullable
-              as List<Complaint>,
-      announcements: null == announcements
-          ? _value.announcements
-          : announcements // ignore: cast_nullable_to_non_nullable
-              as List<Announcement>,
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-      filteredComplaints: null == filteredComplaints
-          ? _value.filteredComplaints
-          : filteredComplaints // ignore: cast_nullable_to_non_nullable
-              as List<Complaint>,
-      complaintStatusFilter: null == complaintStatusFilter
-          ? _value.complaintStatusFilter
-          : complaintStatusFilter // ignore: cast_nullable_to_non_nullable
-              as String,
-      conversations: null == conversations
-          ? _value.conversations
-          : conversations // ignore: cast_nullable_to_non_nullable
-              as List<ChatConversation>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            activeTabIndex: null == activeTabIndex
+                ? _value.activeTabIndex
+                : activeTabIndex // ignore: cast_nullable_to_non_nullable
+                      as int,
+            rooms: null == rooms
+                ? _value.rooms
+                : rooms // ignore: cast_nullable_to_non_nullable
+                      as List<Room>,
+            pendingBills: null == pendingBills
+                ? _value.pendingBills
+                : pendingBills // ignore: cast_nullable_to_non_nullable
+                      as List<Bill>,
+            requests: null == requests
+                ? _value.requests
+                : requests // ignore: cast_nullable_to_non_nullable
+                      as List<Request>,
+            complaints: null == complaints
+                ? _value.complaints
+                : complaints // ignore: cast_nullable_to_non_nullable
+                      as List<Complaint>,
+            announcements: null == announcements
+                ? _value.announcements
+                : announcements // ignore: cast_nullable_to_non_nullable
+                      as List<Announcement>,
+            isLoading: null == isLoading
+                ? _value.isLoading
+                : isLoading // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            error: freezed == error
+                ? _value.error
+                : error // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            filteredComplaints: null == filteredComplaints
+                ? _value.filteredComplaints
+                : filteredComplaints // ignore: cast_nullable_to_non_nullable
+                      as List<Complaint>,
+            complaintStatusFilter: null == complaintStatusFilter
+                ? _value.complaintStatusFilter
+                : complaintStatusFilter // ignore: cast_nullable_to_non_nullable
+                      as String,
+            conversations: null == conversations
+                ? _value.conversations
+                : conversations // ignore: cast_nullable_to_non_nullable
+                      as List<ChatConversation>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$AdminPanelStateImplCopyWith<$Res>
     implements $AdminPanelStateCopyWith<$Res> {
-  factory _$$AdminPanelStateImplCopyWith(_$AdminPanelStateImpl value,
-          $Res Function(_$AdminPanelStateImpl) then) =
-      __$$AdminPanelStateImplCopyWithImpl<$Res>;
+  factory _$$AdminPanelStateImplCopyWith(
+    _$AdminPanelStateImpl value,
+    $Res Function(_$AdminPanelStateImpl) then,
+  ) = __$$AdminPanelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int activeTabIndex,
-      List<Room> rooms,
-      List<Bill> pendingBills,
-      List<Request> requests,
-      List<Complaint> complaints,
-      List<Announcement> announcements,
-      bool isLoading,
-      String? error,
-      List<Complaint> filteredComplaints,
-      String complaintStatusFilter,
-      List<ChatConversation> conversations});
+  $Res call({
+    int activeTabIndex,
+    List<Room> rooms,
+    List<Bill> pendingBills,
+    List<Request> requests,
+    List<Complaint> complaints,
+    List<Announcement> announcements,
+    bool isLoading,
+    String? error,
+    List<Complaint> filteredComplaints,
+    String complaintStatusFilter,
+    List<ChatConversation> conversations,
+  });
 }
 
 /// @nodoc
@@ -1418,9 +1510,12 @@ class __$$AdminPanelStateImplCopyWithImpl<$Res>
     extends _$AdminPanelStateCopyWithImpl<$Res, _$AdminPanelStateImpl>
     implements _$$AdminPanelStateImplCopyWith<$Res> {
   __$$AdminPanelStateImplCopyWithImpl(
-      _$AdminPanelStateImpl _value, $Res Function(_$AdminPanelStateImpl) _then)
-      : super(_value, _then);
+    _$AdminPanelStateImpl _value,
+    $Res Function(_$AdminPanelStateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdminPanelState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1436,84 +1531,84 @@ class __$$AdminPanelStateImplCopyWithImpl<$Res>
     Object? complaintStatusFilter = null,
     Object? conversations = null,
   }) {
-    return _then(_$AdminPanelStateImpl(
-      activeTabIndex: null == activeTabIndex
-          ? _value.activeTabIndex
-          : activeTabIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-      rooms: null == rooms
-          ? _value._rooms
-          : rooms // ignore: cast_nullable_to_non_nullable
-              as List<Room>,
-      pendingBills: null == pendingBills
-          ? _value._pendingBills
-          : pendingBills // ignore: cast_nullable_to_non_nullable
-              as List<Bill>,
-      requests: null == requests
-          ? _value._requests
-          : requests // ignore: cast_nullable_to_non_nullable
-              as List<Request>,
-      complaints: null == complaints
-          ? _value._complaints
-          : complaints // ignore: cast_nullable_to_non_nullable
-              as List<Complaint>,
-      announcements: null == announcements
-          ? _value._announcements
-          : announcements // ignore: cast_nullable_to_non_nullable
-              as List<Announcement>,
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-      filteredComplaints: null == filteredComplaints
-          ? _value._filteredComplaints
-          : filteredComplaints // ignore: cast_nullable_to_non_nullable
-              as List<Complaint>,
-      complaintStatusFilter: null == complaintStatusFilter
-          ? _value.complaintStatusFilter
-          : complaintStatusFilter // ignore: cast_nullable_to_non_nullable
-              as String,
-      conversations: null == conversations
-          ? _value._conversations
-          : conversations // ignore: cast_nullable_to_non_nullable
-              as List<ChatConversation>,
-    ));
+    return _then(
+      _$AdminPanelStateImpl(
+        activeTabIndex: null == activeTabIndex
+            ? _value.activeTabIndex
+            : activeTabIndex // ignore: cast_nullable_to_non_nullable
+                  as int,
+        rooms: null == rooms
+            ? _value._rooms
+            : rooms // ignore: cast_nullable_to_non_nullable
+                  as List<Room>,
+        pendingBills: null == pendingBills
+            ? _value._pendingBills
+            : pendingBills // ignore: cast_nullable_to_non_nullable
+                  as List<Bill>,
+        requests: null == requests
+            ? _value._requests
+            : requests // ignore: cast_nullable_to_non_nullable
+                  as List<Request>,
+        complaints: null == complaints
+            ? _value._complaints
+            : complaints // ignore: cast_nullable_to_non_nullable
+                  as List<Complaint>,
+        announcements: null == announcements
+            ? _value._announcements
+            : announcements // ignore: cast_nullable_to_non_nullable
+                  as List<Announcement>,
+        isLoading: null == isLoading
+            ? _value.isLoading
+            : isLoading // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        error: freezed == error
+            ? _value.error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        filteredComplaints: null == filteredComplaints
+            ? _value._filteredComplaints
+            : filteredComplaints // ignore: cast_nullable_to_non_nullable
+                  as List<Complaint>,
+        complaintStatusFilter: null == complaintStatusFilter
+            ? _value.complaintStatusFilter
+            : complaintStatusFilter // ignore: cast_nullable_to_non_nullable
+                  as String,
+        conversations: null == conversations
+            ? _value._conversations
+            : conversations // ignore: cast_nullable_to_non_nullable
+                  as List<ChatConversation>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$AdminPanelStateImpl implements _AdminPanelState {
-  const _$AdminPanelStateImpl(
-      {this.activeTabIndex = 0,
-      final List<Room> rooms = const [],
-      final List<Bill> pendingBills = const [],
-      final List<Request> requests = const [],
-      final List<Complaint> complaints = const [],
-      final List<Announcement> announcements = const [],
-      this.isLoading = true,
-      this.error,
-      final List<Complaint> filteredComplaints = const [],
-      this.complaintStatusFilter = 'Semua',
-      final List<ChatConversation> conversations = const []})
-      : _rooms = rooms,
-        _pendingBills = pendingBills,
-        _requests = requests,
-        _complaints = complaints,
-        _announcements = announcements,
-        _filteredComplaints = filteredComplaints,
-        _conversations = conversations;
+  const _$AdminPanelStateImpl({
+    required this.activeTabIndex,
+    required final List<Room> rooms,
+    required final List<Bill> pendingBills,
+    required final List<Request> requests,
+    required final List<Complaint> complaints,
+    required final List<Announcement> announcements,
+    required this.isLoading,
+    this.error,
+    final List<Complaint> filteredComplaints = const [],
+    this.complaintStatusFilter = 'Semua',
+    final List<ChatConversation> conversations = const [],
+  }) : _rooms = rooms,
+       _pendingBills = pendingBills,
+       _requests = requests,
+       _complaints = complaints,
+       _announcements = announcements,
+       _filteredComplaints = filteredComplaints,
+       _conversations = conversations;
 
   @override
-  @JsonKey()
   final int activeTabIndex;
   final List<Room> _rooms;
   @override
-  @JsonKey()
   List<Room> get rooms {
     if (_rooms is EqualUnmodifiableListView) return _rooms;
     // ignore: implicit_dynamic_type
@@ -1522,7 +1617,6 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
 
   final List<Bill> _pendingBills;
   @override
-  @JsonKey()
   List<Bill> get pendingBills {
     if (_pendingBills is EqualUnmodifiableListView) return _pendingBills;
     // ignore: implicit_dynamic_type
@@ -1531,7 +1625,6 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
 
   final List<Request> _requests;
   @override
-  @JsonKey()
   List<Request> get requests {
     if (_requests is EqualUnmodifiableListView) return _requests;
     // ignore: implicit_dynamic_type
@@ -1540,7 +1633,6 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
 
   final List<Complaint> _complaints;
   @override
-  @JsonKey()
   List<Complaint> get complaints {
     if (_complaints is EqualUnmodifiableListView) return _complaints;
     // ignore: implicit_dynamic_type
@@ -1549,7 +1641,6 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
 
   final List<Announcement> _announcements;
   @override
-  @JsonKey()
   List<Announcement> get announcements {
     if (_announcements is EqualUnmodifiableListView) return _announcements;
     // ignore: implicit_dynamic_type
@@ -1557,11 +1648,12 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
   }
 
   @override
-  @JsonKey()
   final bool isLoading;
   @override
   final String? error;
+  // State untuk manajemen keluhan admin
   final List<Complaint> _filteredComplaints;
+  // State untuk manajemen keluhan admin
   @override
   @JsonKey()
   List<Complaint> get filteredComplaints {
@@ -1574,7 +1666,9 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
   @override
   @JsonKey()
   final String complaintStatusFilter;
+  // State baru untuk daftar percakapan chat
   final List<ChatConversation> _conversations;
+  // State baru untuk daftar percakapan chat
   @override
   @JsonKey()
   List<ChatConversation> get conversations {
@@ -1596,60 +1690,76 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
             (identical(other.activeTabIndex, activeTabIndex) ||
                 other.activeTabIndex == activeTabIndex) &&
             const DeepCollectionEquality().equals(other._rooms, _rooms) &&
-            const DeepCollectionEquality()
-                .equals(other._pendingBills, _pendingBills) &&
+            const DeepCollectionEquality().equals(
+              other._pendingBills,
+              _pendingBills,
+            ) &&
             const DeepCollectionEquality().equals(other._requests, _requests) &&
-            const DeepCollectionEquality()
-                .equals(other._complaints, _complaints) &&
-            const DeepCollectionEquality()
-                .equals(other._announcements, _announcements) &&
+            const DeepCollectionEquality().equals(
+              other._complaints,
+              _complaints,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._announcements,
+              _announcements,
+            ) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.error, error) || other.error == error) &&
-            const DeepCollectionEquality()
-                .equals(other._filteredComplaints, _filteredComplaints) &&
+            const DeepCollectionEquality().equals(
+              other._filteredComplaints,
+              _filteredComplaints,
+            ) &&
             (identical(other.complaintStatusFilter, complaintStatusFilter) ||
                 other.complaintStatusFilter == complaintStatusFilter) &&
-            const DeepCollectionEquality()
-                .equals(other._conversations, _conversations));
+            const DeepCollectionEquality().equals(
+              other._conversations,
+              _conversations,
+            ));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      activeTabIndex,
-      const DeepCollectionEquality().hash(_rooms),
-      const DeepCollectionEquality().hash(_pendingBills),
-      const DeepCollectionEquality().hash(_requests),
-      const DeepCollectionEquality().hash(_complaints),
-      const DeepCollectionEquality().hash(_announcements),
-      isLoading,
-      error,
-      const DeepCollectionEquality().hash(_filteredComplaints),
-      complaintStatusFilter,
-      const DeepCollectionEquality().hash(_conversations));
+    runtimeType,
+    activeTabIndex,
+    const DeepCollectionEquality().hash(_rooms),
+    const DeepCollectionEquality().hash(_pendingBills),
+    const DeepCollectionEquality().hash(_requests),
+    const DeepCollectionEquality().hash(_complaints),
+    const DeepCollectionEquality().hash(_announcements),
+    isLoading,
+    error,
+    const DeepCollectionEquality().hash(_filteredComplaints),
+    complaintStatusFilter,
+    const DeepCollectionEquality().hash(_conversations),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdminPanelState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AdminPanelStateImplCopyWith<_$AdminPanelStateImpl> get copyWith =>
       __$$AdminPanelStateImplCopyWithImpl<_$AdminPanelStateImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _AdminPanelState implements AdminPanelState {
-  const factory _AdminPanelState(
-      {required final int activeTabIndex,
-      required final List<Room> rooms,
-      required final List<Bill> pendingBills,
-      required final List<Request> requests,
-      required final List<Complaint> complaints,
-      required final List<Announcement> announcements,
-      required final bool isLoading,
-      final String? error,
-      final List<Complaint> filteredComplaints,
-      final String complaintStatusFilter,
-      final List<ChatConversation> conversations}) = _$AdminPanelStateImpl;
+  const factory _AdminPanelState({
+    required final int activeTabIndex,
+    required final List<Room> rooms,
+    required final List<Bill> pendingBills,
+    required final List<Request> requests,
+    required final List<Complaint> complaints,
+    required final List<Announcement> announcements,
+    required final bool isLoading,
+    final String? error,
+    final List<Complaint> filteredComplaints,
+    final String complaintStatusFilter,
+    final List<ChatConversation> conversations,
+  }) = _$AdminPanelStateImpl;
 
   @override
   int get activeTabIndex;
@@ -1666,15 +1776,18 @@ abstract class _AdminPanelState implements AdminPanelState {
   @override
   bool get isLoading;
   @override
-  String? get error;
+  String? get error; // State untuk manajemen keluhan admin
   @override
   List<Complaint> get filteredComplaints;
   @override
-  String get complaintStatusFilter;
+  String get complaintStatusFilter; // State baru untuk daftar percakapan chat
   @override
   List<ChatConversation> get conversations;
+
+  /// Create a copy of AdminPanelState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AdminPanelStateImplCopyWith<_$AdminPanelStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

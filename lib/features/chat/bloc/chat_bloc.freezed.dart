@@ -12,7 +12,8 @@ part of 'chat_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$ChatEvent {
@@ -21,45 +22,39 @@ mixin _$ChatEvent {
     required TResult Function(String userId) load,
     required TResult Function(String text) sendMessage,
     required TResult Function(String imageUrl) sendImage,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId)? load,
     TResult? Function(String text)? sendMessage,
     TResult? Function(String imageUrl)? sendImage,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId)? load,
     TResult Function(String text)? sendMessage,
     TResult Function(String imageUrl)? sendImage,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadChat value) load,
     required TResult Function(SendTextMessage value) sendMessage,
     required TResult Function(SendImageMessage value) sendImage,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadChat value)? load,
     TResult? Function(SendTextMessage value)? sendMessage,
     TResult? Function(SendImageMessage value)? sendImage,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadChat value)? load,
     TResult Function(SendTextMessage value)? sendMessage,
     TResult Function(SendImageMessage value)? sendImage,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -77,13 +72,17 @@ class _$ChatEventCopyWithImpl<$Res, $Val extends ChatEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of ChatEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 abstract class _$$LoadChatImplCopyWith<$Res> {
   factory _$$LoadChatImplCopyWith(
-          _$LoadChatImpl value, $Res Function(_$LoadChatImpl) then) =
-      __$$LoadChatImplCopyWithImpl<$Res>;
+    _$LoadChatImpl value,
+    $Res Function(_$LoadChatImpl) then,
+  ) = __$$LoadChatImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String userId});
 }
@@ -93,20 +92,23 @@ class __$$LoadChatImplCopyWithImpl<$Res>
     extends _$ChatEventCopyWithImpl<$Res, _$LoadChatImpl>
     implements _$$LoadChatImplCopyWith<$Res> {
   __$$LoadChatImplCopyWithImpl(
-      _$LoadChatImpl _value, $Res Function(_$LoadChatImpl) _then)
-      : super(_value, _then);
+    _$LoadChatImpl _value,
+    $Res Function(_$LoadChatImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ChatEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? userId = null,
-  }) {
-    return _then(_$LoadChatImpl(
-      null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? userId = null}) {
+    return _then(
+      _$LoadChatImpl(
+        null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -134,7 +136,9 @@ class _$LoadChatImpl implements LoadChat {
   @override
   int get hashCode => Object.hash(runtimeType, userId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChatEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadChatImplCopyWith<_$LoadChatImpl> get copyWith =>
@@ -213,16 +217,20 @@ abstract class LoadChat implements ChatEvent {
   const factory LoadChat(final String userId) = _$LoadChatImpl;
 
   String get userId;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ChatEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoadChatImplCopyWith<_$LoadChatImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class _$$SendTextMessageImplCopyWith<$Res> {
-  factory _$$SendTextMessageImplCopyWith(_$SendTextMessageImpl value,
-          $Res Function(_$SendTextMessageImpl) then) =
-      __$$SendTextMessageImplCopyWithImpl<$Res>;
+  factory _$$SendTextMessageImplCopyWith(
+    _$SendTextMessageImpl value,
+    $Res Function(_$SendTextMessageImpl) then,
+  ) = __$$SendTextMessageImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String text});
 }
@@ -232,20 +240,23 @@ class __$$SendTextMessageImplCopyWithImpl<$Res>
     extends _$ChatEventCopyWithImpl<$Res, _$SendTextMessageImpl>
     implements _$$SendTextMessageImplCopyWith<$Res> {
   __$$SendTextMessageImplCopyWithImpl(
-      _$SendTextMessageImpl _value, $Res Function(_$SendTextMessageImpl) _then)
-      : super(_value, _then);
+    _$SendTextMessageImpl _value,
+    $Res Function(_$SendTextMessageImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ChatEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? text = null,
-  }) {
-    return _then(_$SendTextMessageImpl(
-      null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? text = null}) {
+    return _then(
+      _$SendTextMessageImpl(
+        null == text
+            ? _value.text
+            : text // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -273,12 +284,16 @@ class _$SendTextMessageImpl implements SendTextMessage {
   @override
   int get hashCode => Object.hash(runtimeType, text);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChatEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SendTextMessageImplCopyWith<_$SendTextMessageImpl> get copyWith =>
       __$$SendTextMessageImplCopyWithImpl<_$SendTextMessageImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -353,16 +368,20 @@ abstract class SendTextMessage implements ChatEvent {
   const factory SendTextMessage(final String text) = _$SendTextMessageImpl;
 
   String get text;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ChatEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SendTextMessageImplCopyWith<_$SendTextMessageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class _$$SendImageMessageImplCopyWith<$Res> {
-  factory _$$SendImageMessageImplCopyWith(_$SendImageMessageImpl value,
-          $Res Function(_$SendImageMessageImpl) then) =
-      __$$SendImageMessageImplCopyWithImpl<$Res>;
+  factory _$$SendImageMessageImplCopyWith(
+    _$SendImageMessageImpl value,
+    $Res Function(_$SendImageMessageImpl) then,
+  ) = __$$SendImageMessageImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String imageUrl});
 }
@@ -371,21 +390,24 @@ abstract class _$$SendImageMessageImplCopyWith<$Res> {
 class __$$SendImageMessageImplCopyWithImpl<$Res>
     extends _$ChatEventCopyWithImpl<$Res, _$SendImageMessageImpl>
     implements _$$SendImageMessageImplCopyWith<$Res> {
-  __$$SendImageMessageImplCopyWithImpl(_$SendImageMessageImpl _value,
-      $Res Function(_$SendImageMessageImpl) _then)
-      : super(_value, _then);
+  __$$SendImageMessageImplCopyWithImpl(
+    _$SendImageMessageImpl _value,
+    $Res Function(_$SendImageMessageImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ChatEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? imageUrl = null,
-  }) {
-    return _then(_$SendImageMessageImpl(
-      null == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? imageUrl = null}) {
+    return _then(
+      _$SendImageMessageImpl(
+        null == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -414,12 +436,16 @@ class _$SendImageMessageImpl implements SendImageMessage {
   @override
   int get hashCode => Object.hash(runtimeType, imageUrl);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChatEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SendImageMessageImplCopyWith<_$SendImageMessageImpl> get copyWith =>
       __$$SendImageMessageImplCopyWithImpl<_$SendImageMessageImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -491,10 +517,14 @@ class _$SendImageMessageImpl implements SendImageMessage {
 }
 
 abstract class SendImageMessage implements ChatEvent {
-  const factory SendImageMessage(final String imageUrl) = _$SendImageMessageImpl;
+  const factory SendImageMessage(final String imageUrl) =
+      _$SendImageMessageImpl;
 
   String get imageUrl;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ChatEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SendImageMessageImplCopyWith<_$SendImageMessageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -506,7 +536,9 @@ mixin _$ChatState {
   ChatConversation? get conversation => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChatState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ChatStateCopyWith<ChatState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -516,11 +548,12 @@ abstract class $ChatStateCopyWith<$Res> {
   factory $ChatStateCopyWith(ChatState value, $Res Function(ChatState) then) =
       _$ChatStateCopyWithImpl<$Res, ChatState>;
   @useResult
-  $Res call(
-      {bool isLoading,
-      bool isSending,
-      ChatConversation? conversation,
-      String? error});
+  $Res call({
+    bool isLoading,
+    bool isSending,
+    ChatConversation? conversation,
+    String? error,
+  });
 
   $ChatConversationCopyWith<$Res>? get conversation;
 }
@@ -535,6 +568,8 @@ class _$ChatStateCopyWithImpl<$Res, $Val extends ChatState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ChatState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -543,26 +578,31 @@ class _$ChatStateCopyWithImpl<$Res, $Val extends ChatState>
     Object? conversation = freezed,
     Object? error = freezed,
   }) {
-    return _then(_value.copyWith(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isSending: null == isSending
-          ? _value.isSending
-          : isSending // ignore: cast_nullable_to_non_nullable
-              as bool,
-      conversation: freezed == conversation
-          ? _value.conversation
-          : conversation // ignore: cast_nullable_to_non_nullable
-              as ChatConversation?,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            isLoading: null == isLoading
+                ? _value.isLoading
+                : isLoading // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isSending: null == isSending
+                ? _value.isSending
+                : isSending // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            conversation: freezed == conversation
+                ? _value.conversation
+                : conversation // ignore: cast_nullable_to_non_nullable
+                      as ChatConversation?,
+            error: freezed == error
+                ? _value.error
+                : error // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of ChatState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ChatConversationCopyWith<$Res>? get conversation {
@@ -577,17 +617,20 @@ class _$ChatStateCopyWithImpl<$Res, $Val extends ChatState>
 }
 
 /// @nodoc
-abstract class _$$ChatStateImplCopyWith<$Res> implements $ChatStateCopyWith<$Res> {
+abstract class _$$ChatStateImplCopyWith<$Res>
+    implements $ChatStateCopyWith<$Res> {
   factory _$$ChatStateImplCopyWith(
-          _$ChatStateImpl value, $Res Function(_$ChatStateImpl) then) =
-      __$$ChatStateImplCopyWithImpl<$Res>;
+    _$ChatStateImpl value,
+    $Res Function(_$ChatStateImpl) then,
+  ) = __$$ChatStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool isLoading,
-      bool isSending,
-      ChatConversation? conversation,
-      String? error});
+  $Res call({
+    bool isLoading,
+    bool isSending,
+    ChatConversation? conversation,
+    String? error,
+  });
 
   @override
   $ChatConversationCopyWith<$Res>? get conversation;
@@ -598,9 +641,12 @@ class __$$ChatStateImplCopyWithImpl<$Res>
     extends _$ChatStateCopyWithImpl<$Res, _$ChatStateImpl>
     implements _$$ChatStateImplCopyWith<$Res> {
   __$$ChatStateImplCopyWithImpl(
-      _$ChatStateImpl _value, $Res Function(_$ChatStateImpl) _then)
-      : super(_value, _then);
+    _$ChatStateImpl _value,
+    $Res Function(_$ChatStateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ChatState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -609,35 +655,38 @@ class __$$ChatStateImplCopyWithImpl<$Res>
     Object? conversation = freezed,
     Object? error = freezed,
   }) {
-    return _then(_$ChatStateImpl(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isSending: null == isSending
-          ? _value.isSending
-          : isSending // ignore: cast_nullable_to_non_nullable
-              as bool,
-      conversation: freezed == conversation
-          ? _value.conversation
-          : conversation // ignore: cast_nullable_to_non_nullable
-              as ChatConversation?,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$ChatStateImpl(
+        isLoading: null == isLoading
+            ? _value.isLoading
+            : isLoading // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isSending: null == isSending
+            ? _value.isSending
+            : isSending // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        conversation: freezed == conversation
+            ? _value.conversation
+            : conversation // ignore: cast_nullable_to_non_nullable
+                  as ChatConversation?,
+        error: freezed == error
+            ? _value.error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ChatStateImpl implements _ChatState {
-  const _$ChatStateImpl(
-      {this.isLoading = true,
-      this.isSending = false,
-      this.conversation,
-      this.error});
+  const _$ChatStateImpl({
+    this.isLoading = true,
+    this.isSending = false,
+    this.conversation,
+    this.error,
+  });
 
   @override
   @JsonKey()
@@ -673,7 +722,9 @@ class _$ChatStateImpl implements _ChatState {
   int get hashCode =>
       Object.hash(runtimeType, isLoading, isSending, conversation, error);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChatState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChatStateImplCopyWith<_$ChatStateImpl> get copyWith =>
@@ -681,11 +732,12 @@ class _$ChatStateImpl implements _ChatState {
 }
 
 abstract class _ChatState implements ChatState {
-  const factory _ChatState(
-      {final bool isLoading,
-      final bool isSending,
-      final ChatConversation? conversation,
-      final String? error}) = _$ChatStateImpl;
+  const factory _ChatState({
+    final bool isLoading,
+    final bool isSending,
+    final ChatConversation? conversation,
+    final String? error,
+  }) = _$ChatStateImpl;
 
   @override
   bool get isLoading;
@@ -695,8 +747,11 @@ abstract class _ChatState implements ChatState {
   ChatConversation? get conversation;
   @override
   String? get error;
+
+  /// Create a copy of ChatState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChatStateImplCopyWith<_$ChatStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

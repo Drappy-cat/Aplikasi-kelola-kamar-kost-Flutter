@@ -11,6 +11,7 @@ import 'package:tes/features/notification/notification_screen.dart';
 import 'package:tes/features/profile/profile_screen.dart';
 import 'package:tes/features/settings/settings_screen.dart';
 import 'package:tes/features/settings/terms_screen.dart';
+import 'package:tes/features/settings/help_screen.dart';
 import 'package:tes/features/complaints/admin_complaint_screen.dart';
 import 'package:tes/features/complaints/report_issue_screen.dart';
 import 'package:tes/features/announcements/announcement_screen.dart';
@@ -55,6 +56,10 @@ final appRouter = GoRouter(
       builder: (context, state) => const TermsScreen(),
     ),
     GoRoute(
+      path: AppRoutes.help,
+      builder: (context, state) => const HelpScreen(),
+    ),
+    GoRoute(
       path: AppRoutes.notification,
       builder: (context, state) => const NotificationScreen(),
     ),
@@ -94,7 +99,7 @@ final appRouter = GoRouter(
       builder: (context, state) => const ScanScreen(),
     ),
     GoRoute(
-      path: '${AppRoutes.chat}/:userId', // Menggunakan parameter userId
+      path: '${AppRoutes.chat}/:userId',
       builder: (context, state) {
         final userId = state.pathParameters['userId']!;
         return ChatScreen(recipientUserId: userId);

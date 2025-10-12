@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:map_launcher/map_launcher.dart';
+// import 'package:map_launcher/map_launcher.dart'; // Dinonaktifkan sementara
 import 'package:tes/app/app_routes.dart';
 import 'package:tes/shared/widgets/auth_ui.dart';
 import 'package:tes/shared/services/auth_service.dart';
@@ -58,51 +58,52 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> _launchMaps() async {
-    final coords = Coords(-6.2088, 106.8456);
-    const title = "Lokasi Ri-Kost";
+  // --- FITUR PETA DINONAKTIFKAN SEMENTARA ---
+  // Future<void> _launchMaps() async {
+  //   final coords = Coords(-6.2088, 106.8456);
+  //   const title = "Lokasi Ri-Kost";
 
-    try {
-      final availableMaps = await MapLauncher.getAvailableMaps();
+  //   try {
+  //     final availableMaps = await MapLauncher.getAvailableMaps();
 
-      if (availableMaps.isNotEmpty) {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return SafeArea(
-              child: SingleChildScrollView(
-                child: Wrap(
-                  children: <Widget>[
-                    for (var map in availableMaps)
-                      ListTile(
-                        onTap: () => map.showMarker(
-                          coords: coords,
-                          title: title,
-                        ),
-                        title: Text(map.mapName),
-                        leading: Image.asset(
-                          map.icon,
-                          height: 30.0,
-                          width: 30.0,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Tidak ada aplikasi peta yang tersedia.')),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
-    }
-  }
+  //     if (availableMaps.isNotEmpty) {
+  //       showModalBottomSheet(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return SafeArea(
+  //             child: SingleChildScrollView(
+  //               child: Wrap(
+  //                 children: <Widget>[
+  //                   for (var map in availableMaps)
+  //                     ListTile(
+  //                       onTap: () => map.showMarker(
+  //                         coords: coords,
+  //                         title: title,
+  //                       ),
+  //                       title: Text(map.mapName),
+  //                       leading: Image.asset(
+  //                         map.icon,
+  //                         height: 30.0,
+  //                         width: 30.0,
+  //                       ),
+  //                     ),
+  //                 ],
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Tidak ada aplikasi peta yang tersedia.')),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Error: $e')),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -215,12 +216,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-            const Divider(height: 32),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.map_outlined),
-              label: const Text('Lihat Lokasi di Peta'),
-              onPressed: _launchMaps,
-            ),
+            // --- TOMBOL PETA DINONAKTIFKAN SEMENTARA ---
+            // const Divider(height: 32),
+            // OutlinedButton.icon(
+            //   icon: const Icon(Icons.map_outlined),
+            //   label: const Text('Lihat Lokasi di Peta'),
+            //   onPressed: _launchMaps,
+            // ),
           ],
         ),
       ),

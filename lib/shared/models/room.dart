@@ -23,6 +23,10 @@ class Room with _$Room {
     String? tenantAddress,
     String? tenantPhone,
     String? rentStartDate,
+    // FIELD BARU
+    String? fasilitasTambahan,
+    @Default(false) bool isFurnished,
+    @Default(1) int jumlahKasur,
   }) = _Room;
 
   factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);

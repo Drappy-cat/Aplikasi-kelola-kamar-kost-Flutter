@@ -23,13 +23,17 @@ class _AddEditScreenState extends State<AddEditScreen> {
   late TextEditingController _acCostCtrl;
   late TextEditingController _dimensionsCtrl;
   late TextEditingController _imageUrlsCtrl;
+  // CONTROLLERS BARU
+  late TextEditingController _fasilitasTambahanCtrl;
+  late TextEditingController _jumlahKasurCtrl;
 
   late String _selectedStatus;
   late bool _isPackageFull;
+  // STATE BARU
+  late bool _isFurnished;
 
   bool get _isEditMode => widget.room != null;
 
-  // Dapatkan instance DummyService
   final DummyService _dummyService = getIt<DummyService>();
 
   @override
@@ -45,6 +49,10 @@ class _AddEditScreenState extends State<AddEditScreen> {
     _imageUrlsCtrl = TextEditingController(text: widget.room?.imageUrls.join(', ') ?? '');
     _selectedStatus = widget.room?.status ?? 'Kosong';
     _isPackageFull = widget.room?.packageFull ?? false;
+    // INISIALISASI CONTROLLERS DAN STATE BARU
+    _fasilitasTambahanCtrl = TextEditingController(text: widget.room?.fasilitasTambahan ?? '');
+    _isFurnished = widget.room?.isFurnished ?? false;
+    _jumlahKasurCtrl = TextEditingController(text: widget.room?.jumlahKasur.toString() ?? '1');
   }
 
   @override
@@ -57,6 +65,9 @@ class _AddEditScreenState extends State<AddEditScreen> {
     _acCostCtrl.dispose();
     _dimensionsCtrl.dispose();
     _imageUrlsCtrl.dispose();
+    // DISPOSE CONTROLLERS BARU
+    _fasilitasTambahanCtrl.dispose();
+    _jumlahKasurCtrl.dispose();
     super.dispose();
   }
 
@@ -80,6 +91,10 @@ class _AddEditScreenState extends State<AddEditScreen> {
       tenantAddress: widget.room?.tenantAddress,
       tenantPhone: widget.room?.tenantPhone,
       rentStartDate: widget.room?.rentStartDate,
+      // SIMPAN DATA BARU
+      fasilitasTambahan: _fasilitasTambahanCtrl.text.isEmpty ? null : _fasilitasTambahanCtrl.text,
+      isFurnished: _isFurnished,
+      jumlahKasur: int.tryParse(_jumlahKasurCtrl.text) ?? 1,
     );
 
     if (_isEditMode) {
@@ -93,19 +108,13 @@ class _AddEditScreenState extends State<AddEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditMode ? 'Edit Kamar' : 'Tambah Kamar'),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFF72585), Color(0xFF5B2EBC)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        foregroundColor: Colors.white,
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -170,6 +179,30 @@ class _AddEditScreenState extends State<AddEditScreen> {
                 controller: _acCostCtrl,
                 decoration: const InputDecoration(labelText: 'Biaya Tambahan AC', prefixText: 'Rp '),
                 keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 16),
+              // FIELD INPUT BARU: Fasilitas Tambahan
+              TextFormField(
+                controller: _fasilitasTambahanCtrl,
+                decoration: const InputDecoration(labelText: 'Fasilitas Tambahan (pisahkan dengan koma)', hintText: 'Contoh: Meja, Kursi, Lemari'),
+                maxLines: 2,
+              ),
+              const SizedBox(height: 16),
+              // FIELD INPUT BARU: Jumlah Kasur
+              TextFormField(
+                controller: _jumlahKasurCtrl,
+                decoration: const InputDecoration(labelText: 'Jumlah Kasur'),
+                keyboardType: TextInputType.number,
+                validator: (v) => (v == null || v.isEmpty || int.tryParse(v) == null) ? 'Wajib diisi dengan angka' : null,
+              ),
+              const SizedBox(height: 16),
+              // FIELD INPUT BARU: Is Furnished
+              SwitchListTile(
+                title: const Text('Dilengkapi Furnitur'),
+                value: _isFurnished,
+                onChanged: (value) {
+                  setState(() => _isFurnished = value);
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(

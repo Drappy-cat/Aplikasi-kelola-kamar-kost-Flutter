@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:tes/app/app_routes.dart';
 import 'package:tes/features/home/rent_options_dialog.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/auth_service.dart';
@@ -129,6 +127,11 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                         _buildInfoTile(Icons.electrical_services_outlined, 'Listrik', _formatCurrency(_currentRoom.electricity)),
                         if (_currentRoom.acCost > 0)
                           _buildInfoTile(Icons.ac_unit, 'AC', _formatCurrency(_currentRoom.acCost)),
+                        // FIELD BARU
+                        _buildInfoTile(Icons.bed_outlined, 'Jumlah Kasur', _currentRoom.jumlahKasur.toString()),
+                        _buildInfoTile(Icons.chair_alt_outlined, 'Furnitur', _currentRoom.isFurnished ? 'Ada' : 'Tidak Ada'),
+                        if (_currentRoom.fasilitasTambahan != null && _currentRoom.fasilitasTambahan!.isNotEmpty)
+                          _buildInfoTile(Icons.extension_outlined, 'Fasilitas Tambahan', _currentRoom.fasilitasTambahan!),
                       ],
                     ),
                   ),

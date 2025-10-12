@@ -34,7 +34,10 @@ mixin _$Room {
   String? get tenantName => throw _privateConstructorUsedError;
   String? get tenantAddress => throw _privateConstructorUsedError;
   String? get tenantPhone => throw _privateConstructorUsedError;
-  String? get rentStartDate => throw _privateConstructorUsedError;
+  String? get rentStartDate => throw _privateConstructorUsedError; // FIELD BARU
+  String? get fasilitasTambahan => throw _privateConstructorUsedError;
+  bool get isFurnished => throw _privateConstructorUsedError;
+  int get jumlahKasur => throw _privateConstructorUsedError;
 
   /// Serializes this Room to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -65,6 +68,9 @@ abstract class $RoomCopyWith<$Res> {
     String? tenantAddress,
     String? tenantPhone,
     String? rentStartDate,
+    String? fasilitasTambahan,
+    bool isFurnished,
+    int jumlahKasur,
   });
 }
 
@@ -97,6 +103,9 @@ class _$RoomCopyWithImpl<$Res, $Val extends Room>
     Object? tenantAddress = freezed,
     Object? tenantPhone = freezed,
     Object? rentStartDate = freezed,
+    Object? fasilitasTambahan = freezed,
+    Object? isFurnished = null,
+    Object? jumlahKasur = null,
   }) {
     return _then(
       _value.copyWith(
@@ -156,6 +165,18 @@ class _$RoomCopyWithImpl<$Res, $Val extends Room>
                 ? _value.rentStartDate
                 : rentStartDate // ignore: cast_nullable_to_non_nullable
                       as String?,
+            fasilitasTambahan: freezed == fasilitasTambahan
+                ? _value.fasilitasTambahan
+                : fasilitasTambahan // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isFurnished: null == isFurnished
+                ? _value.isFurnished
+                : isFurnished // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            jumlahKasur: null == jumlahKasur
+                ? _value.jumlahKasur
+                : jumlahKasur // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -185,6 +206,9 @@ abstract class _$$RoomImplCopyWith<$Res> implements $RoomCopyWith<$Res> {
     String? tenantAddress,
     String? tenantPhone,
     String? rentStartDate,
+    String? fasilitasTambahan,
+    bool isFurnished,
+    int jumlahKasur,
   });
 }
 
@@ -214,6 +238,9 @@ class __$$RoomImplCopyWithImpl<$Res>
     Object? tenantAddress = freezed,
     Object? tenantPhone = freezed,
     Object? rentStartDate = freezed,
+    Object? fasilitasTambahan = freezed,
+    Object? isFurnished = null,
+    Object? jumlahKasur = null,
   }) {
     return _then(
       _$RoomImpl(
@@ -273,6 +300,18 @@ class __$$RoomImplCopyWithImpl<$Res>
             ? _value.rentStartDate
             : rentStartDate // ignore: cast_nullable_to_non_nullable
                   as String?,
+        fasilitasTambahan: freezed == fasilitasTambahan
+            ? _value.fasilitasTambahan
+            : fasilitasTambahan // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isFurnished: null == isFurnished
+            ? _value.isFurnished
+            : isFurnished // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        jumlahKasur: null == jumlahKasur
+            ? _value.jumlahKasur
+            : jumlahKasur // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -296,6 +335,9 @@ class _$RoomImpl extends _Room {
     this.tenantAddress,
     this.tenantPhone,
     this.rentStartDate,
+    this.fasilitasTambahan,
+    this.isFurnished = false,
+    this.jumlahKasur = 1,
   }) : _imageUrls = imageUrls,
        super._();
 
@@ -340,10 +382,19 @@ class _$RoomImpl extends _Room {
   final String? tenantPhone;
   @override
   final String? rentStartDate;
+  // FIELD BARU
+  @override
+  final String? fasilitasTambahan;
+  @override
+  @JsonKey()
+  final bool isFurnished;
+  @override
+  @JsonKey()
+  final int jumlahKasur;
 
   @override
   String toString() {
-    return 'Room(code: $code, status: $status, baseRent: $baseRent, wifi: $wifi, water: $water, electricity: $electricity, acCost: $acCost, packageFull: $packageFull, dimensions: $dimensions, imageUrls: $imageUrls, tenantName: $tenantName, tenantAddress: $tenantAddress, tenantPhone: $tenantPhone, rentStartDate: $rentStartDate)';
+    return 'Room(code: $code, status: $status, baseRent: $baseRent, wifi: $wifi, water: $water, electricity: $electricity, acCost: $acCost, packageFull: $packageFull, dimensions: $dimensions, imageUrls: $imageUrls, tenantName: $tenantName, tenantAddress: $tenantAddress, tenantPhone: $tenantPhone, rentStartDate: $rentStartDate, fasilitasTambahan: $fasilitasTambahan, isFurnished: $isFurnished, jumlahKasur: $jumlahKasur)';
   }
 
   @override
@@ -375,7 +426,13 @@ class _$RoomImpl extends _Room {
             (identical(other.tenantPhone, tenantPhone) ||
                 other.tenantPhone == tenantPhone) &&
             (identical(other.rentStartDate, rentStartDate) ||
-                other.rentStartDate == rentStartDate));
+                other.rentStartDate == rentStartDate) &&
+            (identical(other.fasilitasTambahan, fasilitasTambahan) ||
+                other.fasilitasTambahan == fasilitasTambahan) &&
+            (identical(other.isFurnished, isFurnished) ||
+                other.isFurnished == isFurnished) &&
+            (identical(other.jumlahKasur, jumlahKasur) ||
+                other.jumlahKasur == jumlahKasur));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -396,6 +453,9 @@ class _$RoomImpl extends _Room {
     tenantAddress,
     tenantPhone,
     rentStartDate,
+    fasilitasTambahan,
+    isFurnished,
+    jumlahKasur,
   );
 
   /// Create a copy of Room
@@ -428,6 +488,9 @@ abstract class _Room extends Room {
     final String? tenantAddress,
     final String? tenantPhone,
     final String? rentStartDate,
+    final String? fasilitasTambahan,
+    final bool isFurnished,
+    final int jumlahKasur,
   }) = _$RoomImpl;
   const _Room._() : super._();
 
@@ -460,7 +523,13 @@ abstract class _Room extends Room {
   @override
   String? get tenantPhone;
   @override
-  String? get rentStartDate;
+  String? get rentStartDate; // FIELD BARU
+  @override
+  String? get fasilitasTambahan;
+  @override
+  bool get isFurnished;
+  @override
+  int get jumlahKasur;
 
   /// Create a copy of Room
   /// with the given fields replaced by the non-null parameter values.

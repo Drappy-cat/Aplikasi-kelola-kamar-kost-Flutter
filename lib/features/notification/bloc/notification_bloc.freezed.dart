@@ -12,7 +12,8 @@ part of 'notification_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$NotificationEvent {
@@ -20,47 +21,42 @@ mixin _$NotificationEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() load,
     required TResult Function(int notificationIndex) markAsRead,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? load,
     TResult? Function(int notificationIndex)? markAsRead,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? load,
     TResult Function(int notificationIndex)? markAsRead,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadNotifications value) load,
     required TResult Function(MarkAsRead value) markAsRead,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadNotifications value)? load,
     TResult? Function(MarkAsRead value)? markAsRead,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadNotifications value)? load,
     TResult Function(MarkAsRead value)? markAsRead,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $NotificationEventCopyWith<$Res> {
   factory $NotificationEventCopyWith(
-          NotificationEvent value, $Res Function(NotificationEvent) then) =
-      _$NotificationEventCopyWithImpl<$Res, NotificationEvent>;
+    NotificationEvent value,
+    $Res Function(NotificationEvent) then,
+  ) = _$NotificationEventCopyWithImpl<$Res, NotificationEvent>;
 }
 
 /// @nodoc
@@ -72,22 +68,30 @@ class _$NotificationEventCopyWithImpl<$Res, $Val extends NotificationEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of NotificationEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 abstract class _$$LoadNotificationsImplCopyWith<$Res> {
-  factory _$$LoadNotificationsImplCopyWith(_$LoadNotificationsImpl value,
-          $Res Function(_$LoadNotificationsImpl) then) =
-      __$$LoadNotificationsImplCopyWithImpl<$Res>;
+  factory _$$LoadNotificationsImplCopyWith(
+    _$LoadNotificationsImpl value,
+    $Res Function(_$LoadNotificationsImpl) then,
+  ) = __$$LoadNotificationsImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$LoadNotificationsImplCopyWithImpl<$Res>
     extends _$NotificationEventCopyWithImpl<$Res, _$LoadNotificationsImpl>
     implements _$$LoadNotificationsImplCopyWith<$Res> {
-  __$$LoadNotificationsImplCopyWithImpl(_$LoadNotificationsImpl _value,
-      $Res Function(_$LoadNotificationsImpl) _then)
-      : super(_value, _then);
+  __$$LoadNotificationsImplCopyWithImpl(
+    _$LoadNotificationsImpl _value,
+    $Res Function(_$LoadNotificationsImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of NotificationEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -179,8 +183,9 @@ abstract class LoadNotifications implements NotificationEvent {
 /// @nodoc
 abstract class _$$MarkAsReadImplCopyWith<$Res> {
   factory _$$MarkAsReadImplCopyWith(
-          _$MarkAsReadImpl value, $Res Function(_$MarkAsReadImpl) then) =
-      __$$MarkAsReadImplCopyWithImpl<$Res>;
+    _$MarkAsReadImpl value,
+    $Res Function(_$MarkAsReadImpl) then,
+  ) = __$$MarkAsReadImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int notificationIndex});
 }
@@ -190,20 +195,23 @@ class __$$MarkAsReadImplCopyWithImpl<$Res>
     extends _$NotificationEventCopyWithImpl<$Res, _$MarkAsReadImpl>
     implements _$$MarkAsReadImplCopyWith<$Res> {
   __$$MarkAsReadImplCopyWithImpl(
-      _$MarkAsReadImpl _value, $Res Function(_$MarkAsReadImpl) _then)
-      : super(_value, _then);
+    _$MarkAsReadImpl _value,
+    $Res Function(_$MarkAsReadImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of NotificationEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? notificationIndex = null,
-  }) {
-    return _then(_$MarkAsReadImpl(
-      null == notificationIndex
-          ? _value.notificationIndex
-          : notificationIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? notificationIndex = null}) {
+    return _then(
+      _$MarkAsReadImpl(
+        null == notificationIndex
+            ? _value.notificationIndex
+            : notificationIndex // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -232,7 +240,9 @@ class _$MarkAsReadImpl implements MarkAsRead {
   @override
   int get hashCode => Object.hash(runtimeType, notificationIndex);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MarkAsReadImplCopyWith<_$MarkAsReadImpl> get copyWith =>
@@ -305,7 +315,10 @@ abstract class MarkAsRead implements NotificationEvent {
   const factory MarkAsRead(final int notificationIndex) = _$MarkAsReadImpl;
 
   int get notificationIndex;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MarkAsReadImplCopyWith<_$MarkAsReadImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -316,7 +329,9 @@ mixin _$NotificationState {
   List<AppNotification> get notifications => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationStateCopyWith<NotificationState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -324,11 +339,15 @@ mixin _$NotificationState {
 /// @nodoc
 abstract class $NotificationStateCopyWith<$Res> {
   factory $NotificationStateCopyWith(
-          NotificationState value, $Res Function(NotificationState) then) =
-      _$NotificationStateCopyWithImpl<$Res, NotificationState>;
+    NotificationState value,
+    $Res Function(NotificationState) then,
+  ) = _$NotificationStateCopyWithImpl<$Res, NotificationState>;
   @useResult
-  $Res call(
-      {bool isLoading, List<AppNotification> notifications, String? error});
+  $Res call({
+    bool isLoading,
+    List<AppNotification> notifications,
+    String? error,
+  });
 }
 
 /// @nodoc
@@ -341,6 +360,8 @@ class _$NotificationStateCopyWithImpl<$Res, $Val extends NotificationState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -348,43 +369,53 @@ class _$NotificationStateCopyWithImpl<$Res, $Val extends NotificationState>
     Object? notifications = null,
     Object? error = freezed,
   }) {
-    return _then(_value.copyWith(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      notifications: null == notifications
-          ? _value.notifications
-          : notifications // ignore: cast_nullable_to_non_nullable
-              as List<AppNotification>,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            isLoading: null == isLoading
+                ? _value.isLoading
+                : isLoading // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            notifications: null == notifications
+                ? _value.notifications
+                : notifications // ignore: cast_nullable_to_non_nullable
+                      as List<AppNotification>,
+            error: freezed == error
+                ? _value.error
+                : error // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$NotificationStateImplCopyWith<$Res>
     implements $NotificationStateCopyWith<$Res> {
-  factory _$$NotificationStateImplCopyWith(_$NotificationStateImpl value,
-          $Res Function(_$NotificationStateImpl) then) =
-      __$$NotificationStateImplCopyWithImpl<$Res>;
+  factory _$$NotificationStateImplCopyWith(
+    _$NotificationStateImpl value,
+    $Res Function(_$NotificationStateImpl) then,
+  ) = __$$NotificationStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool isLoading, List<AppNotification> notifications, String? error});
+  $Res call({
+    bool isLoading,
+    List<AppNotification> notifications,
+    String? error,
+  });
 }
 
 /// @nodoc
 class __$$NotificationStateImplCopyWithImpl<$Res>
     extends _$NotificationStateCopyWithImpl<$Res, _$NotificationStateImpl>
     implements _$$NotificationStateImplCopyWith<$Res> {
-  __$$NotificationStateImplCopyWithImpl(_$NotificationStateImpl _value,
-      $Res Function(_$NotificationStateImpl) _then)
-      : super(_value, _then);
+  __$$NotificationStateImplCopyWithImpl(
+    _$NotificationStateImpl _value,
+    $Res Function(_$NotificationStateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of NotificationState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -392,31 +423,33 @@ class __$$NotificationStateImplCopyWithImpl<$Res>
     Object? notifications = null,
     Object? error = freezed,
   }) {
-    return _then(_$NotificationStateImpl(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      notifications: null == notifications
-          ? _value._notifications
-          : notifications // ignore: cast_nullable_to_non_nullable
-              as List<AppNotification>,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$NotificationStateImpl(
+        isLoading: null == isLoading
+            ? _value.isLoading
+            : isLoading // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        notifications: null == notifications
+            ? _value._notifications
+            : notifications // ignore: cast_nullable_to_non_nullable
+                  as List<AppNotification>,
+        error: freezed == error
+            ? _value.error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$NotificationStateImpl implements _NotificationState {
-  const _$NotificationStateImpl(
-      {this.isLoading = true,
-      final List<AppNotification> notifications = const [],
-      this.error})
-      : _notifications = notifications;
+  const _$NotificationStateImpl({
+    this.isLoading = true,
+    final List<AppNotification> notifications = const [],
+    this.error,
+  }) : _notifications = notifications;
 
   @override
   @JsonKey()
@@ -445,28 +478,39 @@ class _$NotificationStateImpl implements _NotificationState {
             other is _$NotificationStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
-            const DeepCollectionEquality()
-                .equals(other._notifications, _notifications) &&
+            const DeepCollectionEquality().equals(
+              other._notifications,
+              _notifications,
+            ) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading,
-      const DeepCollectionEquality().hash(_notifications), error);
+  int get hashCode => Object.hash(
+    runtimeType,
+    isLoading,
+    const DeepCollectionEquality().hash(_notifications),
+    error,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationStateImplCopyWith<_$NotificationStateImpl> get copyWith =>
       __$$NotificationStateImplCopyWithImpl<_$NotificationStateImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _NotificationState implements NotificationState {
-  const factory _NotificationState(
-      {final bool isLoading,
-      final List<AppNotification> notifications,
-      final String? error}) = _$NotificationStateImpl;
+  const factory _NotificationState({
+    final bool isLoading,
+    final List<AppNotification> notifications,
+    final String? error,
+  }) = _$NotificationStateImpl;
 
   @override
   bool get isLoading;
@@ -474,8 +518,11 @@ abstract class _NotificationState implements NotificationState {
   List<AppNotification> get notifications;
   @override
   String? get error;
+
+  /// Create a copy of NotificationState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationStateImplCopyWith<_$NotificationStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

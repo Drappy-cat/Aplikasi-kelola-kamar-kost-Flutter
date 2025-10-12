@@ -7,12 +7,19 @@ part 'request.g.dart';
 class Request with _$Request {
   const factory Request({
     required String id,
-    required String type,
+    required String type, // 'Booking Kamar', 'Sewa Langsung', dll.
     required String date,
     required String note,
+    // Status bisa lebih deskriptif: 'Pending', 'Menunggu Pembayaran', 'Disetujui', 'Ditolak'
     required String status,
     String? roomCode,
     String? userName,
+
+    // Kolom baru untuk alur pembayaran
+    String? paymentMethod,
+    DateTime? paymentDueDate,
+    String? virtualAccountNumber,
+    
   }) = _Request;
 
   factory Request.fromJson(Map<String, dynamic> json) => _$RequestFromJson(json);

@@ -22,12 +22,18 @@ Request _$RequestFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Request {
   String get id => throw _privateConstructorUsedError;
-  String get type => throw _privateConstructorUsedError;
+  String get type =>
+      throw _privateConstructorUsedError; // 'Booking Kamar', 'Sewa Langsung', dll.
   String get date => throw _privateConstructorUsedError;
-  String get note => throw _privateConstructorUsedError;
+  String get note =>
+      throw _privateConstructorUsedError; // Status bisa lebih deskriptif: 'Pending', 'Menunggu Pembayaran', 'Disetujui', 'Ditolak'
   String get status => throw _privateConstructorUsedError;
   String? get roomCode => throw _privateConstructorUsedError;
-  String? get userName => throw _privateConstructorUsedError;
+  String? get userName =>
+      throw _privateConstructorUsedError; // Kolom baru untuk alur pembayaran
+  String? get paymentMethod => throw _privateConstructorUsedError;
+  DateTime? get paymentDueDate => throw _privateConstructorUsedError;
+  String? get virtualAccountNumber => throw _privateConstructorUsedError;
 
   /// Serializes this Request to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,6 +57,9 @@ abstract class $RequestCopyWith<$Res> {
     String status,
     String? roomCode,
     String? userName,
+    String? paymentMethod,
+    DateTime? paymentDueDate,
+    String? virtualAccountNumber,
   });
 }
 
@@ -76,6 +85,9 @@ class _$RequestCopyWithImpl<$Res, $Val extends Request>
     Object? status = null,
     Object? roomCode = freezed,
     Object? userName = freezed,
+    Object? paymentMethod = freezed,
+    Object? paymentDueDate = freezed,
+    Object? virtualAccountNumber = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -107,6 +119,18 @@ class _$RequestCopyWithImpl<$Res, $Val extends Request>
                 ? _value.userName
                 : userName // ignore: cast_nullable_to_non_nullable
                       as String?,
+            paymentMethod: freezed == paymentMethod
+                ? _value.paymentMethod
+                : paymentMethod // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            paymentDueDate: freezed == paymentDueDate
+                ? _value.paymentDueDate
+                : paymentDueDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            virtualAccountNumber: freezed == virtualAccountNumber
+                ? _value.virtualAccountNumber
+                : virtualAccountNumber // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -129,6 +153,9 @@ abstract class _$$RequestImplCopyWith<$Res> implements $RequestCopyWith<$Res> {
     String status,
     String? roomCode,
     String? userName,
+    String? paymentMethod,
+    DateTime? paymentDueDate,
+    String? virtualAccountNumber,
   });
 }
 
@@ -153,6 +180,9 @@ class __$$RequestImplCopyWithImpl<$Res>
     Object? status = null,
     Object? roomCode = freezed,
     Object? userName = freezed,
+    Object? paymentMethod = freezed,
+    Object? paymentDueDate = freezed,
+    Object? virtualAccountNumber = freezed,
   }) {
     return _then(
       _$RequestImpl(
@@ -184,6 +214,18 @@ class __$$RequestImplCopyWithImpl<$Res>
             ? _value.userName
             : userName // ignore: cast_nullable_to_non_nullable
                   as String?,
+        paymentMethod: freezed == paymentMethod
+            ? _value.paymentMethod
+            : paymentMethod // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        paymentDueDate: freezed == paymentDueDate
+            ? _value.paymentDueDate
+            : paymentDueDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        virtualAccountNumber: freezed == virtualAccountNumber
+            ? _value.virtualAccountNumber
+            : virtualAccountNumber // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -200,6 +242,9 @@ class _$RequestImpl implements _Request {
     required this.status,
     this.roomCode,
     this.userName,
+    this.paymentMethod,
+    this.paymentDueDate,
+    this.virtualAccountNumber,
   });
 
   factory _$RequestImpl.fromJson(Map<String, dynamic> json) =>
@@ -209,20 +254,29 @@ class _$RequestImpl implements _Request {
   final String id;
   @override
   final String type;
+  // 'Booking Kamar', 'Sewa Langsung', dll.
   @override
   final String date;
   @override
   final String note;
+  // Status bisa lebih deskriptif: 'Pending', 'Menunggu Pembayaran', 'Disetujui', 'Ditolak'
   @override
   final String status;
   @override
   final String? roomCode;
   @override
   final String? userName;
+  // Kolom baru untuk alur pembayaran
+  @override
+  final String? paymentMethod;
+  @override
+  final DateTime? paymentDueDate;
+  @override
+  final String? virtualAccountNumber;
 
   @override
   String toString() {
-    return 'Request(id: $id, type: $type, date: $date, note: $note, status: $status, roomCode: $roomCode, userName: $userName)';
+    return 'Request(id: $id, type: $type, date: $date, note: $note, status: $status, roomCode: $roomCode, userName: $userName, paymentMethod: $paymentMethod, paymentDueDate: $paymentDueDate, virtualAccountNumber: $virtualAccountNumber)';
   }
 
   @override
@@ -238,7 +292,13 @@ class _$RequestImpl implements _Request {
             (identical(other.roomCode, roomCode) ||
                 other.roomCode == roomCode) &&
             (identical(other.userName, userName) ||
-                other.userName == userName));
+                other.userName == userName) &&
+            (identical(other.paymentMethod, paymentMethod) ||
+                other.paymentMethod == paymentMethod) &&
+            (identical(other.paymentDueDate, paymentDueDate) ||
+                other.paymentDueDate == paymentDueDate) &&
+            (identical(other.virtualAccountNumber, virtualAccountNumber) ||
+                other.virtualAccountNumber == virtualAccountNumber));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -252,6 +312,9 @@ class _$RequestImpl implements _Request {
     status,
     roomCode,
     userName,
+    paymentMethod,
+    paymentDueDate,
+    virtualAccountNumber,
   );
 
   /// Create a copy of Request
@@ -277,6 +340,9 @@ abstract class _Request implements Request {
     required final String status,
     final String? roomCode,
     final String? userName,
+    final String? paymentMethod,
+    final DateTime? paymentDueDate,
+    final String? virtualAccountNumber,
   }) = _$RequestImpl;
 
   factory _Request.fromJson(Map<String, dynamic> json) = _$RequestImpl.fromJson;
@@ -284,17 +350,23 @@ abstract class _Request implements Request {
   @override
   String get id;
   @override
-  String get type;
+  String get type; // 'Booking Kamar', 'Sewa Langsung', dll.
   @override
   String get date;
   @override
-  String get note;
+  String get note; // Status bisa lebih deskriptif: 'Pending', 'Menunggu Pembayaran', 'Disetujui', 'Ditolak'
   @override
   String get status;
   @override
   String? get roomCode;
   @override
-  String? get userName;
+  String? get userName; // Kolom baru untuk alur pembayaran
+  @override
+  String? get paymentMethod;
+  @override
+  DateTime? get paymentDueDate;
+  @override
+  String? get virtualAccountNumber;
 
   /// Create a copy of Request
   /// with the given fields replaced by the non-null parameter values.

@@ -12,7 +12,8 @@ part of 'chat_message.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) {
   return _ChatMessage.fromJson(json);
@@ -21,13 +22,18 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ChatMessage {
   String get id => throw _privateConstructorUsedError;
-  String get senderId => throw _privateConstructorUsedError; // 'admin' or user.id
+  String get senderId =>
+      throw _privateConstructorUsedError; // 'admin' or user.id
   String? get text => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
   DateTime get timestamp => throw _privateConstructorUsedError;
 
+  /// Serializes this ChatMessage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ChatMessage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ChatMessageCopyWith<ChatMessage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -35,15 +41,17 @@ mixin _$ChatMessage {
 /// @nodoc
 abstract class $ChatMessageCopyWith<$Res> {
   factory $ChatMessageCopyWith(
-          ChatMessage value, $Res Function(ChatMessage) then) =
-      _$ChatMessageCopyWithImpl<$Res, ChatMessage>;
+    ChatMessage value,
+    $Res Function(ChatMessage) then,
+  ) = _$ChatMessageCopyWithImpl<$Res, ChatMessage>;
   @useResult
-  $Res call(
-      {String id,
-      String senderId,
-      String? text,
-      String? imageUrl,
-      DateTime timestamp});
+  $Res call({
+    String id,
+    String senderId,
+    String? text,
+    String? imageUrl,
+    DateTime timestamp,
+  });
 }
 
 /// @nodoc
@@ -56,6 +64,8 @@ class _$ChatMessageCopyWithImpl<$Res, $Val extends ChatMessage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ChatMessage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -65,28 +75,31 @@ class _$ChatMessageCopyWithImpl<$Res, $Val extends ChatMessage>
     Object? imageUrl = freezed,
     Object? timestamp = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      senderId: null == senderId
-          ? _value.senderId
-          : senderId // ignore: cast_nullable_to_non_nullable
-              as String,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            senderId: null == senderId
+                ? _value.senderId
+                : senderId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            text: freezed == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            imageUrl: freezed == imageUrl
+                ? _value.imageUrl
+                : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -94,16 +107,18 @@ class _$ChatMessageCopyWithImpl<$Res, $Val extends ChatMessage>
 abstract class _$$ChatMessageImplCopyWith<$Res>
     implements $ChatMessageCopyWith<$Res> {
   factory _$$ChatMessageImplCopyWith(
-          _$ChatMessageImpl value, $Res Function(_$ChatMessageImpl) then) =
-      __$$ChatMessageImplCopyWithImpl<$Res>;
+    _$ChatMessageImpl value,
+    $Res Function(_$ChatMessageImpl) then,
+  ) = __$$ChatMessageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String senderId,
-      String? text,
-      String? imageUrl,
-      DateTime timestamp});
+  $Res call({
+    String id,
+    String senderId,
+    String? text,
+    String? imageUrl,
+    DateTime timestamp,
+  });
 }
 
 /// @nodoc
@@ -111,9 +126,12 @@ class __$$ChatMessageImplCopyWithImpl<$Res>
     extends _$ChatMessageCopyWithImpl<$Res, _$ChatMessageImpl>
     implements _$$ChatMessageImplCopyWith<$Res> {
   __$$ChatMessageImplCopyWithImpl(
-      _$ChatMessageImpl _value, $Res Function(_$ChatMessageImpl) _then)
-      : super(_value, _then);
+    _$ChatMessageImpl _value,
+    $Res Function(_$ChatMessageImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ChatMessage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -123,40 +141,43 @@ class __$$ChatMessageImplCopyWithImpl<$Res>
     Object? imageUrl = freezed,
     Object? timestamp = null,
   }) {
-    return _then(_$ChatMessageImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      senderId: null == senderId
-          ? _value.senderId
-          : senderId // ignore: cast_nullable_to_non_nullable
-              as String,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$ChatMessageImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        senderId: null == senderId
+            ? _value.senderId
+            : senderId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        text: freezed == text
+            ? _value.text
+            : text // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        imageUrl: freezed == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ChatMessageImpl implements _ChatMessage {
-  const _$ChatMessageImpl(
-      {required this.id,
-      required this.senderId,
-      this.text,
-      this.imageUrl,
-      required this.timestamp});
+  const _$ChatMessageImpl({
+    required this.id,
+    required this.senderId,
+    this.text,
+    this.imageUrl,
+    required this.timestamp,
+  });
 
   factory _$ChatMessageImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatMessageImplFromJson(json);
@@ -165,6 +186,7 @@ class _$ChatMessageImpl implements _ChatMessage {
   final String id;
   @override
   final String senderId;
+  // 'admin' or user.id
   @override
   final String? text;
   @override
@@ -192,12 +214,14 @@ class _$ChatMessageImpl implements _ChatMessage {
                 other.timestamp == timestamp));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, senderId, text, imageUrl, timestamp);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChatMessage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChatMessageImplCopyWith<_$ChatMessageImpl> get copyWith =>
@@ -205,19 +229,18 @@ class _$ChatMessageImpl implements _ChatMessage {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ChatMessageImplToJson(
-      this,
-    );
+    return _$$ChatMessageImplToJson(this);
   }
 }
 
 abstract class _ChatMessage implements ChatMessage {
-  const factory _ChatMessage(
-      {required final String id,
-      required final String senderId,
-      final String? text,
-      final String? imageUrl,
-      required final DateTime timestamp}) = _$ChatMessageImpl;
+  const factory _ChatMessage({
+    required final String id,
+    required final String senderId,
+    final String? text,
+    final String? imageUrl,
+    required final DateTime timestamp,
+  }) = _$ChatMessageImpl;
 
   factory _ChatMessage.fromJson(Map<String, dynamic> json) =
       _$ChatMessageImpl.fromJson;
@@ -225,15 +248,18 @@ abstract class _ChatMessage implements ChatMessage {
   @override
   String get id;
   @override
-  String get senderId;
+  String get senderId; // 'admin' or user.id
   @override
   String? get text;
   @override
   String? get imageUrl;
   @override
   DateTime get timestamp;
+
+  /// Create a copy of ChatMessage
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChatMessageImplCopyWith<_$ChatMessageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
