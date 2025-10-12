@@ -323,8 +323,8 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
         children: [
           const Text('Gunakan aplikasi perbankan Anda untuk memindai kode di bawah ini.'),
           const SizedBox(height: 16),
-          // Asumsi ada gambar QRIS di assets
-          Image.asset('assets/logo/sample_qris.png', height: 200, width: 200),
+          // Menggunakan path aset yang baru
+          Image.asset('assets/qr_scan/qr.png', height: 200, width: 200),
           const SizedBox(height: 16),
           Text('Total: ${NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(_totalPrice)}', style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
