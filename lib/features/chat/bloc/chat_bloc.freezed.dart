@@ -16,26 +16,25 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ChatEvent {
-  String get userId => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String userId) load,
-    required TResult Function(String userId, String text) sendMessage,
-    required TResult Function(String userId, String imageUrl) sendImage,
+    required TResult Function(String text) sendMessage,
+    required TResult Function(String imageUrl) sendImage,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId)? load,
-    TResult? Function(String userId, String text)? sendMessage,
-    TResult? Function(String userId, String imageUrl)? sendImage,
+    TResult? Function(String text)? sendMessage,
+    TResult? Function(String imageUrl)? sendImage,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId)? load,
-    TResult Function(String userId, String text)? sendMessage,
-    TResult Function(String userId, String imageUrl)? sendImage,
+    TResult Function(String text)? sendMessage,
+    TResult Function(String imageUrl)? sendImage,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -61,18 +60,12 @@ mixin _$ChatEvent {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ChatEventCopyWith<ChatEvent> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ChatEventCopyWith<$Res> {
-  factory $ChatEventCopyWith(
-          ChatEvent value, $Res Function(ChatEvent) then) =
+  factory $ChatEventCopyWith(ChatEvent value, $Res Function(ChatEvent) then) =
       _$ChatEventCopyWithImpl<$Res, ChatEvent>;
-  @useResult
-  $Res call({String userId});
 }
 
 /// @nodoc
@@ -84,27 +77,13 @@ class _$ChatEventCopyWithImpl<$Res, $Val extends ChatEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? userId = null,
-  }) {
-    return _then(_value.copyWith(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$LoadChatImplCopyWith<$Res> implements $ChatEventCopyWith<$Res> {
+abstract class _$$LoadChatImplCopyWith<$Res> {
   factory _$$LoadChatImplCopyWith(
           _$LoadChatImpl value, $Res Function(_$LoadChatImpl) then) =
       __$$LoadChatImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({String userId});
 }
@@ -165,8 +144,8 @@ class _$LoadChatImpl implements LoadChat {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String userId) load,
-    required TResult Function(String userId, String text) sendMessage,
-    required TResult Function(String userId, String imageUrl) sendImage,
+    required TResult Function(String text) sendMessage,
+    required TResult Function(String imageUrl) sendImage,
   }) {
     return load(userId);
   }
@@ -175,8 +154,8 @@ class _$LoadChatImpl implements LoadChat {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId)? load,
-    TResult? Function(String userId, String text)? sendMessage,
-    TResult? Function(String userId, String imageUrl)? sendImage,
+    TResult? Function(String text)? sendMessage,
+    TResult? Function(String imageUrl)? sendImage,
   }) {
     return load?.call(userId);
   }
@@ -185,8 +164,8 @@ class _$LoadChatImpl implements LoadChat {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId)? load,
-    TResult Function(String userId, String text)? sendMessage,
-    TResult Function(String userId, String imageUrl)? sendImage,
+    TResult Function(String text)? sendMessage,
+    TResult Function(String imageUrl)? sendImage,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -233,23 +212,19 @@ class _$LoadChatImpl implements LoadChat {
 abstract class LoadChat implements ChatEvent {
   const factory LoadChat(final String userId) = _$LoadChatImpl;
 
-  @override
   String get userId;
-  @override
   @JsonKey(ignore: true)
   _$$LoadChatImplCopyWith<_$LoadChatImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SendTextMessageImplCopyWith<$Res>
-    implements $ChatEventCopyWith<$Res> {
+abstract class _$$SendTextMessageImplCopyWith<$Res> {
   factory _$$SendTextMessageImplCopyWith(_$SendTextMessageImpl value,
           $Res Function(_$SendTextMessageImpl) then) =
       __$$SendTextMessageImplCopyWithImpl<$Res>;
-  @override
   @useResult
-  $Res call({String userId, String text});
+  $Res call({String text});
 }
 
 /// @nodoc
@@ -263,14 +238,9 @@ class __$$SendTextMessageImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
     Object? text = null,
   }) {
     return _then(_$SendTextMessageImpl(
-      null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
       null == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -282,16 +252,14 @@ class __$$SendTextMessageImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SendTextMessageImpl implements SendTextMessage {
-  const _$SendTextMessageImpl(this.userId, this.text);
+  const _$SendTextMessageImpl(this.text);
 
-  @override
-  final String userId;
   @override
   final String text;
 
   @override
   String toString() {
-    return 'ChatEvent.sendMessage(userId: $userId, text: $text)';
+    return 'ChatEvent.sendMessage(text: $text)';
   }
 
   @override
@@ -299,12 +267,11 @@ class _$SendTextMessageImpl implements SendTextMessage {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SendTextMessageImpl &&
-            (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.text, text) || other.text == text));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userId, text);
+  int get hashCode => Object.hash(runtimeType, text);
 
   @JsonKey(ignore: true)
   @override
@@ -317,32 +284,32 @@ class _$SendTextMessageImpl implements SendTextMessage {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String userId) load,
-    required TResult Function(String userId, String text) sendMessage,
-    required TResult Function(String userId, String imageUrl) sendImage,
+    required TResult Function(String text) sendMessage,
+    required TResult Function(String imageUrl) sendImage,
   }) {
-    return sendMessage(userId, text);
+    return sendMessage(text);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId)? load,
-    TResult? Function(String userId, String text)? sendMessage,
-    TResult? Function(String userId, String imageUrl)? sendImage,
+    TResult? Function(String text)? sendMessage,
+    TResult? Function(String imageUrl)? sendImage,
   }) {
-    return sendMessage?.call(userId, text);
+    return sendMessage?.call(text);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId)? load,
-    TResult Function(String userId, String text)? sendMessage,
-    TResult Function(String userId, String imageUrl)? sendImage,
+    TResult Function(String text)? sendMessage,
+    TResult Function(String imageUrl)? sendImage,
     required TResult orElse(),
   }) {
     if (sendMessage != null) {
-      return sendMessage(userId, text);
+      return sendMessage(text);
     }
     return orElse();
   }
@@ -383,27 +350,21 @@ class _$SendTextMessageImpl implements SendTextMessage {
 }
 
 abstract class SendTextMessage implements ChatEvent {
-  const factory SendTextMessage(final String userId, final String text) =
-      _$SendTextMessageImpl;
+  const factory SendTextMessage(final String text) = _$SendTextMessageImpl;
 
-  @override
-  String get userId;
   String get text;
-  @override
   @JsonKey(ignore: true)
   _$$SendTextMessageImplCopyWith<_$SendTextMessageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SendImageMessageImplCopyWith<$Res>
-    implements $ChatEventCopyWith<$Res> {
+abstract class _$$SendImageMessageImplCopyWith<$Res> {
   factory _$$SendImageMessageImplCopyWith(_$SendImageMessageImpl value,
           $Res Function(_$SendImageMessageImpl) then) =
       __$$SendImageMessageImplCopyWithImpl<$Res>;
-  @override
   @useResult
-  $Res call({String userId, String imageUrl});
+  $Res call({String imageUrl});
 }
 
 /// @nodoc
@@ -417,14 +378,9 @@ class __$$SendImageMessageImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
     Object? imageUrl = null,
   }) {
     return _then(_$SendImageMessageImpl(
-      null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
       null == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
@@ -436,16 +392,14 @@ class __$$SendImageMessageImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SendImageMessageImpl implements SendImageMessage {
-  const _$SendImageMessageImpl(this.userId, this.imageUrl);
+  const _$SendImageMessageImpl(this.imageUrl);
 
-  @override
-  final String userId;
   @override
   final String imageUrl;
 
   @override
   String toString() {
-    return 'ChatEvent.sendImage(userId: $userId, imageUrl: $imageUrl)';
+    return 'ChatEvent.sendImage(imageUrl: $imageUrl)';
   }
 
   @override
@@ -453,13 +407,12 @@ class _$SendImageMessageImpl implements SendImageMessage {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SendImageMessageImpl &&
-            (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userId, imageUrl);
+  int get hashCode => Object.hash(runtimeType, imageUrl);
 
   @JsonKey(ignore: true)
   @override
@@ -472,32 +425,32 @@ class _$SendImageMessageImpl implements SendImageMessage {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String userId) load,
-    required TResult Function(String userId, String text) sendMessage,
-    required TResult Function(String userId, String imageUrl) sendImage,
+    required TResult Function(String text) sendMessage,
+    required TResult Function(String imageUrl) sendImage,
   }) {
-    return sendImage(userId, imageUrl);
+    return sendImage(imageUrl);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId)? load,
-    TResult? Function(String userId, String text)? sendMessage,
-    TResult? Function(String userId, String imageUrl)? sendImage,
+    TResult? Function(String text)? sendMessage,
+    TResult? Function(String imageUrl)? sendImage,
   }) {
-    return sendImage?.call(userId, imageUrl);
+    return sendImage?.call(imageUrl);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId)? load,
-    TResult Function(String userId, String text)? sendMessage,
-    TResult Function(String userId, String imageUrl)? sendImage,
+    TResult Function(String text)? sendMessage,
+    TResult Function(String imageUrl)? sendImage,
     required TResult orElse(),
   }) {
     if (sendImage != null) {
-      return sendImage(userId, imageUrl);
+      return sendImage(imageUrl);
     }
     return orElse();
   }
@@ -538,13 +491,9 @@ class _$SendImageMessageImpl implements SendImageMessage {
 }
 
 abstract class SendImageMessage implements ChatEvent {
-  const factory SendImageMessage(final String userId, final String imageUrl) =
-      _$SendImageMessageImpl;
+  const factory SendImageMessage(final String imageUrl) = _$SendImageMessageImpl;
 
-  @override
-  String get userId;
   String get imageUrl;
-  @override
   @JsonKey(ignore: true)
   _$$SendImageMessageImplCopyWith<_$SendImageMessageImpl> get copyWith =>
       throw _privateConstructorUsedError;

@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
     const title = "Lokasi Ri-Kost";
 
     try {
-      final availableMaps = await MapLauncher.getAvailableMaps();
+      final availableMaps = await AvailableMap.getAvailableMaps();
 
       if (availableMaps.isNotEmpty) {
         showModalBottomSheet(
@@ -219,7 +219,6 @@ class _LoginScreenState extends State<LoginScreen> {
             OutlinedButton.icon(
               icon: const Icon(Icons.map_outlined),
               label: const Text('Lihat Lokasi di Peta'),
-              // PERBAIKAN: Memanggil metode map_launcher yang baru
               onPressed: _launchMaps,
             ),
           ],

@@ -11,7 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # PERBAIKAN: Menambahkan package yang hilang untuk lokalisasi
   flutter_localizations:
     sdk: flutter
 
@@ -33,6 +32,7 @@ dependencies:
   flutter_animate: ^4.5.0
   lottie: ^3.1.2
   freezed_annotation: ^2.4.1
+  map_launcher: ^3.1.0
 
   # --- Library dari Tugas ---
   device_info_plus: ^10.1.0

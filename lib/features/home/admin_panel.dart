@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tes/app/app_routes.dart';
-import 'package:tes/features/activity_log/activity_log_screen.dart'; // <-- IMPORT BARU
+import 'package:tes/features/activity_log/activity_log_screen.dart';
+import 'package:tes/features/chat/admin_chat_list_screen.dart'; // <-- IMPORT BARU
 import 'package:tes/features/complaints/admin_complaint_screen.dart';
 import 'package:tes/features/home/admin_widgets/announcements_page.dart';
 import 'package:tes/features/home/admin_widgets/bills_page.dart';
@@ -78,8 +79,9 @@ class AdminPanelView extends StatelessWidget {
                   BillsPage(pendingBills: state.pendingBills),
                   RequestsPage(requests: state.requests),
                   const AdminComplaintScreen(),
+                  const AdminChatListScreen(), // <-- HALAMAN BARU
                   AnnouncementsPage(announcements: state.announcements),
-                  const ActivityLogScreen(), // <-- HALAMAN BARU
+                  const ActivityLogScreen(),
                 ],
               ),
             ),
@@ -91,8 +93,9 @@ class AdminPanelView extends StatelessWidget {
           NavigationDestination(icon: Icon(Icons.receipt_long_outlined), label: 'Tagihan'),
           NavigationDestination(icon: Icon(Icons.inbox_outlined), label: 'Pengajuan'),
           NavigationDestination(icon: Icon(Icons.report_problem_outlined), label: 'Pengaduan'),
+          NavigationDestination(icon: Icon(Icons.chat_bubble_outline), label: 'Pesan'), // <-- TAB BARU
           NavigationDestination(icon: Icon(Icons.campaign_outlined), label: 'Pengumuman'),
-          NavigationDestination(icon: Icon(Icons.history_toggle_off_outlined), label: 'Log'), // <-- TAB BARU
+          NavigationDestination(icon: Icon(Icons.history_toggle_off_outlined), label: 'Log'),
         ],
       ),
       floatingActionButton: _getFabForTab(context, state.activeTabIndex),
@@ -101,7 +104,7 @@ class AdminPanelView extends StatelessWidget {
 
   Widget? _getFabForTab(BuildContext context, int index) {
     switch (index) {
-      case 4: // Pengumuman
+      case 5: // Pengumuman (indeksnya bergeser)
         return FloatingActionButton(
           onPressed: () => _showAddAnnouncementDialog(context),
           child: const Icon(Icons.add_alert),

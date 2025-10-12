@@ -1290,6 +1290,7 @@ mixin _$AdminPanelState {
   String? get error => throw _privateConstructorUsedError;
   List<Complaint> get filteredComplaints => throw _privateConstructorUsedError;
   String get complaintStatusFilter => throw _privateConstructorUsedError;
+  List<ChatConversation> get conversations => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AdminPanelStateCopyWith<AdminPanelState> get copyWith =>
@@ -1312,7 +1313,8 @@ abstract class $AdminPanelStateCopyWith<$Res> {
       bool isLoading,
       String? error,
       List<Complaint> filteredComplaints,
-      String complaintStatusFilter});
+      String complaintStatusFilter,
+      List<ChatConversation> conversations});
 }
 
 /// @nodoc
@@ -1338,6 +1340,7 @@ class _$AdminPanelStateCopyWithImpl<$Res, $Val extends AdminPanelState>
     Object? error = freezed,
     Object? filteredComplaints = null,
     Object? complaintStatusFilter = null,
+    Object? conversations = null,
   }) {
     return _then(_value.copyWith(
       activeTabIndex: null == activeTabIndex
@@ -1380,6 +1383,10 @@ class _$AdminPanelStateCopyWithImpl<$Res, $Val extends AdminPanelState>
           ? _value.complaintStatusFilter
           : complaintStatusFilter // ignore: cast_nullable_to_non_nullable
               as String,
+      conversations: null == conversations
+          ? _value.conversations
+          : conversations // ignore: cast_nullable_to_non_nullable
+              as List<ChatConversation>,
     ) as $Val);
   }
 }
@@ -1402,7 +1409,8 @@ abstract class _$$AdminPanelStateImplCopyWith<$Res>
       bool isLoading,
       String? error,
       List<Complaint> filteredComplaints,
-      String complaintStatusFilter});
+      String complaintStatusFilter,
+      List<ChatConversation> conversations});
 }
 
 /// @nodoc
@@ -1426,6 +1434,7 @@ class __$$AdminPanelStateImplCopyWithImpl<$Res>
     Object? error = freezed,
     Object? filteredComplaints = null,
     Object? complaintStatusFilter = null,
+    Object? conversations = null,
   }) {
     return _then(_$AdminPanelStateImpl(
       activeTabIndex: null == activeTabIndex
@@ -1468,6 +1477,10 @@ class __$$AdminPanelStateImplCopyWithImpl<$Res>
           ? _value.complaintStatusFilter
           : complaintStatusFilter // ignore: cast_nullable_to_non_nullable
               as String,
+      conversations: null == conversations
+          ? _value._conversations
+          : conversations // ignore: cast_nullable_to_non_nullable
+              as List<ChatConversation>,
     ));
   }
 }
@@ -1476,27 +1489,31 @@ class __$$AdminPanelStateImplCopyWithImpl<$Res>
 
 class _$AdminPanelStateImpl implements _AdminPanelState {
   const _$AdminPanelStateImpl(
-      {required this.activeTabIndex,
-      required final List<Room> rooms,
-      required final List<Bill> pendingBills,
-      required final List<Request> requests,
-      required final List<Complaint> complaints,
-      required final List<Announcement> announcements,
-      required this.isLoading,
+      {this.activeTabIndex = 0,
+      final List<Room> rooms = const [],
+      final List<Bill> pendingBills = const [],
+      final List<Request> requests = const [],
+      final List<Complaint> complaints = const [],
+      final List<Announcement> announcements = const [],
+      this.isLoading = true,
       this.error,
       final List<Complaint> filteredComplaints = const [],
-      this.complaintStatusFilter = 'Semua'})
+      this.complaintStatusFilter = 'Semua',
+      final List<ChatConversation> conversations = const []})
       : _rooms = rooms,
         _pendingBills = pendingBills,
         _requests = requests,
         _complaints = complaints,
         _announcements = announcements,
-        _filteredComplaints = filteredComplaints;
+        _filteredComplaints = filteredComplaints,
+        _conversations = conversations;
 
   @override
+  @JsonKey()
   final int activeTabIndex;
   final List<Room> _rooms;
   @override
+  @JsonKey()
   List<Room> get rooms {
     if (_rooms is EqualUnmodifiableListView) return _rooms;
     // ignore: implicit_dynamic_type
@@ -1505,6 +1522,7 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
 
   final List<Bill> _pendingBills;
   @override
+  @JsonKey()
   List<Bill> get pendingBills {
     if (_pendingBills is EqualUnmodifiableListView) return _pendingBills;
     // ignore: implicit_dynamic_type
@@ -1513,6 +1531,7 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
 
   final List<Request> _requests;
   @override
+  @JsonKey()
   List<Request> get requests {
     if (_requests is EqualUnmodifiableListView) return _requests;
     // ignore: implicit_dynamic_type
@@ -1521,6 +1540,7 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
 
   final List<Complaint> _complaints;
   @override
+  @JsonKey()
   List<Complaint> get complaints {
     if (_complaints is EqualUnmodifiableListView) return _complaints;
     // ignore: implicit_dynamic_type
@@ -1529,6 +1549,7 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
 
   final List<Announcement> _announcements;
   @override
+  @JsonKey()
   List<Announcement> get announcements {
     if (_announcements is EqualUnmodifiableListView) return _announcements;
     // ignore: implicit_dynamic_type
@@ -1536,6 +1557,7 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
   }
 
   @override
+  @JsonKey()
   final bool isLoading;
   @override
   final String? error;
@@ -1552,10 +1574,18 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
   @override
   @JsonKey()
   final String complaintStatusFilter;
+  final List<ChatConversation> _conversations;
+  @override
+  @JsonKey()
+  List<ChatConversation> get conversations {
+    if (_conversations is EqualUnmodifiableListView) return _conversations;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_conversations);
+  }
 
   @override
   String toString() {
-    return 'AdminPanelState(activeTabIndex: $activeTabIndex, rooms: $rooms, pendingBills: $pendingBills, requests: $requests, complaints: $complaints, announcements: $announcements, isLoading: $isLoading, error: $error, filteredComplaints: $filteredComplaints, complaintStatusFilter: $complaintStatusFilter)';
+    return 'AdminPanelState(activeTabIndex: $activeTabIndex, rooms: $rooms, pendingBills: $pendingBills, requests: $requests, complaints: $complaints, announcements: $announcements, isLoading: $isLoading, error: $error, filteredComplaints: $filteredComplaints, complaintStatusFilter: $complaintStatusFilter, conversations: $conversations)';
   }
 
   @override
@@ -1579,7 +1609,9 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
             const DeepCollectionEquality()
                 .equals(other._filteredComplaints, _filteredComplaints) &&
             (identical(other.complaintStatusFilter, complaintStatusFilter) ||
-                other.complaintStatusFilter == complaintStatusFilter));
+                other.complaintStatusFilter == complaintStatusFilter) &&
+            const DeepCollectionEquality()
+                .equals(other._conversations, _conversations));
   }
 
   @override
@@ -1594,7 +1626,8 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
       isLoading,
       error,
       const DeepCollectionEquality().hash(_filteredComplaints),
-      complaintStatusFilter);
+      complaintStatusFilter,
+      const DeepCollectionEquality().hash(_conversations));
 
   @JsonKey(ignore: true)
   @override
@@ -1603,7 +1636,6 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
       __$$AdminPanelStateImplCopyWithImpl<_$AdminPanelStateImpl>(
           this, _$identity);
 }
-
 
 abstract class _AdminPanelState implements AdminPanelState {
   const factory _AdminPanelState(
@@ -1616,7 +1648,8 @@ abstract class _AdminPanelState implements AdminPanelState {
       required final bool isLoading,
       final String? error,
       final List<Complaint> filteredComplaints,
-      final String complaintStatusFilter}) = _$AdminPanelStateImpl;
+      final String complaintStatusFilter,
+      final List<ChatConversation> conversations}) = _$AdminPanelStateImpl;
 
   @override
   int get activeTabIndex;
@@ -1638,6 +1671,8 @@ abstract class _AdminPanelState implements AdminPanelState {
   List<Complaint> get filteredComplaints;
   @override
   String get complaintStatusFilter;
+  @override
+  List<ChatConversation> get conversations;
   @override
   @JsonKey(ignore: true)
   _$$AdminPanelStateImplCopyWith<_$AdminPanelStateImpl> get copyWith =>

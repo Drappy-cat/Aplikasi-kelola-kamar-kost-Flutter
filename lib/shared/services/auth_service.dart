@@ -25,6 +25,15 @@ class AuthService {
     }
   }
 
+  // PERBAIKAN: Menambahkan metode yang hilang
+  AppUser? findUserById(String userId) {
+    try {
+      return _users.firstWhere((user) => user.id == userId);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> signIn({required String username, required String password}) async {
     await Future.delayed(const Duration(seconds: 1));
     try {
@@ -50,7 +59,6 @@ class AuthService {
       throw 'Username sudah digunakan.';
     }
     
-    // PERBAIKAN: Membuat dan menambahkan user baru ke dalam list
     final newUser = AppUser(
       id: 'user-${DateTime.now().millisecondsSinceEpoch}', 
       username: username, 
@@ -59,8 +67,6 @@ class AuthService {
       role: 'user', // Role default untuk user baru
     );
     _users.add(newUser);
-    // NOTE: Data user ini belum disimpan secara permanen, akan hilang saat restart.
-    // Ini akan kita perbaiki jika kita membuat fitur manajemen user.
   }
 
   Future<void> updateProfilePicture(String url) async {
@@ -82,7 +88,6 @@ class AuthService {
     _currentUser = _currentUser!.copyWith(password: newPassword);
   }
 
-  // Mengubah dari final menjadi non-final agar bisa ditambahkan
   static final List<AppUser> _users = [
     AppUser(id: 'admin', username: 'admin', password: 'admin123', fullName: 'Admin Ri-Kost', role: 'admin'),
     AppUser(id: 'user1', username: 'budi', password: 'password', fullName: 'Budi Santoso', role: 'tenant', roomId: 'A-101'),
