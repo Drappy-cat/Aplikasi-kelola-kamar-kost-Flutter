@@ -35,7 +35,6 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         throw Exception('Anda harus menjadi penghuni untuk membuat laporan.');
       }
 
-      // PERBAIKAN: Tidak perlu await karena fungsi sekarang sync
       _dummyService.addComplaint(
         userId: user.id,
         roomId: user.roomId!,

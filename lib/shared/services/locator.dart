@@ -4,7 +4,7 @@ import 'package:tes/features/home/bloc/admin_panel_bloc.dart';
 import 'package:tes/features/home/bloc/user_home_bloc.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
-import 'package:tes/shared/services/language_service.dart'; // <-- IMPORT BARU
+import 'package:tes/shared/services/language_service.dart';
 import 'package:tes/shared/services/theme_service.dart';
 
 final getIt = GetIt.instance;
@@ -26,7 +26,7 @@ Future<void> setupLocator() async {
 
   // 4. Daftarkan service lainnya
   getIt.registerLazySingleton(() => ThemeService(prefs));
-  getIt.registerLazySingleton(() => LanguageService(prefs)); // <-- DAFTARKAN SERVICE BARU
+  getIt.registerLazySingleton(() => LanguageService(prefs));
 
   // 5. Daftarkan BLoC sebagai Factory
   getIt.registerFactory(() => UserHomeBloc());

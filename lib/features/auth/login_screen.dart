@@ -63,7 +63,6 @@ class _LoginScreenState extends State<LoginScreen> {
     const title = "Lokasi Ri-Kost";
 
     try {
-      // PERBAIKAN: Menggunakan MapLauncher.getAvailableMaps()
       final availableMaps = await MapLauncher.getAvailableMaps();
 
       if (availableMaps.isNotEmpty) {

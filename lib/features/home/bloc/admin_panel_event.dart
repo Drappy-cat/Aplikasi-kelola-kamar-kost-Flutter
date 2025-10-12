@@ -8,7 +8,7 @@ abstract class AdminPanelEvent with _$AdminPanelEvent {
   const factory AdminPanelEvent.approveBill(String billId) = ApproveBill;
   const factory AdminPanelEvent.rejectBill(String billId) = RejectBill;
 
-  // PERBAIKAN: Event baru untuk manajemen keluhan admin
+  // Event baru untuk manajemen keluhan admin
   const factory AdminPanelEvent.filterComplaints(String status) = FilterComplaints;
   const factory AdminPanelEvent.updateComplaintStatus({
     required String complaintId,

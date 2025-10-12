@@ -5,7 +5,7 @@ import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
+import 'package:tes/shared/services/locator.dart';
 
 part 'user_home_event.dart';
 part 'user_home_state.dart';
@@ -39,7 +39,6 @@ class UserHomeBloc extends Bloc<UserHomeEvent, UserHomeState> {
 
       if (isTenant) {
         userRoom = _dummyService.findRoom(user.roomId!);
-        // PERBAIKAN: Menggunakan metode baru dari DummyService
         latestBill = _dummyService.getLatestBillForUser(user.id);
       } else {
         allRooms = _dummyService.rooms;

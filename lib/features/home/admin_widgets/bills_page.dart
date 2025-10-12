@@ -57,7 +57,6 @@ class BillsPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              // PERBAIKAN: Hanya mengirim event ke BLoC
               context.read<AdminPanelBloc>().add(AdminPanelEvent.rejectBill(bill.id));
               Navigator.of(dialogContext).pop();
             },
@@ -65,7 +64,6 @@ class BillsPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // PERBAIKAN: Hanya mengirim event ke BLoC
               context.read<AdminPanelBloc>().add(AdminPanelEvent.approveBill(bill.id));
               Navigator.of(dialogContext).pop();
             },

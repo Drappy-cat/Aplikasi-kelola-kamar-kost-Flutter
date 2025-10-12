@@ -104,7 +104,6 @@ class _UserHomeViewState extends State<UserHomeView> {
                         const SizedBox(height: 80),
                       ],
                     ),
-                    // PERBAIKAN: Tambahkan FAB untuk chat jika pengguna adalah penghuni
                     if (isTenant)
                       Positioned(
                         bottom: 16,

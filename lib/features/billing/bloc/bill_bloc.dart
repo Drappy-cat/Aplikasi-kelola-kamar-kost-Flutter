@@ -27,7 +27,6 @@ class BillBloc extends Bloc<BillEvent, BillState> {
         emit(const BillState.error('Pengguna tidak ditemukan. Silakan login kembali.'));
         return;
       }
-      // PERBAIKAN: Logika pengurutan dihapus karena sudah ditangani oleh DummyService
       final bills = _dummyService.getBillsForUser(userId);
       emit(BillState.loaded(bills));
     } catch (e) {
@@ -40,7 +39,7 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       await _dummyService.confirmCashPayment(event.billId);
       add(const BillEvent.loadBills());
     } catch (e) {
-      // handle error
+      emit(BillState.error('Gagal konfirmasi pembayaran tunai: ${e.toString()}'));
     }
   }
 
@@ -49,7 +48,7 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       await _dummyService.submitPaymentProof(event.billId, event.proofUrl);
       add(const BillEvent.loadBills());
     } catch (e) {
-      // handle error
+      emit(BillState.error('Gagal mengirim bukti transfer: ${e.toString()}'));
     }
   }
 }

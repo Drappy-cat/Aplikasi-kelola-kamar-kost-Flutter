@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tes/features/home/admin_panel.dart';
 import 'package:tes/features/home/user_home_page.dart';
 import 'package:tes/shared/services/auth_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT
+import 'package:tes/shared/services/locator.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tes/shared/models/announcement.dart';
 import 'package:tes/shared/models/bill.dart';
-import 'package:tes/shared/models/chat_conversation.dart'; // <-- IMPORT BARU
+import 'package:tes/shared/models/chat_conversation.dart';
 import 'package:tes/shared/models/complaint.dart';
 import 'package:tes/shared/models/request.dart';
 import 'package:tes/shared/models/room.dart';
@@ -35,7 +35,7 @@ class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
       final requests = _dummyService.requests;
       final complaints = _dummyService.getAllComplaints();
       final announcements = _dummyService.getLatestAnnouncements();
-      final conversations = _dummyService.conversations; // <-- AMBIL DATA PERCAKAPAN
+      final conversations = _dummyService.conversations;
 
       // Urutkan percakapan berdasarkan pesan terakhir
       conversations.sort((a, b) {
@@ -56,7 +56,7 @@ class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
         complaints: complaints,
         announcements: announcements,
         filteredComplaints: filteredComplaints,
-        conversations: conversations, // <-- SIMPAN KE STATE
+        conversations: conversations,
       ));
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e.toString()));

@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tes/app/app_routes.dart';
 import 'package:tes/features/settings/bloc/settings_bloc.dart';
-import 'package:tes/l10n/app_localizations.dart'; // <-- IMPORT BARU
-import 'package:tes/shared/services/language_service.dart'; // <-- IMPORT BARU
+import 'package:tes/l10n/app_localizations.dart';
+import 'package:tes/shared/services/language_service.dart';
 import 'package:tes/shared/services/locator.dart';
 import 'package:tes/shared/services/theme_service.dart';
 

@@ -25,7 +25,6 @@ class AuthService {
     }
   }
 
-  // PERBAIKAN: Menambahkan metode yang hilang
   AppUser? findUserById(String userId) {
     try {
       return _users.firstWhere((user) => user.id == userId);

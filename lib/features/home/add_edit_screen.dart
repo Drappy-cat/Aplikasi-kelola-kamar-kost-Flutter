@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/dummy_service.dart';
-import 'package:tes/shared/services/locator.dart'; // <-- IMPORT LOCATOR
+import 'package:tes/shared/services/locator.dart';
 
 class AddEditScreen extends StatefulWidget {
   final Room? room;
@@ -60,7 +60,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
     super.dispose();
   }
 
-  void _saveForm() async { // Tambahkan async karena updateRoom adalah Future
+  void _saveForm() async {
     if (!_formKey.currentState!.validate()) return;
 
     final imageUrls = _imageUrlsCtrl.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
@@ -127,7 +127,6 @@ class _AddEditScreenState extends State<AddEditScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                // PERBAIKAN: Gunakan initialValue
                 value: _selectedStatus,
                 decoration: const InputDecoration(labelText: 'Status Kamar'),
                 items: const [

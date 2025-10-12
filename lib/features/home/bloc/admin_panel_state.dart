@@ -16,7 +16,7 @@ abstract class AdminPanelState with _$AdminPanelState {
     @Default([]) List<Complaint> filteredComplaints,
     @Default('Semua') String complaintStatusFilter,
 
-    // PERBAIKAN: State baru untuk daftar percakapan chat
+    // State baru untuk daftar percakapan chat
     @Default([]) List<ChatConversation> conversations,
   }) = _AdminPanelState;
 

@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart'; // <-- IMPORT BARU
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tes/shared/models/activity_log.dart';
 import 'package:tes/shared/services/auth_service.dart';
@@ -35,12 +35,12 @@ class ActivityLogBloc extends Bloc<ActivityLogEvent, ActivityLogState> {
         action: event.action,
       );
 
-      // 2. PERBAIKAN: Buat notifikasi untuk admin
+      // 2. Buat notifikasi untuk admin
       await _dummyService.addNotification(
         title: 'Aktivitas Penghuni',
         subtitle: '${user.fullName ?? user.username} telah mencatat aktivitas \'${event.action}\'.',
         icon: Icons.history_toggle_off_outlined,
-        iconColor: Colors.blue, // Anda bisa sesuaikan warnanya
+        iconColor: Colors.blue,
       );
 
       emit(state.copyWith(

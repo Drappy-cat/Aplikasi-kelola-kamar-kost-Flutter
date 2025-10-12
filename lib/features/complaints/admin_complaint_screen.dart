@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tes/features/home/bloc/admin_panel_bloc.dart';
 import 'package:tes/shared/models/complaint.dart';
 
-// PERBAIKAN: Diubah menjadi StatelessWidget
 class AdminComplaintScreen extends StatelessWidget {
   const AdminComplaintScreen({super.key});
 
@@ -20,7 +19,6 @@ class AdminComplaintScreen extends StatelessWidget {
               .toList(),
           onChanged: (newStatus) {
             if (newStatus != null) {
-              // PERBAIKAN: Mengirim event ke BLoC
               context.read<AdminPanelBloc>().add(
                     AdminPanelEvent.updateComplaintStatus(
                       complaintId: complaint.id,
@@ -37,7 +35,6 @@ class AdminComplaintScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Menggunakan BlocBuilder untuk mendapatkan state terbaru dari AdminPanelBloc
     return BlocBuilder<AdminPanelBloc, AdminPanelState>(
       builder: (context, state) {
         return Column(
@@ -51,10 +48,8 @@ class AdminComplaintScreen extends StatelessWidget {
                   ButtonSegment(value: 'In Progress', label: Text('Dikerjakan')),
                   ButtonSegment(value: 'Selesai', label: Text('Selesai')),
                 ],
-                // PERBAIKAN: Nilai selected diambil dari state BLoC
                 selected: {state.complaintStatusFilter},
                 onSelectionChanged: (newSelection) {
-                  // PERBAIKAN: Mengirim event filter ke BLoC
                   context
                       .read<AdminPanelBloc>()
                       .add(AdminPanelEvent.filterComplaints(newSelection.first));
@@ -63,7 +58,6 @@ class AdminComplaintScreen extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                // PERBAIKAN: Data diambil dari filteredComplaints di state BLoC
                 itemCount: state.filteredComplaints.length,
                 itemBuilder: (context, index) {
                   final complaint = state.filteredComplaints[index];
