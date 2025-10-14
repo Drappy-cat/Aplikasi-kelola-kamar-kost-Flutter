@@ -21,13 +21,11 @@ class RoomCard extends StatelessWidget {
     final bool isAvailable = room.status == 'Kosong';
 
     return Card(
-      // CardTheme dari my_app.dart akan diterapkan di sini
-      margin: const EdgeInsets.only(bottom: 16), // Beri jarak antar kartu
+      margin: const EdgeInsets.only(bottom: 16),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () async {
           await context.push(AppRoutes.roomDetail, extra: room);
-          // Muat ulang data setelah kembali dari detail untuk update status
           if (context.mounted) {
             context.read<UserHomeBloc>().add(const UserHomeEvent.loadData());
           }

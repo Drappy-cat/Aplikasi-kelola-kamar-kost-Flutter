@@ -12,7 +12,6 @@ import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/dummy_service.dart';
 import 'package:tes/shared/services/locator.dart';
 
-// Enum untuk merepresentasikan setiap langkah dalam dialog
 enum DialogStep { initial, paymentMethod, paymentTransferOptions, virtualAccount, qrCode }
 
 class RentOptionsDialog extends StatefulWidget {
@@ -25,21 +24,17 @@ class RentOptionsDialog extends StatefulWidget {
 }
 
 class _RentOptionsDialogState extends State<RentOptionsDialog> {
-  // State untuk alur dialog
   DialogStep _currentStep = DialogStep.initial;
 
-  // State untuk data
   bool _useAc = false;
   bool _isBooking = false;
   DateTime _selectedBookingDate = DateTime.now();
   bool _isLoading = false;
 
-  // State untuk pembayaran VA
   String _virtualAccountNumber = '';
   Timer? _countdownTimer;
   Duration _timerDuration = const Duration(hours: 1);
 
-  // Service instances
   final AuthService _authService = getIt<AuthService>();
   final DummyService _dummyService = getIt<DummyService>();
 
@@ -55,7 +50,6 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
     super.dispose();
   }
 
-  // --- GETTERS ---
   int get _totalPrice {
     int total = widget.room.baseRent + widget.room.wifi + widget.room.water + widget.room.electricity;
     if (_useAc) {
@@ -64,7 +58,6 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
     return total;
   }
 
-  // --- NAVIGASI & LOGIKA ALUR ---
   void _goToStep(DialogStep step) {
     setState(() {
       _currentStep = step;
@@ -115,7 +108,6 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
     });
   }
 
-  // --- BUILDERS UNTUK SETIAP LANGKAH ---
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -145,7 +137,6 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
     }
   }
 
-  // --- LANGKAH 1: PILIHAN AWAL (BOOKING/SEWA) ---
   Widget _buildInitialStep(BuildContext context) {
     return AlertDialog(
       title: Text(_isBooking ? 'Booking Kamar' : 'Sewa Kamar'),
@@ -213,7 +204,6 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
     );
   }
 
-  // --- LANGKAH 2: PILIHAN METODE PEMBAYARAN ---
   Widget _buildPaymentMethodStep(BuildContext context) {
     return AlertDialog(
       title: const Text('Pilih Metode Pembayaran'),
@@ -243,7 +233,6 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
     );
   }
 
-  // --- LANGKAH 2.5: PILIHAN TRANSFER (VA/QRIS) ---
   Widget _buildTransferOptionsStep(BuildContext context) {
     return AlertDialog(
       title: const Text('Pilih Jenis Transfer'),
@@ -314,7 +303,6 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
     );
   }
 
-  // --- LANGKAH 4: PEMBAYARAN QRIS ---
   Widget _buildQrCodeStep(BuildContext context) {
     return AlertDialog(
       title: const Text('Pindai Kode QRIS'),
@@ -342,7 +330,6 @@ class _RentOptionsDialogState extends State<RentOptionsDialog> {
     );
   }
 
-  // --- LOGIKA PROSES BACKEND ---
   Future<void> _processCashRequest() async {
     setState(() => _isLoading = true);
     await _dummyService.addRequest(

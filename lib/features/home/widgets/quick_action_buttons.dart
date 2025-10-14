@@ -12,10 +12,8 @@ class QuickActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool canPay = latestBill != null && latestBill!.status == 'Belum Dibayar';
 
-    // Mengubah layout menjadi Column untuk mengakomodasi tombol baru
     return Column(
       children: [
-        // Tombol Scan Kehadiran sebagai aksi utama
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
@@ -25,7 +23,6 @@ class QuickActionButtons extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        // Tombol-tombol aksi sekunder
         Row(
           children: [
             Expanded(

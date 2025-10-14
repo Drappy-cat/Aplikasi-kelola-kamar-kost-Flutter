@@ -126,6 +126,13 @@ class SettingsView extends StatelessWidget {
                 child: Column(
                   children: [
                     ListTile(
+                      leading: const Icon(Icons.help_outline),
+                      title: const Text('Pusat Bantuan'), // Akan kita ganti dengan l10n nanti
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.push(AppRoutes.help),
+                    ),
+                    const Divider(height: 1, indent: 16, endIndent: 16),
+                    ListTile(
                       leading: const Icon(Icons.info_outline),
                       title: Text(l10n.aboutApp),
                       subtitle: const Text('Versi 1.0.0'),

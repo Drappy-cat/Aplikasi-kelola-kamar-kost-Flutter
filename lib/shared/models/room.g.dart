@@ -1,10 +1,4 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'room.dart';
-
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
 
 _$RoomImpl _$$RoomImplFromJson(Map<String, dynamic> json) => _$RoomImpl(
   code: json['code'] as String,
