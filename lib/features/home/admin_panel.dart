@@ -10,6 +10,7 @@ import 'package:tes/features/home/admin_widgets/bills_page.dart';
 import 'package:tes/features/home/admin_widgets/requests_page.dart';
 import 'package:tes/features/home/admin_widgets/rooms_page.dart';
 import 'package:tes/features/home/bloc/admin_panel_bloc.dart';
+import 'package:tes/features/reports/report_screen.dart'; // <-- IMPORT BARU
 import 'package:tes/shared/services/dummy_service.dart';
 import 'package:tes/shared/services/locator.dart';
 import 'package:tes/shared/services/theme_service.dart';
@@ -75,6 +76,7 @@ class AdminPanelView extends StatelessWidget {
               child: IndexedStack(
                 index: state.activeTabIndex,
                 children: [
+                  const ReportScreen(), // <-- HALAMAN BARU
                   RoomsPage(rooms: state.rooms),
                   BillsPage(pendingBills: state.pendingBills),
                   RequestsPage(requests: state.requests),
@@ -89,6 +91,7 @@ class AdminPanelView extends StatelessWidget {
         selectedIndex: state.activeTabIndex,
         onDestinationSelected: (index) => bloc.add(AdminPanelEvent.changeTab(index)),
         destinations: const [
+          NavigationDestination(icon: Icon(Icons.bar_chart_outlined), label: 'Laporan'), // <-- TAB BARU
           NavigationDestination(icon: Icon(Icons.bed_outlined), label: 'Kamar'),
           NavigationDestination(icon: Icon(Icons.receipt_long_outlined), label: 'Tagihan'),
           NavigationDestination(icon: Icon(Icons.inbox_outlined), label: 'Pengajuan'),
@@ -104,7 +107,8 @@ class AdminPanelView extends StatelessWidget {
 
   Widget? _getFabForTab(BuildContext context, int index) {
     switch (index) {
-      case 5: // Pengumuman (indeksnya bergeser)
+      // PERBAIKAN: Indeks bergeser karena ada tab Laporan di indeks 0
+      case 6: // Pengumuman
         return FloatingActionButton(
           onPressed: () => _showAddAnnouncementDialog(context),
           child: const Icon(Icons.add_alert),

@@ -81,6 +81,38 @@ class DummyService {
     }
   }
 
+  // --- METODE BARU UNTUK LAPORAN ---
+  Map<String, dynamic> getAdminReportSummary() {
+    // Laporan Keuangan
+    final double totalRevenue = bills
+        .where((b) => b.status == 'Lunas')
+        .fold(0.0, (prev, bill) => prev + bill.amount);
+    final double pendingRevenue = bills
+        .where((b) => b.status == 'Belum Lunas')
+        .fold(0.0, (prev, bill) => prev + bill.amount);
+
+    // Laporan Okupansi
+    final int totalRooms = rooms.length;
+    final int occupiedRooms = rooms.where((r) => r.status == 'Dihuni').length;
+    final int vacantRooms = rooms.where((r) => r.status == 'Kosong').length;
+    final double occupancyRate = totalRooms > 0 ? (occupiedRooms / totalRooms) * 100 : 0;
+
+    // Laporan Aktivitas
+    final int pendingComplaints = complaints.where((c) => c.status == 'Pending').length;
+    final int pendingRequests = requests.where((r) => r.status == 'Menunggu Persetujuan' || r.status == 'Menunggu Pembayaran').length;
+
+    return {
+      'totalRevenue': totalRevenue,
+      'pendingRevenue': pendingRevenue,
+      'totalRooms': totalRooms,
+      'occupiedRooms': occupiedRooms,
+      'vacantRooms': vacantRooms,
+      'occupancyRate': occupancyRate,
+      'pendingComplaints': pendingComplaints,
+      'pendingRequests': pendingRequests,
+    };
+  }
+
   // --- Metode untuk Chat ---
   ChatConversation getConversationForUser(String userId, String userName) {
     try {
