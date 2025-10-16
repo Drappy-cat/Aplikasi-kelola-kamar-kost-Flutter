@@ -21,10 +21,13 @@ ChatConversation _$ChatConversationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ChatConversation {
+  // ID unik untuk percakapan, biasanya sama dengan userId untuk kemudahan.
   String get id =>
-      throw _privateConstructorUsedError; // Usually the same as userId for simplicity
-  String get userId => throw _privateConstructorUsedError;
-  String get userName => throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // ID pengguna yang menjadi lawan bicara dalam percakapan ini.
+  String get userId =>
+      throw _privateConstructorUsedError; // Nama pengguna untuk ditampilkan di UI daftar chat.
+  String get userName =>
+      throw _privateConstructorUsedError; // Daftar semua pesan yang ada di dalam percakapan ini.
   List<ChatMessage> get messages => throw _privateConstructorUsedError;
 
   /// Serializes this ChatConversation to a JSON map.
@@ -168,14 +171,18 @@ class _$ChatConversationImpl implements _ChatConversation {
   factory _$ChatConversationImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatConversationImplFromJson(json);
 
+  // ID unik untuk percakapan, biasanya sama dengan userId untuk kemudahan.
   @override
   final String id;
-  // Usually the same as userId for simplicity
+  // ID pengguna yang menjadi lawan bicara dalam percakapan ini.
   @override
   final String userId;
+  // Nama pengguna untuk ditampilkan di UI daftar chat.
   @override
   final String userName;
+  // Daftar semua pesan yang ada di dalam percakapan ini.
   final List<ChatMessage> _messages;
+  // Daftar semua pesan yang ada di dalam percakapan ini.
   @override
   List<ChatMessage> get messages {
     if (_messages is EqualUnmodifiableListView) return _messages;
@@ -238,12 +245,13 @@ abstract class _ChatConversation implements ChatConversation {
   factory _ChatConversation.fromJson(Map<String, dynamic> json) =
       _$ChatConversationImpl.fromJson;
 
+  // ID unik untuk percakapan, biasanya sama dengan userId untuk kemudahan.
   @override
-  String get id; // Usually the same as userId for simplicity
+  String get id; // ID pengguna yang menjadi lawan bicara dalam percakapan ini.
   @override
-  String get userId;
+  String get userId; // Nama pengguna untuk ditampilkan di UI daftar chat.
   @override
-  String get userName;
+  String get userName; // Daftar semua pesan yang ada di dalam percakapan ini.
   @override
   List<ChatMessage> get messages;
 

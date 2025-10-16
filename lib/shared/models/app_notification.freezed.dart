@@ -21,14 +21,20 @@ AppNotification _$AppNotificationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AppNotification {
-  String get title => throw _privateConstructorUsedError;
-  String get subtitle => throw _privateConstructorUsedError;
+  // Judul notifikasi.
+  String get title =>
+      throw _privateConstructorUsedError; // Isi atau deskripsi singkat dari notifikasi.
+  String get subtitle =>
+      throw _privateConstructorUsedError; // Tanggal kapan notifikasi ini dibuat.
   DateTime get date =>
-      throw _privateConstructorUsedError; // Menggunakan converter untuk tipe data yang tidak didukung JSON secara default
+      throw _privateConstructorUsedError; // Karena `IconData` dan `Color` bukan tipe data standar JSON,
+  // kita memerlukan converter kustom untuk mengubahnya menjadi tipe data primitif (int)
+  // saat menyimpan ke SharedPreferences, dan sebaliknya.
+  // Menggunakan converter untuk mengubah IconData menjadi integer (codePoint) dan sebaliknya.
   @IconDataConverter()
-  IconData get icon => throw _privateConstructorUsedError;
+  IconData get icon => throw _privateConstructorUsedError; // Menggunakan converter untuk mengubah Color menjadi integer (value) dan sebaliknya.
   @ColorConverter()
-  Color get iconColor => throw _privateConstructorUsedError;
+  Color get iconColor => throw _privateConstructorUsedError; // Menandakan apakah notifikasi ini sudah dibaca oleh pengguna.
   bool get isRead => throw _privateConstructorUsedError;
 
   /// Serializes this AppNotification to a JSON map.
@@ -198,19 +204,27 @@ class _$AppNotificationImpl implements _AppNotification {
   factory _$AppNotificationImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppNotificationImplFromJson(json);
 
+  // Judul notifikasi.
   @override
   final String title;
+  // Isi atau deskripsi singkat dari notifikasi.
   @override
   final String subtitle;
+  // Tanggal kapan notifikasi ini dibuat.
   @override
   final DateTime date;
-  // Menggunakan converter untuk tipe data yang tidak didukung JSON secara default
+  // Karena `IconData` dan `Color` bukan tipe data standar JSON,
+  // kita memerlukan converter kustom untuk mengubahnya menjadi tipe data primitif (int)
+  // saat menyimpan ke SharedPreferences, dan sebaliknya.
+  // Menggunakan converter untuk mengubah IconData menjadi integer (codePoint) dan sebaliknya.
   @override
   @IconDataConverter()
   final IconData icon;
+  // Menggunakan converter untuk mengubah Color menjadi integer (value) dan sebaliknya.
   @override
   @ColorConverter()
   final Color iconColor;
+  // Menandakan apakah notifikasi ini sudah dibaca oleh pengguna.
   @override
   @JsonKey()
   final bool isRead;
@@ -270,18 +284,22 @@ abstract class _AppNotification implements AppNotification {
   factory _AppNotification.fromJson(Map<String, dynamic> json) =
       _$AppNotificationImpl.fromJson;
 
+  // Judul notifikasi.
   @override
-  String get title;
+  String get title; // Isi atau deskripsi singkat dari notifikasi.
   @override
-  String get subtitle;
+  String get subtitle; // Tanggal kapan notifikasi ini dibuat.
   @override
-  DateTime get date; // Menggunakan converter untuk tipe data yang tidak didukung JSON secara default
+  DateTime get date; // Karena `IconData` dan `Color` bukan tipe data standar JSON,
+  // kita memerlukan converter kustom untuk mengubahnya menjadi tipe data primitif (int)
+  // saat menyimpan ke SharedPreferences, dan sebaliknya.
+  // Menggunakan converter untuk mengubah IconData menjadi integer (codePoint) dan sebaliknya.
   @override
   @IconDataConverter()
-  IconData get icon;
+  IconData get icon; // Menggunakan converter untuk mengubah Color menjadi integer (value) dan sebaliknya.
   @override
   @ColorConverter()
-  Color get iconColor;
+  Color get iconColor; // Menandakan apakah notifikasi ini sudah dibaca oleh pengguna.
   @override
   bool get isRead;
 

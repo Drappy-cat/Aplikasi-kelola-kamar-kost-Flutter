@@ -21,16 +21,23 @@ Bill _$BillFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Bill {
-  String get id => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
-  String get roomId => throw _privateConstructorUsedError;
-  String get period => throw _privateConstructorUsedError;
-  double get amount => throw _privateConstructorUsedError;
+  // ID unik untuk setiap tagihan.
+  String get id =>
+      throw _privateConstructorUsedError; // ID pengguna yang memiliki tagihan ini.
+  String get userId =>
+      throw _privateConstructorUsedError; // Kode kamar yang terkait dengan tagihan ini.
+  String get roomId =>
+      throw _privateConstructorUsedError; // Periode tagihan, misal: "Juli 2024".
+  String get period =>
+      throw _privateConstructorUsedError; // Jumlah total yang harus dibayar.
+  double get amount =>
+      throw _privateConstructorUsedError; // Status pembayaran saat ini: "Belum Lunas", "Menunggu Konfirmasi", "Lunas".
   String get status =>
-      throw _privateConstructorUsedError; // "Belum Lunas", "Menunggu Konfirmasi", "Lunas"
-  String? get paymentProofUrl => throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // URL ke gambar bukti pembayaran jika metode pembayaran adalah transfer.
+  String? get paymentProofUrl =>
+      throw _privateConstructorUsedError; // Metode pembayaran yang digunakan, misal: "Tunai", "Transfer", "Virtual Account".
   String? get paymentMethod =>
-      throw _privateConstructorUsedError; // "Tunai", "Transfer"
+      throw _privateConstructorUsedError; // Tanggal kapan tagihan ini dibuat.
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this Bill to a JSON map.
@@ -233,24 +240,31 @@ class _$BillImpl implements _Bill {
   factory _$BillImpl.fromJson(Map<String, dynamic> json) =>
       _$$BillImplFromJson(json);
 
+  // ID unik untuk setiap tagihan.
   @override
   final String id;
+  // ID pengguna yang memiliki tagihan ini.
   @override
   final String userId;
+  // Kode kamar yang terkait dengan tagihan ini.
   @override
   final String roomId;
+  // Periode tagihan, misal: "Juli 2024".
   @override
   final String period;
+  // Jumlah total yang harus dibayar.
   @override
   final double amount;
+  // Status pembayaran saat ini: "Belum Lunas", "Menunggu Konfirmasi", "Lunas".
   @override
   final String status;
-  // "Belum Lunas", "Menunggu Konfirmasi", "Lunas"
+  // URL ke gambar bukti pembayaran jika metode pembayaran adalah transfer.
   @override
   final String? paymentProofUrl;
+  // Metode pembayaran yang digunakan, misal: "Tunai", "Transfer", "Virtual Account".
   @override
   final String? paymentMethod;
-  // "Tunai", "Transfer"
+  // Tanggal kapan tagihan ini dibuat.
   @override
   final DateTime createdAt;
 
@@ -322,22 +336,23 @@ abstract class _Bill implements Bill {
 
   factory _Bill.fromJson(Map<String, dynamic> json) = _$BillImpl.fromJson;
 
+  // ID unik untuk setiap tagihan.
   @override
-  String get id;
+  String get id; // ID pengguna yang memiliki tagihan ini.
   @override
-  String get userId;
+  String get userId; // Kode kamar yang terkait dengan tagihan ini.
   @override
-  String get roomId;
+  String get roomId; // Periode tagihan, misal: "Juli 2024".
   @override
-  String get period;
+  String get period; // Jumlah total yang harus dibayar.
   @override
-  double get amount;
+  double get amount; // Status pembayaran saat ini: "Belum Lunas", "Menunggu Konfirmasi", "Lunas".
   @override
-  String get status; // "Belum Lunas", "Menunggu Konfirmasi", "Lunas"
+  String get status; // URL ke gambar bukti pembayaran jika metode pembayaran adalah transfer.
   @override
-  String? get paymentProofUrl;
+  String? get paymentProofUrl; // Metode pembayaran yang digunakan, misal: "Tunai", "Transfer", "Virtual Account".
   @override
-  String? get paymentMethod; // "Tunai", "Transfer"
+  String? get paymentMethod; // Tanggal kapan tagihan ini dibuat.
   @override
   DateTime get createdAt;
 

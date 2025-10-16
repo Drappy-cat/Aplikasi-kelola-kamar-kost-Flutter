@@ -4,14 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart'; // <-- IMPORT BARU
+import 'package:image_picker/image_picker.dart';
 import 'package:tes/app/app_routes.dart';
 import 'package:tes/features/profile/bloc/profile_bloc.dart';
+import 'package:tes/features/settings/settings_page.dart';
 import 'package:tes/shared/models/app_user.dart';
 import 'package:tes/shared/services/locator.dart';
 
-/// Halaman ini sekarang berfungsi sebagai halaman "Edit Profil".
-/// Menyediakan fungsionalitas untuk mengubah data pengguna.
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -24,7 +23,6 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-/// Widget yang membangun UI untuk halaman Edit Profil.
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
 
@@ -82,6 +80,13 @@ class ProfileView extends StatelessWidget {
                 onTap: () => _showEditProfileDialog(context, user.fullName),
               ),
               const Divider(height: 1, indent: 16, endIndent: 16),
+              // MENU BARU: Ubah Info Kontak
+              _ProfileMenuTile(
+                icon: Icons.contact_page_outlined,
+                title: 'Ubah Info Kontak',
+                onTap: () => _showEditContactDialog(context, user),
+              ),
+              const Divider(height: 1, indent: 16, endIndent: 16),
               _ProfileMenuTile(
                 icon: Icons.image_outlined,
                 title: 'Ubah Foto Profil',
@@ -93,6 +98,16 @@ class ProfileView extends StatelessWidget {
                 title: 'Ubah Password',
                 onTap: () => _showChangePasswordDialog(context),
               ),
+              const Divider(height: 1, indent: 16, endIndent: 16),
+              _ProfileMenuTile(
+                icon: Icons.info_outline,
+                title: 'Tentang Aplikasi',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const SettingsPage()),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -103,7 +118,6 @@ class ProfileView extends StatelessWidget {
   Widget _buildProfileHeader(BuildContext context, AppUser user) {
     ImageProvider? backgroundImage;
     if (user.profileImageUrl != null) {
-      // Cek apakah URL adalah path file lokal atau URL jaringan
       if (user.profileImageUrl!.startsWith('/')) {
         backgroundImage = FileImage(File(user.profileImageUrl!));
       } else {
@@ -133,7 +147,6 @@ class ProfileView extends StatelessWidget {
 
   // --- Dialog-dialog untuk mengedit profil ---
 
-  /// PERUBAHAN: Dialog ini sekarang memberikan pilihan antara Galeri dan Kamera.
   Future<void> _showChangePictureDialog(BuildContext context) async {
     await showModalBottomSheet(
       context: context,
@@ -164,14 +177,12 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  /// Metode baru untuk mengambil gambar menggunakan ImagePicker.
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: source);
 
       if (image != null) {
-        // Kirim path file gambar ke BLoC untuk diperbarui.
         context.read<ProfileBloc>().add(ProfileEvent.updateProfilePicture(image.path));
       }
     } catch (e) {
@@ -206,6 +217,52 @@ class ProfileView extends StatelessWidget {
 
     if (ok && nameController.text.isNotEmpty) {
       context.read<ProfileBloc>().add(ProfileEvent.updateFullName(nameController.text.trim()));
+    }
+  }
+
+  // DIALOG BARU: Untuk mengubah info kontak
+  Future<void> _showEditContactDialog(BuildContext context, AppUser user) async {
+    final addressController = TextEditingController(text: user.address ?? '');
+    final phoneController = TextEditingController(text: user.phoneNumber ?? '');
+    final formKey = GlobalKey<FormState>();
+
+    final bool? ok = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Ubah Info Kontak'),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: addressController,
+                decoration: const InputDecoration(labelText: 'Alamat Asal'),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: phoneController,
+                decoration: const InputDecoration(labelText: 'Nomor Telepon'),
+                keyboardType: TextInputType.phone,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => context.pop(false), child: const Text('Batal')),
+          FilledButton(
+            onPressed: () => context.pop(true),
+            child: const Text('Simpan'),
+          ),
+        ],
+      ),
+    );
+
+    if (ok == true) {
+      context.read<ProfileBloc>().add(ProfileEvent.updateContactInfo(
+            address: addressController.text.trim(),
+            phoneNumber: phoneController.text.trim(),
+          ));
     }
   }
 

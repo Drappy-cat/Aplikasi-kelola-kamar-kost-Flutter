@@ -21,11 +21,15 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ChatMessage {
-  String get id => throw _privateConstructorUsedError;
+  // ID unik untuk setiap pesan.
+  String get id =>
+      throw _privateConstructorUsedError; // ID pengirim pesan, bisa berupa ID pengguna atau string 'admin'.
   String get senderId =>
-      throw _privateConstructorUsedError; // 'admin' or user.id
-  String? get text => throw _privateConstructorUsedError;
-  String? get imageUrl => throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // Isi teks dari pesan (opsional, karena pesan bisa berupa gambar).
+  String? get text =>
+      throw _privateConstructorUsedError; // URL gambar jika pesan ini adalah gambar (opsional).
+  String? get imageUrl =>
+      throw _privateConstructorUsedError; // Waktu pasti saat pesan dikirim.
   DateTime get timestamp => throw _privateConstructorUsedError;
 
   /// Serializes this ChatMessage to a JSON map.
@@ -182,15 +186,19 @@ class _$ChatMessageImpl implements _ChatMessage {
   factory _$ChatMessageImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatMessageImplFromJson(json);
 
+  // ID unik untuk setiap pesan.
   @override
   final String id;
+  // ID pengirim pesan, bisa berupa ID pengguna atau string 'admin'.
   @override
   final String senderId;
-  // 'admin' or user.id
+  // Isi teks dari pesan (opsional, karena pesan bisa berupa gambar).
   @override
   final String? text;
+  // URL gambar jika pesan ini adalah gambar (opsional).
   @override
   final String? imageUrl;
+  // Waktu pasti saat pesan dikirim.
   @override
   final DateTime timestamp;
 
@@ -245,14 +253,15 @@ abstract class _ChatMessage implements ChatMessage {
   factory _ChatMessage.fromJson(Map<String, dynamic> json) =
       _$ChatMessageImpl.fromJson;
 
+  // ID unik untuk setiap pesan.
   @override
-  String get id;
+  String get id; // ID pengirim pesan, bisa berupa ID pengguna atau string 'admin'.
   @override
-  String get senderId; // 'admin' or user.id
+  String get senderId; // Isi teks dari pesan (opsional, karena pesan bisa berupa gambar).
   @override
-  String? get text;
+  String? get text; // URL gambar jika pesan ini adalah gambar (opsional).
   @override
-  String? get imageUrl;
+  String? get imageUrl; // Waktu pasti saat pesan dikirim.
   @override
   DateTime get timestamp;
 

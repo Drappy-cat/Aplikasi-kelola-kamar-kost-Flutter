@@ -77,6 +77,7 @@ class MyApp extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
+          // PERBAIKAN: Menggunakan nama kelas CardThemeData yang benar
           cardTheme: CardThemeData(
             elevation: 0,
             color: const Color(0xFF1E1E1E),

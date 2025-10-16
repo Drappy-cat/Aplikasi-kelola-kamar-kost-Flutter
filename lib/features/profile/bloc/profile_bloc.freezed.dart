@@ -22,6 +22,8 @@ mixin _$ProfileEvent {
     required TResult Function() load,
     required TResult Function(String newName) updateFullName,
     required TResult Function(String newUrl) updateProfilePicture,
+    required TResult Function(String address, String phoneNumber)
+    updateContactInfo,
     required TResult Function(String oldPassword, String newPassword)
     changePassword,
     required TResult Function() logout,
@@ -31,6 +33,7 @@ mixin _$ProfileEvent {
     TResult? Function()? load,
     TResult? Function(String newName)? updateFullName,
     TResult? Function(String newUrl)? updateProfilePicture,
+    TResult? Function(String address, String phoneNumber)? updateContactInfo,
     TResult? Function(String oldPassword, String newPassword)? changePassword,
     TResult? Function()? logout,
   }) => throw _privateConstructorUsedError;
@@ -39,6 +42,7 @@ mixin _$ProfileEvent {
     TResult Function()? load,
     TResult Function(String newName)? updateFullName,
     TResult Function(String newUrl)? updateProfilePicture,
+    TResult Function(String address, String phoneNumber)? updateContactInfo,
     TResult Function(String oldPassword, String newPassword)? changePassword,
     TResult Function()? logout,
     required TResult orElse(),
@@ -48,6 +52,7 @@ mixin _$ProfileEvent {
     required TResult Function(LoadProfile value) load,
     required TResult Function(UpdateFullName value) updateFullName,
     required TResult Function(UpdateProfilePicture value) updateProfilePicture,
+    required TResult Function(UpdateContactInfo value) updateContactInfo,
     required TResult Function(ChangePassword value) changePassword,
     required TResult Function(Logout value) logout,
   }) => throw _privateConstructorUsedError;
@@ -56,6 +61,7 @@ mixin _$ProfileEvent {
     TResult? Function(LoadProfile value)? load,
     TResult? Function(UpdateFullName value)? updateFullName,
     TResult? Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult? Function(UpdateContactInfo value)? updateContactInfo,
     TResult? Function(ChangePassword value)? changePassword,
     TResult? Function(Logout value)? logout,
   }) => throw _privateConstructorUsedError;
@@ -64,6 +70,7 @@ mixin _$ProfileEvent {
     TResult Function(LoadProfile value)? load,
     TResult Function(UpdateFullName value)? updateFullName,
     TResult Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult Function(UpdateContactInfo value)? updateContactInfo,
     TResult Function(ChangePassword value)? changePassword,
     TResult Function(Logout value)? logout,
     required TResult orElse(),
@@ -138,6 +145,8 @@ class _$LoadProfileImpl implements LoadProfile {
     required TResult Function() load,
     required TResult Function(String newName) updateFullName,
     required TResult Function(String newUrl) updateProfilePicture,
+    required TResult Function(String address, String phoneNumber)
+    updateContactInfo,
     required TResult Function(String oldPassword, String newPassword)
     changePassword,
     required TResult Function() logout,
@@ -151,6 +160,7 @@ class _$LoadProfileImpl implements LoadProfile {
     TResult? Function()? load,
     TResult? Function(String newName)? updateFullName,
     TResult? Function(String newUrl)? updateProfilePicture,
+    TResult? Function(String address, String phoneNumber)? updateContactInfo,
     TResult? Function(String oldPassword, String newPassword)? changePassword,
     TResult? Function()? logout,
   }) {
@@ -163,6 +173,7 @@ class _$LoadProfileImpl implements LoadProfile {
     TResult Function()? load,
     TResult Function(String newName)? updateFullName,
     TResult Function(String newUrl)? updateProfilePicture,
+    TResult Function(String address, String phoneNumber)? updateContactInfo,
     TResult Function(String oldPassword, String newPassword)? changePassword,
     TResult Function()? logout,
     required TResult orElse(),
@@ -179,6 +190,7 @@ class _$LoadProfileImpl implements LoadProfile {
     required TResult Function(LoadProfile value) load,
     required TResult Function(UpdateFullName value) updateFullName,
     required TResult Function(UpdateProfilePicture value) updateProfilePicture,
+    required TResult Function(UpdateContactInfo value) updateContactInfo,
     required TResult Function(ChangePassword value) changePassword,
     required TResult Function(Logout value) logout,
   }) {
@@ -191,6 +203,7 @@ class _$LoadProfileImpl implements LoadProfile {
     TResult? Function(LoadProfile value)? load,
     TResult? Function(UpdateFullName value)? updateFullName,
     TResult? Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult? Function(UpdateContactInfo value)? updateContactInfo,
     TResult? Function(ChangePassword value)? changePassword,
     TResult? Function(Logout value)? logout,
   }) {
@@ -203,6 +216,7 @@ class _$LoadProfileImpl implements LoadProfile {
     TResult Function(LoadProfile value)? load,
     TResult Function(UpdateFullName value)? updateFullName,
     TResult Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult Function(UpdateContactInfo value)? updateContactInfo,
     TResult Function(ChangePassword value)? changePassword,
     TResult Function(Logout value)? logout,
     required TResult orElse(),
@@ -294,6 +308,8 @@ class _$UpdateFullNameImpl implements UpdateFullName {
     required TResult Function() load,
     required TResult Function(String newName) updateFullName,
     required TResult Function(String newUrl) updateProfilePicture,
+    required TResult Function(String address, String phoneNumber)
+    updateContactInfo,
     required TResult Function(String oldPassword, String newPassword)
     changePassword,
     required TResult Function() logout,
@@ -307,6 +323,7 @@ class _$UpdateFullNameImpl implements UpdateFullName {
     TResult? Function()? load,
     TResult? Function(String newName)? updateFullName,
     TResult? Function(String newUrl)? updateProfilePicture,
+    TResult? Function(String address, String phoneNumber)? updateContactInfo,
     TResult? Function(String oldPassword, String newPassword)? changePassword,
     TResult? Function()? logout,
   }) {
@@ -319,6 +336,7 @@ class _$UpdateFullNameImpl implements UpdateFullName {
     TResult Function()? load,
     TResult Function(String newName)? updateFullName,
     TResult Function(String newUrl)? updateProfilePicture,
+    TResult Function(String address, String phoneNumber)? updateContactInfo,
     TResult Function(String oldPassword, String newPassword)? changePassword,
     TResult Function()? logout,
     required TResult orElse(),
@@ -335,6 +353,7 @@ class _$UpdateFullNameImpl implements UpdateFullName {
     required TResult Function(LoadProfile value) load,
     required TResult Function(UpdateFullName value) updateFullName,
     required TResult Function(UpdateProfilePicture value) updateProfilePicture,
+    required TResult Function(UpdateContactInfo value) updateContactInfo,
     required TResult Function(ChangePassword value) changePassword,
     required TResult Function(Logout value) logout,
   }) {
@@ -347,6 +366,7 @@ class _$UpdateFullNameImpl implements UpdateFullName {
     TResult? Function(LoadProfile value)? load,
     TResult? Function(UpdateFullName value)? updateFullName,
     TResult? Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult? Function(UpdateContactInfo value)? updateContactInfo,
     TResult? Function(ChangePassword value)? changePassword,
     TResult? Function(Logout value)? logout,
   }) {
@@ -359,6 +379,7 @@ class _$UpdateFullNameImpl implements UpdateFullName {
     TResult Function(LoadProfile value)? load,
     TResult Function(UpdateFullName value)? updateFullName,
     TResult Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult Function(UpdateContactInfo value)? updateContactInfo,
     TResult Function(ChangePassword value)? changePassword,
     TResult Function(Logout value)? logout,
     required TResult orElse(),
@@ -459,6 +480,8 @@ class _$UpdateProfilePictureImpl implements UpdateProfilePicture {
     required TResult Function() load,
     required TResult Function(String newName) updateFullName,
     required TResult Function(String newUrl) updateProfilePicture,
+    required TResult Function(String address, String phoneNumber)
+    updateContactInfo,
     required TResult Function(String oldPassword, String newPassword)
     changePassword,
     required TResult Function() logout,
@@ -472,6 +495,7 @@ class _$UpdateProfilePictureImpl implements UpdateProfilePicture {
     TResult? Function()? load,
     TResult? Function(String newName)? updateFullName,
     TResult? Function(String newUrl)? updateProfilePicture,
+    TResult? Function(String address, String phoneNumber)? updateContactInfo,
     TResult? Function(String oldPassword, String newPassword)? changePassword,
     TResult? Function()? logout,
   }) {
@@ -484,6 +508,7 @@ class _$UpdateProfilePictureImpl implements UpdateProfilePicture {
     TResult Function()? load,
     TResult Function(String newName)? updateFullName,
     TResult Function(String newUrl)? updateProfilePicture,
+    TResult Function(String address, String phoneNumber)? updateContactInfo,
     TResult Function(String oldPassword, String newPassword)? changePassword,
     TResult Function()? logout,
     required TResult orElse(),
@@ -500,6 +525,7 @@ class _$UpdateProfilePictureImpl implements UpdateProfilePicture {
     required TResult Function(LoadProfile value) load,
     required TResult Function(UpdateFullName value) updateFullName,
     required TResult Function(UpdateProfilePicture value) updateProfilePicture,
+    required TResult Function(UpdateContactInfo value) updateContactInfo,
     required TResult Function(ChangePassword value) changePassword,
     required TResult Function(Logout value) logout,
   }) {
@@ -512,6 +538,7 @@ class _$UpdateProfilePictureImpl implements UpdateProfilePicture {
     TResult? Function(LoadProfile value)? load,
     TResult? Function(UpdateFullName value)? updateFullName,
     TResult? Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult? Function(UpdateContactInfo value)? updateContactInfo,
     TResult? Function(ChangePassword value)? changePassword,
     TResult? Function(Logout value)? logout,
   }) {
@@ -524,6 +551,7 @@ class _$UpdateProfilePictureImpl implements UpdateProfilePicture {
     TResult Function(LoadProfile value)? load,
     TResult Function(UpdateFullName value)? updateFullName,
     TResult Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult Function(UpdateContactInfo value)? updateContactInfo,
     TResult Function(ChangePassword value)? changePassword,
     TResult Function(Logout value)? logout,
     required TResult orElse(),
@@ -546,6 +574,192 @@ abstract class UpdateProfilePicture implements ProfileEvent {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UpdateProfilePictureImplCopyWith<_$UpdateProfilePictureImpl>
   get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateContactInfoImplCopyWith<$Res> {
+  factory _$$UpdateContactInfoImplCopyWith(
+    _$UpdateContactInfoImpl value,
+    $Res Function(_$UpdateContactInfoImpl) then,
+  ) = __$$UpdateContactInfoImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String address, String phoneNumber});
+}
+
+/// @nodoc
+class __$$UpdateContactInfoImplCopyWithImpl<$Res>
+    extends _$ProfileEventCopyWithImpl<$Res, _$UpdateContactInfoImpl>
+    implements _$$UpdateContactInfoImplCopyWith<$Res> {
+  __$$UpdateContactInfoImplCopyWithImpl(
+    _$UpdateContactInfoImpl _value,
+    $Res Function(_$UpdateContactInfoImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of ProfileEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? address = null, Object? phoneNumber = null}) {
+    return _then(
+      _$UpdateContactInfoImpl(
+        address: null == address
+            ? _value.address
+            : address // ignore: cast_nullable_to_non_nullable
+                  as String,
+        phoneNumber: null == phoneNumber
+            ? _value.phoneNumber
+            : phoneNumber // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$UpdateContactInfoImpl implements UpdateContactInfo {
+  const _$UpdateContactInfoImpl({
+    required this.address,
+    required this.phoneNumber,
+  });
+
+  @override
+  final String address;
+  @override
+  final String phoneNumber;
+
+  @override
+  String toString() {
+    return 'ProfileEvent.updateContactInfo(address: $address, phoneNumber: $phoneNumber)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateContactInfoImpl &&
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, address, phoneNumber);
+
+  /// Create a copy of ProfileEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateContactInfoImplCopyWith<_$UpdateContactInfoImpl> get copyWith =>
+      __$$UpdateContactInfoImplCopyWithImpl<_$UpdateContactInfoImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() load,
+    required TResult Function(String newName) updateFullName,
+    required TResult Function(String newUrl) updateProfilePicture,
+    required TResult Function(String address, String phoneNumber)
+    updateContactInfo,
+    required TResult Function(String oldPassword, String newPassword)
+    changePassword,
+    required TResult Function() logout,
+  }) {
+    return updateContactInfo(address, phoneNumber);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? load,
+    TResult? Function(String newName)? updateFullName,
+    TResult? Function(String newUrl)? updateProfilePicture,
+    TResult? Function(String address, String phoneNumber)? updateContactInfo,
+    TResult? Function(String oldPassword, String newPassword)? changePassword,
+    TResult? Function()? logout,
+  }) {
+    return updateContactInfo?.call(address, phoneNumber);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? load,
+    TResult Function(String newName)? updateFullName,
+    TResult Function(String newUrl)? updateProfilePicture,
+    TResult Function(String address, String phoneNumber)? updateContactInfo,
+    TResult Function(String oldPassword, String newPassword)? changePassword,
+    TResult Function()? logout,
+    required TResult orElse(),
+  }) {
+    if (updateContactInfo != null) {
+      return updateContactInfo(address, phoneNumber);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadProfile value) load,
+    required TResult Function(UpdateFullName value) updateFullName,
+    required TResult Function(UpdateProfilePicture value) updateProfilePicture,
+    required TResult Function(UpdateContactInfo value) updateContactInfo,
+    required TResult Function(ChangePassword value) changePassword,
+    required TResult Function(Logout value) logout,
+  }) {
+    return updateContactInfo(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadProfile value)? load,
+    TResult? Function(UpdateFullName value)? updateFullName,
+    TResult? Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult? Function(UpdateContactInfo value)? updateContactInfo,
+    TResult? Function(ChangePassword value)? changePassword,
+    TResult? Function(Logout value)? logout,
+  }) {
+    return updateContactInfo?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadProfile value)? load,
+    TResult Function(UpdateFullName value)? updateFullName,
+    TResult Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult Function(UpdateContactInfo value)? updateContactInfo,
+    TResult Function(ChangePassword value)? changePassword,
+    TResult Function(Logout value)? logout,
+    required TResult orElse(),
+  }) {
+    if (updateContactInfo != null) {
+      return updateContactInfo(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UpdateContactInfo implements ProfileEvent {
+  const factory UpdateContactInfo({
+    required final String address,
+    required final String phoneNumber,
+  }) = _$UpdateContactInfoImpl;
+
+  String get address;
+  String get phoneNumber;
+
+  /// Create a copy of ProfileEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UpdateContactInfoImplCopyWith<_$UpdateContactInfoImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -636,6 +850,8 @@ class _$ChangePasswordImpl implements ChangePassword {
     required TResult Function() load,
     required TResult Function(String newName) updateFullName,
     required TResult Function(String newUrl) updateProfilePicture,
+    required TResult Function(String address, String phoneNumber)
+    updateContactInfo,
     required TResult Function(String oldPassword, String newPassword)
     changePassword,
     required TResult Function() logout,
@@ -649,6 +865,7 @@ class _$ChangePasswordImpl implements ChangePassword {
     TResult? Function()? load,
     TResult? Function(String newName)? updateFullName,
     TResult? Function(String newUrl)? updateProfilePicture,
+    TResult? Function(String address, String phoneNumber)? updateContactInfo,
     TResult? Function(String oldPassword, String newPassword)? changePassword,
     TResult? Function()? logout,
   }) {
@@ -661,6 +878,7 @@ class _$ChangePasswordImpl implements ChangePassword {
     TResult Function()? load,
     TResult Function(String newName)? updateFullName,
     TResult Function(String newUrl)? updateProfilePicture,
+    TResult Function(String address, String phoneNumber)? updateContactInfo,
     TResult Function(String oldPassword, String newPassword)? changePassword,
     TResult Function()? logout,
     required TResult orElse(),
@@ -677,6 +895,7 @@ class _$ChangePasswordImpl implements ChangePassword {
     required TResult Function(LoadProfile value) load,
     required TResult Function(UpdateFullName value) updateFullName,
     required TResult Function(UpdateProfilePicture value) updateProfilePicture,
+    required TResult Function(UpdateContactInfo value) updateContactInfo,
     required TResult Function(ChangePassword value) changePassword,
     required TResult Function(Logout value) logout,
   }) {
@@ -689,6 +908,7 @@ class _$ChangePasswordImpl implements ChangePassword {
     TResult? Function(LoadProfile value)? load,
     TResult? Function(UpdateFullName value)? updateFullName,
     TResult? Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult? Function(UpdateContactInfo value)? updateContactInfo,
     TResult? Function(ChangePassword value)? changePassword,
     TResult? Function(Logout value)? logout,
   }) {
@@ -701,6 +921,7 @@ class _$ChangePasswordImpl implements ChangePassword {
     TResult Function(LoadProfile value)? load,
     TResult Function(UpdateFullName value)? updateFullName,
     TResult Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult Function(UpdateContactInfo value)? updateContactInfo,
     TResult Function(ChangePassword value)? changePassword,
     TResult Function(Logout value)? logout,
     required TResult orElse(),
@@ -774,6 +995,8 @@ class _$LogoutImpl implements Logout {
     required TResult Function() load,
     required TResult Function(String newName) updateFullName,
     required TResult Function(String newUrl) updateProfilePicture,
+    required TResult Function(String address, String phoneNumber)
+    updateContactInfo,
     required TResult Function(String oldPassword, String newPassword)
     changePassword,
     required TResult Function() logout,
@@ -787,6 +1010,7 @@ class _$LogoutImpl implements Logout {
     TResult? Function()? load,
     TResult? Function(String newName)? updateFullName,
     TResult? Function(String newUrl)? updateProfilePicture,
+    TResult? Function(String address, String phoneNumber)? updateContactInfo,
     TResult? Function(String oldPassword, String newPassword)? changePassword,
     TResult? Function()? logout,
   }) {
@@ -799,6 +1023,7 @@ class _$LogoutImpl implements Logout {
     TResult Function()? load,
     TResult Function(String newName)? updateFullName,
     TResult Function(String newUrl)? updateProfilePicture,
+    TResult Function(String address, String phoneNumber)? updateContactInfo,
     TResult Function(String oldPassword, String newPassword)? changePassword,
     TResult Function()? logout,
     required TResult orElse(),
@@ -815,6 +1040,7 @@ class _$LogoutImpl implements Logout {
     required TResult Function(LoadProfile value) load,
     required TResult Function(UpdateFullName value) updateFullName,
     required TResult Function(UpdateProfilePicture value) updateProfilePicture,
+    required TResult Function(UpdateContactInfo value) updateContactInfo,
     required TResult Function(ChangePassword value) changePassword,
     required TResult Function(Logout value) logout,
   }) {
@@ -827,6 +1053,7 @@ class _$LogoutImpl implements Logout {
     TResult? Function(LoadProfile value)? load,
     TResult? Function(UpdateFullName value)? updateFullName,
     TResult? Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult? Function(UpdateContactInfo value)? updateContactInfo,
     TResult? Function(ChangePassword value)? changePassword,
     TResult? Function(Logout value)? logout,
   }) {
@@ -839,6 +1066,7 @@ class _$LogoutImpl implements Logout {
     TResult Function(LoadProfile value)? load,
     TResult Function(UpdateFullName value)? updateFullName,
     TResult Function(UpdateProfilePicture value)? updateProfilePicture,
+    TResult Function(UpdateContactInfo value)? updateContactInfo,
     TResult Function(ChangePassword value)? changePassword,
     TResult Function(Logout value)? logout,
     required TResult orElse(),

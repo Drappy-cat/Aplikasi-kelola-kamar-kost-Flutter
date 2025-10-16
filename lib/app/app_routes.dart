@@ -22,4 +22,5 @@ class AppRoutes {
   static const String roomDetail = '/room_detail';
   static const String scanActivity = '/scan_activity';
   static const String chat = '/chat';
+  static const String aboutApp = '/about_app'; // <-- RUTE BARU
 }

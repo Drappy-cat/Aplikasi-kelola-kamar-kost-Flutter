@@ -7,7 +7,6 @@ part 'app_user.g.dart';
 /// Bisa berupa admin, penghuni (tenant), atau pengguna biasa (tamu).
 @freezed
 class AppUser with _$AppUser {
-  // Constructor privat diperlukan oleh Freezed untuk menambahkan metode kustom seperti getter.
   const AppUser._();
 
   const factory AppUser({
@@ -24,12 +23,15 @@ class AppUser with _$AppUser {
     // URL ke gambar profil pengguna.
     String? profileImageUrl,
     // Kode kamar yang dihuni oleh pengguna (jika mereka adalah penghuni).
-    // Nilai ini null jika pengguna bukan penghuni.
     String? roomId,
+
+    // --- FIELD BARU ---
+    String? address,
+    String? phoneNumber,
+    
   }) = _AppUser;
 
   /// Getter kustom untuk mendapatkan nama tampilan pengguna.
-  /// Jika nama lengkap ada, gunakan itu. Jika tidak, gunakan username sebagai fallback.
   String get name => fullName ?? username;
 
   /// Factory constructor untuk membuat instance AppUser dari JSON.

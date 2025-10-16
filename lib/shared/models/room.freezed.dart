@@ -21,23 +21,36 @@ Room _$RoomFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Room {
-  String get code => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
-  int get baseRent => throw _privateConstructorUsedError;
-  int get wifi => throw _privateConstructorUsedError;
-  int get water => throw _privateConstructorUsedError;
-  int get electricity => throw _privateConstructorUsedError;
-  int get acCost => throw _privateConstructorUsedError;
-  bool get packageFull => throw _privateConstructorUsedError;
-  String get dimensions => throw _privateConstructorUsedError;
-  List<String> get imageUrls => throw _privateConstructorUsedError;
+  // --- Detail Utama Kamar ---
+  String get code =>
+      throw _privateConstructorUsedError; // Kode unik kamar, misal: A-101
+  String get status =>
+      throw _privateConstructorUsedError; // Status ketersediaan: "Kosong", "Dihuni", "Booked", "Maintenance"
+  String get dimensions =>
+      throw _privateConstructorUsedError; // Ukuran kamar, misal: "3x4 m"
+  List<String> get imageUrls =>
+      throw _privateConstructorUsedError; // Daftar path atau URL gambar kamar
+  // --- Detail Biaya Sewa (per bulan) ---
+  int get baseRent => throw _privateConstructorUsedError; // Harga sewa dasar
+  int get wifi => throw _privateConstructorUsedError; // Biaya Wi-Fi
+  int get water => throw _privateConstructorUsedError; // Biaya Air
+  int get electricity => throw _privateConstructorUsedError; // Biaya Listrik
+  int get acCost =>
+      throw _privateConstructorUsedError; // Biaya tambahan jika menggunakan AC
+  bool get packageFull =>
+      throw _privateConstructorUsedError; // Menandakan apakah harga sewa sudah termasuk semua utilitas
+  // --- Detail Fasilitas ---
+  bool get isFurnished =>
+      throw _privateConstructorUsedError; // Apakah kamar dilengkapi furnitur
+  int get jumlahKasur =>
+      throw _privateConstructorUsedError; // Jumlah kasur yang tersedia
+  String? get fasilitasTambahan =>
+      throw _privateConstructorUsedError; // Fasilitas lain, misal: "Meja, Lemari"
+  // --- Detail Penghuni (jika ada) ---
   String? get tenantName => throw _privateConstructorUsedError;
   String? get tenantAddress => throw _privateConstructorUsedError;
   String? get tenantPhone => throw _privateConstructorUsedError;
-  String? get rentStartDate => throw _privateConstructorUsedError; // FIELD BARU
-  String? get fasilitasTambahan => throw _privateConstructorUsedError;
-  bool get isFurnished => throw _privateConstructorUsedError;
-  int get jumlahKasur => throw _privateConstructorUsedError;
+  String? get rentStartDate => throw _privateConstructorUsedError;
 
   /// Serializes this Room to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -56,21 +69,21 @@ abstract class $RoomCopyWith<$Res> {
   $Res call({
     String code,
     String status,
+    String dimensions,
+    List<String> imageUrls,
     int baseRent,
     int wifi,
     int water,
     int electricity,
     int acCost,
     bool packageFull,
-    String dimensions,
-    List<String> imageUrls,
+    bool isFurnished,
+    int jumlahKasur,
+    String? fasilitasTambahan,
     String? tenantName,
     String? tenantAddress,
     String? tenantPhone,
     String? rentStartDate,
-    String? fasilitasTambahan,
-    bool isFurnished,
-    int jumlahKasur,
   });
 }
 
@@ -91,21 +104,21 @@ class _$RoomCopyWithImpl<$Res, $Val extends Room>
   $Res call({
     Object? code = null,
     Object? status = null,
+    Object? dimensions = null,
+    Object? imageUrls = null,
     Object? baseRent = null,
     Object? wifi = null,
     Object? water = null,
     Object? electricity = null,
     Object? acCost = null,
     Object? packageFull = null,
-    Object? dimensions = null,
-    Object? imageUrls = null,
+    Object? isFurnished = null,
+    Object? jumlahKasur = null,
+    Object? fasilitasTambahan = freezed,
     Object? tenantName = freezed,
     Object? tenantAddress = freezed,
     Object? tenantPhone = freezed,
     Object? rentStartDate = freezed,
-    Object? fasilitasTambahan = freezed,
-    Object? isFurnished = null,
-    Object? jumlahKasur = null,
   }) {
     return _then(
       _value.copyWith(
@@ -117,6 +130,14 @@ class _$RoomCopyWithImpl<$Res, $Val extends Room>
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as String,
+            dimensions: null == dimensions
+                ? _value.dimensions
+                : dimensions // ignore: cast_nullable_to_non_nullable
+                      as String,
+            imageUrls: null == imageUrls
+                ? _value.imageUrls
+                : imageUrls // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
             baseRent: null == baseRent
                 ? _value.baseRent
                 : baseRent // ignore: cast_nullable_to_non_nullable
@@ -141,14 +162,18 @@ class _$RoomCopyWithImpl<$Res, $Val extends Room>
                 ? _value.packageFull
                 : packageFull // ignore: cast_nullable_to_non_nullable
                       as bool,
-            dimensions: null == dimensions
-                ? _value.dimensions
-                : dimensions // ignore: cast_nullable_to_non_nullable
-                      as String,
-            imageUrls: null == imageUrls
-                ? _value.imageUrls
-                : imageUrls // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
+            isFurnished: null == isFurnished
+                ? _value.isFurnished
+                : isFurnished // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            jumlahKasur: null == jumlahKasur
+                ? _value.jumlahKasur
+                : jumlahKasur // ignore: cast_nullable_to_non_nullable
+                      as int,
+            fasilitasTambahan: freezed == fasilitasTambahan
+                ? _value.fasilitasTambahan
+                : fasilitasTambahan // ignore: cast_nullable_to_non_nullable
+                      as String?,
             tenantName: freezed == tenantName
                 ? _value.tenantName
                 : tenantName // ignore: cast_nullable_to_non_nullable
@@ -165,18 +190,6 @@ class _$RoomCopyWithImpl<$Res, $Val extends Room>
                 ? _value.rentStartDate
                 : rentStartDate // ignore: cast_nullable_to_non_nullable
                       as String?,
-            fasilitasTambahan: freezed == fasilitasTambahan
-                ? _value.fasilitasTambahan
-                : fasilitasTambahan // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            isFurnished: null == isFurnished
-                ? _value.isFurnished
-                : isFurnished // ignore: cast_nullable_to_non_nullable
-                      as bool,
-            jumlahKasur: null == jumlahKasur
-                ? _value.jumlahKasur
-                : jumlahKasur // ignore: cast_nullable_to_non_nullable
-                      as int,
           )
           as $Val,
     );
@@ -194,21 +207,21 @@ abstract class _$$RoomImplCopyWith<$Res> implements $RoomCopyWith<$Res> {
   $Res call({
     String code,
     String status,
+    String dimensions,
+    List<String> imageUrls,
     int baseRent,
     int wifi,
     int water,
     int electricity,
     int acCost,
     bool packageFull,
-    String dimensions,
-    List<String> imageUrls,
+    bool isFurnished,
+    int jumlahKasur,
+    String? fasilitasTambahan,
     String? tenantName,
     String? tenantAddress,
     String? tenantPhone,
     String? rentStartDate,
-    String? fasilitasTambahan,
-    bool isFurnished,
-    int jumlahKasur,
   });
 }
 
@@ -226,21 +239,21 @@ class __$$RoomImplCopyWithImpl<$Res>
   $Res call({
     Object? code = null,
     Object? status = null,
+    Object? dimensions = null,
+    Object? imageUrls = null,
     Object? baseRent = null,
     Object? wifi = null,
     Object? water = null,
     Object? electricity = null,
     Object? acCost = null,
     Object? packageFull = null,
-    Object? dimensions = null,
-    Object? imageUrls = null,
+    Object? isFurnished = null,
+    Object? jumlahKasur = null,
+    Object? fasilitasTambahan = freezed,
     Object? tenantName = freezed,
     Object? tenantAddress = freezed,
     Object? tenantPhone = freezed,
     Object? rentStartDate = freezed,
-    Object? fasilitasTambahan = freezed,
-    Object? isFurnished = null,
-    Object? jumlahKasur = null,
   }) {
     return _then(
       _$RoomImpl(
@@ -252,6 +265,14 @@ class __$$RoomImplCopyWithImpl<$Res>
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as String,
+        dimensions: null == dimensions
+            ? _value.dimensions
+            : dimensions // ignore: cast_nullable_to_non_nullable
+                  as String,
+        imageUrls: null == imageUrls
+            ? _value._imageUrls
+            : imageUrls // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
         baseRent: null == baseRent
             ? _value.baseRent
             : baseRent // ignore: cast_nullable_to_non_nullable
@@ -276,14 +297,18 @@ class __$$RoomImplCopyWithImpl<$Res>
             ? _value.packageFull
             : packageFull // ignore: cast_nullable_to_non_nullable
                   as bool,
-        dimensions: null == dimensions
-            ? _value.dimensions
-            : dimensions // ignore: cast_nullable_to_non_nullable
-                  as String,
-        imageUrls: null == imageUrls
-            ? _value._imageUrls
-            : imageUrls // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
+        isFurnished: null == isFurnished
+            ? _value.isFurnished
+            : isFurnished // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        jumlahKasur: null == jumlahKasur
+            ? _value.jumlahKasur
+            : jumlahKasur // ignore: cast_nullable_to_non_nullable
+                  as int,
+        fasilitasTambahan: freezed == fasilitasTambahan
+            ? _value.fasilitasTambahan
+            : fasilitasTambahan // ignore: cast_nullable_to_non_nullable
+                  as String?,
         tenantName: freezed == tenantName
             ? _value.tenantName
             : tenantName // ignore: cast_nullable_to_non_nullable
@@ -300,18 +325,6 @@ class __$$RoomImplCopyWithImpl<$Res>
             ? _value.rentStartDate
             : rentStartDate // ignore: cast_nullable_to_non_nullable
                   as String?,
-        fasilitasTambahan: freezed == fasilitasTambahan
-            ? _value.fasilitasTambahan
-            : fasilitasTambahan // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        isFurnished: null == isFurnished
-            ? _value.isFurnished
-            : isFurnished // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        jumlahKasur: null == jumlahKasur
-            ? _value.jumlahKasur
-            : jumlahKasur // ignore: cast_nullable_to_non_nullable
-                  as int,
       ),
     );
   }
@@ -323,49 +336,40 @@ class _$RoomImpl extends _Room {
   const _$RoomImpl({
     required this.code,
     required this.status,
+    this.dimensions = 'N/A',
+    final List<String> imageUrls = const [],
     required this.baseRent,
     required this.wifi,
     required this.water,
     required this.electricity,
     this.acCost = 0,
     this.packageFull = false,
-    this.dimensions = 'N/A',
-    final List<String> imageUrls = const [],
+    this.isFurnished = false,
+    this.jumlahKasur = 1,
+    this.fasilitasTambahan,
     this.tenantName,
     this.tenantAddress,
     this.tenantPhone,
     this.rentStartDate,
-    this.fasilitasTambahan,
-    this.isFurnished = false,
-    this.jumlahKasur = 1,
   }) : _imageUrls = imageUrls,
        super._();
 
   factory _$RoomImpl.fromJson(Map<String, dynamic> json) =>
       _$$RoomImplFromJson(json);
 
+  // --- Detail Utama Kamar ---
   @override
   final String code;
+  // Kode unik kamar, misal: A-101
   @override
   final String status;
-  @override
-  final int baseRent;
-  @override
-  final int wifi;
-  @override
-  final int water;
-  @override
-  final int electricity;
-  @override
-  @JsonKey()
-  final int acCost;
-  @override
-  @JsonKey()
-  final bool packageFull;
+  // Status ketersediaan: "Kosong", "Dihuni", "Booked", "Maintenance"
   @override
   @JsonKey()
   final String dimensions;
+  // Ukuran kamar, misal: "3x4 m"
   final List<String> _imageUrls;
+  // Ukuran kamar, misal: "3x4 m"
   @override
   @JsonKey()
   List<String> get imageUrls {
@@ -374,6 +378,41 @@ class _$RoomImpl extends _Room {
     return EqualUnmodifiableListView(_imageUrls);
   }
 
+  // Daftar path atau URL gambar kamar
+  // --- Detail Biaya Sewa (per bulan) ---
+  @override
+  final int baseRent;
+  // Harga sewa dasar
+  @override
+  final int wifi;
+  // Biaya Wi-Fi
+  @override
+  final int water;
+  // Biaya Air
+  @override
+  final int electricity;
+  // Biaya Listrik
+  @override
+  @JsonKey()
+  final int acCost;
+  // Biaya tambahan jika menggunakan AC
+  @override
+  @JsonKey()
+  final bool packageFull;
+  // Menandakan apakah harga sewa sudah termasuk semua utilitas
+  // --- Detail Fasilitas ---
+  @override
+  @JsonKey()
+  final bool isFurnished;
+  // Apakah kamar dilengkapi furnitur
+  @override
+  @JsonKey()
+  final int jumlahKasur;
+  // Jumlah kasur yang tersedia
+  @override
+  final String? fasilitasTambahan;
+  // Fasilitas lain, misal: "Meja, Lemari"
+  // --- Detail Penghuni (jika ada) ---
   @override
   final String? tenantName;
   @override
@@ -382,19 +421,10 @@ class _$RoomImpl extends _Room {
   final String? tenantPhone;
   @override
   final String? rentStartDate;
-  // FIELD BARU
-  @override
-  final String? fasilitasTambahan;
-  @override
-  @JsonKey()
-  final bool isFurnished;
-  @override
-  @JsonKey()
-  final int jumlahKasur;
 
   @override
   String toString() {
-    return 'Room(code: $code, status: $status, baseRent: $baseRent, wifi: $wifi, water: $water, electricity: $electricity, acCost: $acCost, packageFull: $packageFull, dimensions: $dimensions, imageUrls: $imageUrls, tenantName: $tenantName, tenantAddress: $tenantAddress, tenantPhone: $tenantPhone, rentStartDate: $rentStartDate, fasilitasTambahan: $fasilitasTambahan, isFurnished: $isFurnished, jumlahKasur: $jumlahKasur)';
+    return 'Room(code: $code, status: $status, dimensions: $dimensions, imageUrls: $imageUrls, baseRent: $baseRent, wifi: $wifi, water: $water, electricity: $electricity, acCost: $acCost, packageFull: $packageFull, isFurnished: $isFurnished, jumlahKasur: $jumlahKasur, fasilitasTambahan: $fasilitasTambahan, tenantName: $tenantName, tenantAddress: $tenantAddress, tenantPhone: $tenantPhone, rentStartDate: $rentStartDate)';
   }
 
   @override
@@ -404,6 +434,12 @@ class _$RoomImpl extends _Room {
             other is _$RoomImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.dimensions, dimensions) ||
+                other.dimensions == dimensions) &&
+            const DeepCollectionEquality().equals(
+              other._imageUrls,
+              _imageUrls,
+            ) &&
             (identical(other.baseRent, baseRent) ||
                 other.baseRent == baseRent) &&
             (identical(other.wifi, wifi) || other.wifi == wifi) &&
@@ -413,12 +449,12 @@ class _$RoomImpl extends _Room {
             (identical(other.acCost, acCost) || other.acCost == acCost) &&
             (identical(other.packageFull, packageFull) ||
                 other.packageFull == packageFull) &&
-            (identical(other.dimensions, dimensions) ||
-                other.dimensions == dimensions) &&
-            const DeepCollectionEquality().equals(
-              other._imageUrls,
-              _imageUrls,
-            ) &&
+            (identical(other.isFurnished, isFurnished) ||
+                other.isFurnished == isFurnished) &&
+            (identical(other.jumlahKasur, jumlahKasur) ||
+                other.jumlahKasur == jumlahKasur) &&
+            (identical(other.fasilitasTambahan, fasilitasTambahan) ||
+                other.fasilitasTambahan == fasilitasTambahan) &&
             (identical(other.tenantName, tenantName) ||
                 other.tenantName == tenantName) &&
             (identical(other.tenantAddress, tenantAddress) ||
@@ -426,13 +462,7 @@ class _$RoomImpl extends _Room {
             (identical(other.tenantPhone, tenantPhone) ||
                 other.tenantPhone == tenantPhone) &&
             (identical(other.rentStartDate, rentStartDate) ||
-                other.rentStartDate == rentStartDate) &&
-            (identical(other.fasilitasTambahan, fasilitasTambahan) ||
-                other.fasilitasTambahan == fasilitasTambahan) &&
-            (identical(other.isFurnished, isFurnished) ||
-                other.isFurnished == isFurnished) &&
-            (identical(other.jumlahKasur, jumlahKasur) ||
-                other.jumlahKasur == jumlahKasur));
+                other.rentStartDate == rentStartDate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -441,21 +471,21 @@ class _$RoomImpl extends _Room {
     runtimeType,
     code,
     status,
+    dimensions,
+    const DeepCollectionEquality().hash(_imageUrls),
     baseRent,
     wifi,
     water,
     electricity,
     acCost,
     packageFull,
-    dimensions,
-    const DeepCollectionEquality().hash(_imageUrls),
+    isFurnished,
+    jumlahKasur,
+    fasilitasTambahan,
     tenantName,
     tenantAddress,
     tenantPhone,
     rentStartDate,
-    fasilitasTambahan,
-    isFurnished,
-    jumlahKasur,
   );
 
   /// Create a copy of Room
@@ -476,46 +506,56 @@ abstract class _Room extends Room {
   const factory _Room({
     required final String code,
     required final String status,
+    final String dimensions,
+    final List<String> imageUrls,
     required final int baseRent,
     required final int wifi,
     required final int water,
     required final int electricity,
     final int acCost,
     final bool packageFull,
-    final String dimensions,
-    final List<String> imageUrls,
+    final bool isFurnished,
+    final int jumlahKasur,
+    final String? fasilitasTambahan,
     final String? tenantName,
     final String? tenantAddress,
     final String? tenantPhone,
     final String? rentStartDate,
-    final String? fasilitasTambahan,
-    final bool isFurnished,
-    final int jumlahKasur,
   }) = _$RoomImpl;
   const _Room._() : super._();
 
   factory _Room.fromJson(Map<String, dynamic> json) = _$RoomImpl.fromJson;
 
+  // --- Detail Utama Kamar ---
   @override
-  String get code;
+  String get code; // Kode unik kamar, misal: A-101
   @override
-  String get status;
+  String get status; // Status ketersediaan: "Kosong", "Dihuni", "Booked", "Maintenance"
   @override
-  int get baseRent;
+  String get dimensions; // Ukuran kamar, misal: "3x4 m"
   @override
-  int get wifi;
+  List<String> get imageUrls; // Daftar path atau URL gambar kamar
+  // --- Detail Biaya Sewa (per bulan) ---
   @override
-  int get water;
+  int get baseRent; // Harga sewa dasar
   @override
-  int get electricity;
+  int get wifi; // Biaya Wi-Fi
   @override
-  int get acCost;
+  int get water; // Biaya Air
   @override
-  bool get packageFull;
+  int get electricity; // Biaya Listrik
   @override
-  String get dimensions;
+  int get acCost; // Biaya tambahan jika menggunakan AC
   @override
-  List<String> get imageUrls;
+  bool get packageFull; // Menandakan apakah harga sewa sudah termasuk semua utilitas
+  // --- Detail Fasilitas ---
+  @override
+  bool get isFurnished; // Apakah kamar dilengkapi furnitur
+  @override
+  int get jumlahKasur; // Jumlah kasur yang tersedia
+  @override
+  String? get fasilitasTambahan; // Fasilitas lain, misal: "Meja, Lemari"
+  // --- Detail Penghuni (jika ada) ---
   @override
   String? get tenantName;
   @override
@@ -523,13 +563,7 @@ abstract class _Room extends Room {
   @override
   String? get tenantPhone;
   @override
-  String? get rentStartDate; // FIELD BARU
-  @override
-  String? get fasilitasTambahan;
-  @override
-  bool get isFurnished;
-  @override
-  int get jumlahKasur;
+  String? get rentStartDate;
 
   /// Create a copy of Room
   /// with the given fields replaced by the non-null parameter values.

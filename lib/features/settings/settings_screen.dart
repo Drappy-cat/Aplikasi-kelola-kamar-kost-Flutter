@@ -8,7 +8,6 @@ import 'package:tes/shared/services/language_service.dart';
 import 'package:tes/shared/services/locator.dart';
 import 'package:tes/shared/services/theme_service.dart';
 
-// Halaman wrapper yang menyediakan BLoC
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -21,11 +20,9 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
-// Widget yang membangun UI
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
 
-  // Dialog untuk memilih bahasa
   void _showLanguageDialog(BuildContext context) {
     final languageService = getIt<LanguageService>();
     showDialog(
@@ -62,12 +59,10 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeService = getIt<ThemeService>();
-    // Mengambil teks terjemahan
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        // Menggunakan teks dari lokalisasi
         title: Text(l10n.settings),
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
@@ -127,30 +122,17 @@ class SettingsView extends StatelessWidget {
                   children: [
                     ListTile(
                       leading: const Icon(Icons.help_outline),
-                      title: const Text('Pusat Bantuan'), // Akan kita ganti dengan l10n nanti
+                      title: const Text('Pusat Bantuan'),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () => context.push(AppRoutes.help),
                     ),
                     const Divider(height: 1, indent: 16, endIndent: 16),
+                    // PERBAIKAN: Mengarahkan ke halaman AboutAppScreen yang baru.
                     ListTile(
                       leading: const Icon(Icons.info_outline),
                       title: Text(l10n.aboutApp),
-                      subtitle: const Text('Versi 1.0.0'),
                       trailing: const Icon(Icons.chevron_right),
-                      onTap: () {
-                        showAboutDialog(
-                          context: context,
-                          applicationName: 'Ri-Kost',
-                          applicationVersion: '1.0.0',
-                          applicationLegalese: '© 2025 Rizma Indra',
-                          children: <Widget>[
-                            const Padding(
-                              padding: EdgeInsets.only(top: 15.0),
-                              child: Text('Aplikasi manajemen kost sederhana.'),
-                            ),
-                          ],
-                        );
-                      },
+                      onTap: () => context.push(AppRoutes.aboutApp),
                     ),
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     ListTile(

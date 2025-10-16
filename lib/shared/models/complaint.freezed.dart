@@ -21,14 +21,23 @@ Complaint _$ComplaintFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Complaint {
-  String get id => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
-  String get roomId => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
-  String get category => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
-  List<String> get imageUrls => throw _privateConstructorUsedError;
+  // ID unik untuk setiap pengaduan.
+  String get id =>
+      throw _privateConstructorUsedError; // ID pengguna yang membuat pengaduan.
+  String get userId =>
+      throw _privateConstructorUsedError; // Kode kamar dari mana pengaduan ini berasal.
+  String get roomId =>
+      throw _privateConstructorUsedError; // Judul singkat dari pengaduan, misal: "Keran air bocor".
+  String get title =>
+      throw _privateConstructorUsedError; // Deskripsi detail dari masalah yang dilaporkan.
+  String get description =>
+      throw _privateConstructorUsedError; // Kategori pengaduan, misal: "Kerusakan Fasilitas", "Kebersihan".
+  String get category =>
+      throw _privateConstructorUsedError; // Status penanganan pengaduan: "Pending", "In Progress", "Resolved", "Ditolak".
+  String get status =>
+      throw _privateConstructorUsedError; // Daftar URL gambar bukti yang diunggah oleh pengguna.
+  List<String> get imageUrls =>
+      throw _privateConstructorUsedError; // Tanggal kapan pengaduan ini dibuat.
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this Complaint to a JSON map.
@@ -235,21 +244,30 @@ class _$ComplaintImpl implements _Complaint {
   factory _$ComplaintImpl.fromJson(Map<String, dynamic> json) =>
       _$$ComplaintImplFromJson(json);
 
+  // ID unik untuk setiap pengaduan.
   @override
   final String id;
+  // ID pengguna yang membuat pengaduan.
   @override
   final String userId;
+  // Kode kamar dari mana pengaduan ini berasal.
   @override
   final String roomId;
+  // Judul singkat dari pengaduan, misal: "Keran air bocor".
   @override
   final String title;
+  // Deskripsi detail dari masalah yang dilaporkan.
   @override
   final String description;
+  // Kategori pengaduan, misal: "Kerusakan Fasilitas", "Kebersihan".
   @override
   final String category;
+  // Status penanganan pengaduan: "Pending", "In Progress", "Resolved", "Ditolak".
   @override
   final String status;
+  // Daftar URL gambar bukti yang diunggah oleh pengguna.
   final List<String> _imageUrls;
+  // Daftar URL gambar bukti yang diunggah oleh pengguna.
   @override
   @JsonKey()
   List<String> get imageUrls {
@@ -258,6 +276,7 @@ class _$ComplaintImpl implements _Complaint {
     return EqualUnmodifiableListView(_imageUrls);
   }
 
+  // Tanggal kapan pengaduan ini dibuat.
   @override
   final DateTime createdAt;
 
@@ -333,22 +352,23 @@ abstract class _Complaint implements Complaint {
   factory _Complaint.fromJson(Map<String, dynamic> json) =
       _$ComplaintImpl.fromJson;
 
+  // ID unik untuk setiap pengaduan.
   @override
-  String get id;
+  String get id; // ID pengguna yang membuat pengaduan.
   @override
-  String get userId;
+  String get userId; // Kode kamar dari mana pengaduan ini berasal.
   @override
-  String get roomId;
+  String get roomId; // Judul singkat dari pengaduan, misal: "Keran air bocor".
   @override
-  String get title;
+  String get title; // Deskripsi detail dari masalah yang dilaporkan.
   @override
-  String get description;
+  String get description; // Kategori pengaduan, misal: "Kerusakan Fasilitas", "Kebersihan".
   @override
-  String get category;
+  String get category; // Status penanganan pengaduan: "Pending", "In Progress", "Resolved", "Ditolak".
   @override
-  String get status;
+  String get status; // Daftar URL gambar bukti yang diunggah oleh pengguna.
   @override
-  List<String> get imageUrls;
+  List<String> get imageUrls; // Tanggal kapan pengaduan ini dibuat.
   @override
   DateTime get createdAt;
 

@@ -21,11 +21,15 @@ ActivityLog _$ActivityLogFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ActivityLog {
-  String get id => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
-  String get userName => throw _privateConstructorUsedError;
+  // ID unik untuk setiap log.
+  String get id =>
+      throw _privateConstructorUsedError; // ID pengguna yang melakukan aktivitas.
+  String get userId =>
+      throw _privateConstructorUsedError; // Nama pengguna untuk kemudahan tampilan.
+  String get userName =>
+      throw _privateConstructorUsedError; // Jenis aksi yang dicatat, yaitu "Berangkat" atau "Pulang".
   String get action =>
-      throw _privateConstructorUsedError; // "Berangkat" atau "Pulang"
+      throw _privateConstructorUsedError; // Waktu pasti saat aktivitas dicatat.
   DateTime get timestamp => throw _privateConstructorUsedError;
 
   /// Serializes this ActivityLog to a JSON map.
@@ -182,15 +186,19 @@ class _$ActivityLogImpl implements _ActivityLog {
   factory _$ActivityLogImpl.fromJson(Map<String, dynamic> json) =>
       _$$ActivityLogImplFromJson(json);
 
+  // ID unik untuk setiap log.
   @override
   final String id;
+  // ID pengguna yang melakukan aktivitas.
   @override
   final String userId;
+  // Nama pengguna untuk kemudahan tampilan.
   @override
   final String userName;
+  // Jenis aksi yang dicatat, yaitu "Berangkat" atau "Pulang".
   @override
   final String action;
-  // "Berangkat" atau "Pulang"
+  // Waktu pasti saat aktivitas dicatat.
   @override
   final DateTime timestamp;
 
@@ -244,14 +252,15 @@ abstract class _ActivityLog implements ActivityLog {
   factory _ActivityLog.fromJson(Map<String, dynamic> json) =
       _$ActivityLogImpl.fromJson;
 
+  // ID unik untuk setiap log.
   @override
-  String get id;
+  String get id; // ID pengguna yang melakukan aktivitas.
   @override
-  String get userId;
+  String get userId; // Nama pengguna untuk kemudahan tampilan.
   @override
-  String get userName;
+  String get userName; // Jenis aksi yang dicatat, yaitu "Berangkat" atau "Pulang".
   @override
-  String get action; // "Berangkat" atau "Pulang"
+  String get action; // Waktu pasti saat aktivitas dicatat.
   @override
   DateTime get timestamp;
 

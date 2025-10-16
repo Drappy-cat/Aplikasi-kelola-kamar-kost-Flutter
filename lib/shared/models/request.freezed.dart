@@ -21,18 +21,26 @@ Request _$RequestFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Request {
-  String get id => throw _privateConstructorUsedError;
+  // ID unik untuk setiap permintaan.
+  String get id =>
+      throw _privateConstructorUsedError; // Jenis permintaan, misal: "Booking Tunai", "Sewa via VA".
   String get type =>
-      throw _privateConstructorUsedError; // 'Booking Kamar', 'Sewa Langsung', dll.
-  String get date => throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // Tanggal saat permintaan dibuat.
+  String get date =>
+      throw _privateConstructorUsedError; // Catatan atau deskripsi tambahan untuk permintaan.
   String get note =>
-      throw _privateConstructorUsedError; // Status bisa lebih deskriptif: 'Pending', 'Menunggu Pembayaran', 'Disetujui', 'Ditolak'
-  String get status => throw _privateConstructorUsedError;
-  String? get roomCode => throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // Status permintaan saat ini: "Menunggu Persetujuan", "Menunggu Pembayaran", "Disetujui", "Ditolak".
+  String get status =>
+      throw _privateConstructorUsedError; // Kode kamar yang terkait dengan permintaan ini.
+  String? get roomCode =>
+      throw _privateConstructorUsedError; // Nama pengguna yang membuat permintaan.
   String? get userName =>
-      throw _privateConstructorUsedError; // Kolom baru untuk alur pembayaran
-  String? get paymentMethod => throw _privateConstructorUsedError;
-  DateTime? get paymentDueDate => throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // --- Properti untuk Alur Pembayaran ---
+  // Metode pembayaran yang dipilih, misal: "Tunai", "Virtual Account", "QRIS".
+  String? get paymentMethod =>
+      throw _privateConstructorUsedError; // Tanggal dan waktu jatuh tempo pembayaran (untuk timer).
+  DateTime? get paymentDueDate =>
+      throw _privateConstructorUsedError; // Nomor Virtual Account yang digenerate untuk pembayaran.
   String? get virtualAccountNumber => throw _privateConstructorUsedError;
 
   /// Serializes this Request to a JSON map.
@@ -250,27 +258,35 @@ class _$RequestImpl implements _Request {
   factory _$RequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$RequestImplFromJson(json);
 
+  // ID unik untuk setiap permintaan.
   @override
   final String id;
+  // Jenis permintaan, misal: "Booking Tunai", "Sewa via VA".
   @override
   final String type;
-  // 'Booking Kamar', 'Sewa Langsung', dll.
+  // Tanggal saat permintaan dibuat.
   @override
   final String date;
+  // Catatan atau deskripsi tambahan untuk permintaan.
   @override
   final String note;
-  // Status bisa lebih deskriptif: 'Pending', 'Menunggu Pembayaran', 'Disetujui', 'Ditolak'
+  // Status permintaan saat ini: "Menunggu Persetujuan", "Menunggu Pembayaran", "Disetujui", "Ditolak".
   @override
   final String status;
+  // Kode kamar yang terkait dengan permintaan ini.
   @override
   final String? roomCode;
+  // Nama pengguna yang membuat permintaan.
   @override
   final String? userName;
-  // Kolom baru untuk alur pembayaran
+  // --- Properti untuk Alur Pembayaran ---
+  // Metode pembayaran yang dipilih, misal: "Tunai", "Virtual Account", "QRIS".
   @override
   final String? paymentMethod;
+  // Tanggal dan waktu jatuh tempo pembayaran (untuk timer).
   @override
   final DateTime? paymentDueDate;
+  // Nomor Virtual Account yang digenerate untuk pembayaran.
   @override
   final String? virtualAccountNumber;
 
@@ -347,24 +363,26 @@ abstract class _Request implements Request {
 
   factory _Request.fromJson(Map<String, dynamic> json) = _$RequestImpl.fromJson;
 
+  // ID unik untuk setiap permintaan.
   @override
-  String get id;
+  String get id; // Jenis permintaan, misal: "Booking Tunai", "Sewa via VA".
   @override
-  String get type; // 'Booking Kamar', 'Sewa Langsung', dll.
+  String get type; // Tanggal saat permintaan dibuat.
   @override
-  String get date;
+  String get date; // Catatan atau deskripsi tambahan untuk permintaan.
   @override
-  String get note; // Status bisa lebih deskriptif: 'Pending', 'Menunggu Pembayaran', 'Disetujui', 'Ditolak'
+  String get note; // Status permintaan saat ini: "Menunggu Persetujuan", "Menunggu Pembayaran", "Disetujui", "Ditolak".
   @override
-  String get status;
+  String get status; // Kode kamar yang terkait dengan permintaan ini.
   @override
-  String? get roomCode;
+  String? get roomCode; // Nama pengguna yang membuat permintaan.
   @override
-  String? get userName; // Kolom baru untuk alur pembayaran
+  String? get userName; // --- Properti untuk Alur Pembayaran ---
+  // Metode pembayaran yang dipilih, misal: "Tunai", "Virtual Account", "QRIS".
   @override
-  String? get paymentMethod;
+  String? get paymentMethod; // Tanggal dan waktu jatuh tempo pembayaran (untuk timer).
   @override
-  DateTime? get paymentDueDate;
+  DateTime? get paymentDueDate; // Nomor Virtual Account yang digenerate untuk pembayaran.
   @override
   String? get virtualAccountNumber;
 

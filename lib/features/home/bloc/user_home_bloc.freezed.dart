@@ -659,15 +659,21 @@ class _$LoadedImpl implements _Loaded {
     required final List<Room> allRooms,
   }) : _allRooms = allRooms;
 
+  // Menandakan apakah pengguna saat ini adalah penghuni atau tamu.
   @override
   final bool isTenant;
+  // Pengumuman terbaru untuk ditampilkan di bagian atas.
   @override
   final Announcement? latestAnnouncement;
+  // Data kamar spesifik jika pengguna adalah penghuni.
   @override
   final Room? userRoom;
+  // Data tagihan terakhir jika pengguna adalah penghuni.
   @override
   final Bill? latestBill;
+  // Daftar semua kamar jika pengguna adalah tamu.
   final List<Room> _allRooms;
+  // Daftar semua kamar jika pengguna adalah tamu.
   @override
   List<Room> get allRooms {
     if (_allRooms is EqualUnmodifiableListView) return _allRooms;
@@ -831,10 +837,12 @@ abstract class _Loaded implements UserHomeState {
     required final List<Room> allRooms,
   }) = _$LoadedImpl;
 
-  bool get isTenant;
-  Announcement? get latestAnnouncement;
-  Room? get userRoom;
-  Bill? get latestBill;
+  // Menandakan apakah pengguna saat ini adalah penghuni atau tamu.
+  bool get isTenant; // Pengumuman terbaru untuk ditampilkan di bagian atas.
+  Announcement?
+  get latestAnnouncement; // Data kamar spesifik jika pengguna adalah penghuni.
+  Room? get userRoom; // Data tagihan terakhir jika pengguna adalah penghuni.
+  Bill? get latestBill; // Daftar semua kamar jika pengguna adalah tamu.
   List<Room> get allRooms;
 
   /// Create a copy of UserHomeState

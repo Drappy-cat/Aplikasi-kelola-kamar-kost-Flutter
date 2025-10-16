@@ -1358,20 +1358,22 @@ abstract class UpdateComplaintStatus implements AdminPanelEvent {
 
 /// @nodoc
 mixin _$AdminPanelState {
-  int get activeTabIndex => throw _privateConstructorUsedError;
+  // Indeks tab yang sedang aktif di UI.
+  int get activeTabIndex =>
+      throw _privateConstructorUsedError; // Daftar semua data yang dikelola oleh admin.
   List<Room> get rooms => throw _privateConstructorUsedError;
   List<Bill> get pendingBills => throw _privateConstructorUsedError;
   List<Request> get requests => throw _privateConstructorUsedError;
   List<Complaint> get complaints => throw _privateConstructorUsedError;
   List<Announcement> get announcements => throw _privateConstructorUsedError;
-  bool get isLoading => throw _privateConstructorUsedError;
-  String? get error =>
-      throw _privateConstructorUsedError; // State untuk manajemen keluhan admin
-  List<Complaint> get filteredComplaints => throw _privateConstructorUsedError;
-  String get complaintStatusFilter =>
-      throw _privateConstructorUsedError; // State baru untuk daftar percakapan chat
   List<ChatConversation> get conversations =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // Status loading untuk menampilkan CircularProgressIndicator.
+  bool get isLoading =>
+      throw _privateConstructorUsedError; // Menyimpan pesan error jika terjadi kesalahan.
+  String? get error =>
+      throw _privateConstructorUsedError; // State spesifik untuk fitur filter di halaman pengaduan.
+  List<Complaint> get filteredComplaints => throw _privateConstructorUsedError;
+  String get complaintStatusFilter => throw _privateConstructorUsedError;
 
   /// Create a copy of AdminPanelState
   /// with the given fields replaced by the non-null parameter values.
@@ -1394,11 +1396,11 @@ abstract class $AdminPanelStateCopyWith<$Res> {
     List<Request> requests,
     List<Complaint> complaints,
     List<Announcement> announcements,
+    List<ChatConversation> conversations,
     bool isLoading,
     String? error,
     List<Complaint> filteredComplaints,
     String complaintStatusFilter,
-    List<ChatConversation> conversations,
   });
 }
 
@@ -1423,11 +1425,11 @@ class _$AdminPanelStateCopyWithImpl<$Res, $Val extends AdminPanelState>
     Object? requests = null,
     Object? complaints = null,
     Object? announcements = null,
+    Object? conversations = null,
     Object? isLoading = null,
     Object? error = freezed,
     Object? filteredComplaints = null,
     Object? complaintStatusFilter = null,
-    Object? conversations = null,
   }) {
     return _then(
       _value.copyWith(
@@ -1455,6 +1457,10 @@ class _$AdminPanelStateCopyWithImpl<$Res, $Val extends AdminPanelState>
                 ? _value.announcements
                 : announcements // ignore: cast_nullable_to_non_nullable
                       as List<Announcement>,
+            conversations: null == conversations
+                ? _value.conversations
+                : conversations // ignore: cast_nullable_to_non_nullable
+                      as List<ChatConversation>,
             isLoading: null == isLoading
                 ? _value.isLoading
                 : isLoading // ignore: cast_nullable_to_non_nullable
@@ -1471,10 +1477,6 @@ class _$AdminPanelStateCopyWithImpl<$Res, $Val extends AdminPanelState>
                 ? _value.complaintStatusFilter
                 : complaintStatusFilter // ignore: cast_nullable_to_non_nullable
                       as String,
-            conversations: null == conversations
-                ? _value.conversations
-                : conversations // ignore: cast_nullable_to_non_nullable
-                      as List<ChatConversation>,
           )
           as $Val,
     );
@@ -1497,11 +1499,11 @@ abstract class _$$AdminPanelStateImplCopyWith<$Res>
     List<Request> requests,
     List<Complaint> complaints,
     List<Announcement> announcements,
+    List<ChatConversation> conversations,
     bool isLoading,
     String? error,
     List<Complaint> filteredComplaints,
     String complaintStatusFilter,
-    List<ChatConversation> conversations,
   });
 }
 
@@ -1525,11 +1527,11 @@ class __$$AdminPanelStateImplCopyWithImpl<$Res>
     Object? requests = null,
     Object? complaints = null,
     Object? announcements = null,
+    Object? conversations = null,
     Object? isLoading = null,
     Object? error = freezed,
     Object? filteredComplaints = null,
     Object? complaintStatusFilter = null,
-    Object? conversations = null,
   }) {
     return _then(
       _$AdminPanelStateImpl(
@@ -1557,6 +1559,10 @@ class __$$AdminPanelStateImplCopyWithImpl<$Res>
             ? _value._announcements
             : announcements // ignore: cast_nullable_to_non_nullable
                   as List<Announcement>,
+        conversations: null == conversations
+            ? _value._conversations
+            : conversations // ignore: cast_nullable_to_non_nullable
+                  as List<ChatConversation>,
         isLoading: null == isLoading
             ? _value.isLoading
             : isLoading // ignore: cast_nullable_to_non_nullable
@@ -1573,10 +1579,6 @@ class __$$AdminPanelStateImplCopyWithImpl<$Res>
             ? _value.complaintStatusFilter
             : complaintStatusFilter // ignore: cast_nullable_to_non_nullable
                   as String,
-        conversations: null == conversations
-            ? _value._conversations
-            : conversations // ignore: cast_nullable_to_non_nullable
-                  as List<ChatConversation>,
       ),
     );
   }
@@ -1592,22 +1594,25 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
     required final List<Request> requests,
     required final List<Complaint> complaints,
     required final List<Announcement> announcements,
+    required final List<ChatConversation> conversations,
     required this.isLoading,
     this.error,
     final List<Complaint> filteredComplaints = const [],
     this.complaintStatusFilter = 'Semua',
-    final List<ChatConversation> conversations = const [],
   }) : _rooms = rooms,
        _pendingBills = pendingBills,
        _requests = requests,
        _complaints = complaints,
        _announcements = announcements,
-       _filteredComplaints = filteredComplaints,
-       _conversations = conversations;
+       _conversations = conversations,
+       _filteredComplaints = filteredComplaints;
 
+  // Indeks tab yang sedang aktif di UI.
   @override
   final int activeTabIndex;
+  // Daftar semua data yang dikelola oleh admin.
   final List<Room> _rooms;
+  // Daftar semua data yang dikelola oleh admin.
   @override
   List<Room> get rooms {
     if (_rooms is EqualUnmodifiableListView) return _rooms;
@@ -1647,13 +1652,23 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
     return EqualUnmodifiableListView(_announcements);
   }
 
+  final List<ChatConversation> _conversations;
+  @override
+  List<ChatConversation> get conversations {
+    if (_conversations is EqualUnmodifiableListView) return _conversations;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_conversations);
+  }
+
+  // Status loading untuk menampilkan CircularProgressIndicator.
   @override
   final bool isLoading;
+  // Menyimpan pesan error jika terjadi kesalahan.
   @override
   final String? error;
-  // State untuk manajemen keluhan admin
+  // State spesifik untuk fitur filter di halaman pengaduan.
   final List<Complaint> _filteredComplaints;
-  // State untuk manajemen keluhan admin
+  // State spesifik untuk fitur filter di halaman pengaduan.
   @override
   @JsonKey()
   List<Complaint> get filteredComplaints {
@@ -1666,20 +1681,10 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
   @override
   @JsonKey()
   final String complaintStatusFilter;
-  // State baru untuk daftar percakapan chat
-  final List<ChatConversation> _conversations;
-  // State baru untuk daftar percakapan chat
-  @override
-  @JsonKey()
-  List<ChatConversation> get conversations {
-    if (_conversations is EqualUnmodifiableListView) return _conversations;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_conversations);
-  }
 
   @override
   String toString() {
-    return 'AdminPanelState(activeTabIndex: $activeTabIndex, rooms: $rooms, pendingBills: $pendingBills, requests: $requests, complaints: $complaints, announcements: $announcements, isLoading: $isLoading, error: $error, filteredComplaints: $filteredComplaints, complaintStatusFilter: $complaintStatusFilter, conversations: $conversations)';
+    return 'AdminPanelState(activeTabIndex: $activeTabIndex, rooms: $rooms, pendingBills: $pendingBills, requests: $requests, complaints: $complaints, announcements: $announcements, conversations: $conversations, isLoading: $isLoading, error: $error, filteredComplaints: $filteredComplaints, complaintStatusFilter: $complaintStatusFilter)';
   }
 
   @override
@@ -1703,6 +1708,10 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
               other._announcements,
               _announcements,
             ) &&
+            const DeepCollectionEquality().equals(
+              other._conversations,
+              _conversations,
+            ) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.error, error) || other.error == error) &&
@@ -1711,11 +1720,7 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
               _filteredComplaints,
             ) &&
             (identical(other.complaintStatusFilter, complaintStatusFilter) ||
-                other.complaintStatusFilter == complaintStatusFilter) &&
-            const DeepCollectionEquality().equals(
-              other._conversations,
-              _conversations,
-            ));
+                other.complaintStatusFilter == complaintStatusFilter));
   }
 
   @override
@@ -1727,11 +1732,11 @@ class _$AdminPanelStateImpl implements _AdminPanelState {
     const DeepCollectionEquality().hash(_requests),
     const DeepCollectionEquality().hash(_complaints),
     const DeepCollectionEquality().hash(_announcements),
+    const DeepCollectionEquality().hash(_conversations),
     isLoading,
     error,
     const DeepCollectionEquality().hash(_filteredComplaints),
     complaintStatusFilter,
-    const DeepCollectionEquality().hash(_conversations),
   );
 
   /// Create a copy of AdminPanelState
@@ -1754,15 +1759,16 @@ abstract class _AdminPanelState implements AdminPanelState {
     required final List<Request> requests,
     required final List<Complaint> complaints,
     required final List<Announcement> announcements,
+    required final List<ChatConversation> conversations,
     required final bool isLoading,
     final String? error,
     final List<Complaint> filteredComplaints,
     final String complaintStatusFilter,
-    final List<ChatConversation> conversations,
   }) = _$AdminPanelStateImpl;
 
+  // Indeks tab yang sedang aktif di UI.
   @override
-  int get activeTabIndex;
+  int get activeTabIndex; // Daftar semua data yang dikelola oleh admin.
   @override
   List<Room> get rooms;
   @override
@@ -1774,15 +1780,15 @@ abstract class _AdminPanelState implements AdminPanelState {
   @override
   List<Announcement> get announcements;
   @override
-  bool get isLoading;
+  List<ChatConversation> get conversations; // Status loading untuk menampilkan CircularProgressIndicator.
   @override
-  String? get error; // State untuk manajemen keluhan admin
+  bool get isLoading; // Menyimpan pesan error jika terjadi kesalahan.
+  @override
+  String? get error; // State spesifik untuk fitur filter di halaman pengaduan.
   @override
   List<Complaint> get filteredComplaints;
   @override
-  String get complaintStatusFilter; // State baru untuk daftar percakapan chat
-  @override
-  List<ChatConversation> get conversations;
+  String get complaintStatusFilter;
 
   /// Create a copy of AdminPanelState
   /// with the given fields replaced by the non-null parameter values.

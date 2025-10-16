@@ -21,13 +21,23 @@ AppUser _$AppUserFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AppUser {
-  String get id => throw _privateConstructorUsedError;
-  String get username => throw _privateConstructorUsedError;
-  String get password => throw _privateConstructorUsedError;
-  String get role => throw _privateConstructorUsedError;
-  String? get fullName => throw _privateConstructorUsedError;
-  String? get profileImageUrl => throw _privateConstructorUsedError;
-  String? get roomId => throw _privateConstructorUsedError;
+  // ID unik untuk setiap pengguna.
+  String get id =>
+      throw _privateConstructorUsedError; // Username yang digunakan untuk login.
+  String get username =>
+      throw _privateConstructorUsedError; // Password pengguna (di aplikasi nyata, ini harus di-hash).
+  String get password =>
+      throw _privateConstructorUsedError; // Peran pengguna: "admin", "tenant", atau "user".
+  String get role =>
+      throw _privateConstructorUsedError; // Nama lengkap pengguna.
+  String? get fullName =>
+      throw _privateConstructorUsedError; // URL ke gambar profil pengguna.
+  String? get profileImageUrl =>
+      throw _privateConstructorUsedError; // Kode kamar yang dihuni oleh pengguna (jika mereka adalah penghuni).
+  String? get roomId =>
+      throw _privateConstructorUsedError; // --- FIELD BARU ---
+  String? get address => throw _privateConstructorUsedError;
+  String? get phoneNumber => throw _privateConstructorUsedError;
 
   /// Serializes this AppUser to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,6 +61,8 @@ abstract class $AppUserCopyWith<$Res> {
     String? fullName,
     String? profileImageUrl,
     String? roomId,
+    String? address,
+    String? phoneNumber,
   });
 }
 
@@ -76,6 +88,8 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
     Object? fullName = freezed,
     Object? profileImageUrl = freezed,
     Object? roomId = freezed,
+    Object? address = freezed,
+    Object? phoneNumber = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -107,6 +121,14 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
                 ? _value.roomId
                 : roomId // ignore: cast_nullable_to_non_nullable
                       as String?,
+            address: freezed == address
+                ? _value.address
+                : address // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            phoneNumber: freezed == phoneNumber
+                ? _value.phoneNumber
+                : phoneNumber // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -129,6 +151,8 @@ abstract class _$$AppUserImplCopyWith<$Res> implements $AppUserCopyWith<$Res> {
     String? fullName,
     String? profileImageUrl,
     String? roomId,
+    String? address,
+    String? phoneNumber,
   });
 }
 
@@ -153,6 +177,8 @@ class __$$AppUserImplCopyWithImpl<$Res>
     Object? fullName = freezed,
     Object? profileImageUrl = freezed,
     Object? roomId = freezed,
+    Object? address = freezed,
+    Object? phoneNumber = freezed,
   }) {
     return _then(
       _$AppUserImpl(
@@ -184,6 +210,14 @@ class __$$AppUserImplCopyWithImpl<$Res>
             ? _value.roomId
             : roomId // ignore: cast_nullable_to_non_nullable
                   as String?,
+        address: freezed == address
+            ? _value.address
+            : address // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        phoneNumber: freezed == phoneNumber
+            ? _value.phoneNumber
+            : phoneNumber // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -200,29 +234,43 @@ class _$AppUserImpl extends _AppUser {
     this.fullName,
     this.profileImageUrl,
     this.roomId,
+    this.address,
+    this.phoneNumber,
   }) : super._();
 
   factory _$AppUserImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppUserImplFromJson(json);
 
+  // ID unik untuk setiap pengguna.
   @override
   final String id;
+  // Username yang digunakan untuk login.
   @override
   final String username;
+  // Password pengguna (di aplikasi nyata, ini harus di-hash).
   @override
   final String password;
+  // Peran pengguna: "admin", "tenant", atau "user".
   @override
   final String role;
+  // Nama lengkap pengguna.
   @override
   final String? fullName;
+  // URL ke gambar profil pengguna.
   @override
   final String? profileImageUrl;
+  // Kode kamar yang dihuni oleh pengguna (jika mereka adalah penghuni).
   @override
   final String? roomId;
+  // --- FIELD BARU ---
+  @override
+  final String? address;
+  @override
+  final String? phoneNumber;
 
   @override
   String toString() {
-    return 'AppUser(id: $id, username: $username, password: $password, role: $role, fullName: $fullName, profileImageUrl: $profileImageUrl, roomId: $roomId)';
+    return 'AppUser(id: $id, username: $username, password: $password, role: $role, fullName: $fullName, profileImageUrl: $profileImageUrl, roomId: $roomId, address: $address, phoneNumber: $phoneNumber)';
   }
 
   @override
@@ -240,7 +288,10 @@ class _$AppUserImpl extends _AppUser {
                 other.fullName == fullName) &&
             (identical(other.profileImageUrl, profileImageUrl) ||
                 other.profileImageUrl == profileImageUrl) &&
-            (identical(other.roomId, roomId) || other.roomId == roomId));
+            (identical(other.roomId, roomId) || other.roomId == roomId) &&
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -254,6 +305,8 @@ class _$AppUserImpl extends _AppUser {
     fullName,
     profileImageUrl,
     roomId,
+    address,
+    phoneNumber,
   );
 
   /// Create a copy of AppUser
@@ -279,25 +332,32 @@ abstract class _AppUser extends AppUser {
     final String? fullName,
     final String? profileImageUrl,
     final String? roomId,
+    final String? address,
+    final String? phoneNumber,
   }) = _$AppUserImpl;
   const _AppUser._() : super._();
 
   factory _AppUser.fromJson(Map<String, dynamic> json) = _$AppUserImpl.fromJson;
 
+  // ID unik untuk setiap pengguna.
   @override
-  String get id;
+  String get id; // Username yang digunakan untuk login.
   @override
-  String get username;
+  String get username; // Password pengguna (di aplikasi nyata, ini harus di-hash).
   @override
-  String get password;
+  String get password; // Peran pengguna: "admin", "tenant", atau "user".
   @override
-  String get role;
+  String get role; // Nama lengkap pengguna.
   @override
-  String? get fullName;
+  String? get fullName; // URL ke gambar profil pengguna.
   @override
-  String? get profileImageUrl;
+  String? get profileImageUrl; // Kode kamar yang dihuni oleh pengguna (jika mereka adalah penghuni).
   @override
-  String? get roomId;
+  String? get roomId; // --- FIELD BARU ---
+  @override
+  String? get address;
+  @override
+  String? get phoneNumber;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.

@@ -21,9 +21,12 @@ Announcement _$AnnouncementFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Announcement {
-  String get id => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
-  String get content => throw _privateConstructorUsedError;
+  // ID unik untuk setiap pengumuman.
+  String get id => throw _privateConstructorUsedError; // Judul pengumuman.
+  String get title =>
+      throw _privateConstructorUsedError; // Isi atau konten detail dari pengumuman.
+  String get content =>
+      throw _privateConstructorUsedError; // Tanggal kapan pengumuman ini dibuat.
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this Announcement to a JSON map.
@@ -157,12 +160,16 @@ class _$AnnouncementImpl implements _Announcement {
   factory _$AnnouncementImpl.fromJson(Map<String, dynamic> json) =>
       _$$AnnouncementImplFromJson(json);
 
+  // ID unik untuk setiap pengumuman.
   @override
   final String id;
+  // Judul pengumuman.
   @override
   final String title;
+  // Isi atau konten detail dari pengumuman.
   @override
   final String content;
+  // Tanggal kapan pengumuman ini dibuat.
   @override
   final DateTime createdAt;
 
@@ -212,12 +219,13 @@ abstract class _Announcement implements Announcement {
   factory _Announcement.fromJson(Map<String, dynamic> json) =
       _$AnnouncementImpl.fromJson;
 
+  // ID unik untuk setiap pengumuman.
   @override
-  String get id;
+  String get id; // Judul pengumuman.
   @override
-  String get title;
+  String get title; // Isi atau konten detail dari pengumuman.
   @override
-  String get content;
+  String get content; // Tanggal kapan pengumuman ini dibuat.
   @override
   DateTime get createdAt;
 
