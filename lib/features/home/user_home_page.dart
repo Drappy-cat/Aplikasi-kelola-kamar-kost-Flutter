@@ -6,14 +6,13 @@ import 'package:tes/app/app_routes.dart';
 import 'package:tes/features/home/bloc/user_home_bloc.dart';
 import 'package:tes/features/home/widgets/announcement_widget.dart';
 import 'package:tes/features/home/widgets/bill_summary_card.dart';
-import 'package:tes/features/home/widgets/quick_action_buttons.dart';
 import 'package:tes/features/home/widgets/room_card.dart';
 import 'package:tes/shared/models/bill.dart';
 import 'package:tes/shared/models/room.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/locator.dart';
+import 'package:tes/shared/widgets/app_drawer.dart';
 
-// Wrapper untuk menyediakan BLoC
 class UserHomePage extends StatelessWidget {
   const UserHomePage({super.key});
 
@@ -26,7 +25,6 @@ class UserHomePage extends StatelessWidget {
   }
 }
 
-// Widget utama yang menampilkan UI
 class UserHomeView extends StatefulWidget {
   const UserHomeView({super.key});
 
@@ -45,35 +43,25 @@ class _UserHomeViewState extends State<UserHomeView> {
 
     return Scaffold(
       appBar: AppBar(
+        title: Text('Hai, $userName'),
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: InkWell(
-            onTap: () => context.push(AppRoutes.profile),
-            child: CircleAvatar(
-              backgroundColor: colorScheme.onPrimary.withOpacity(0.1),
-              backgroundImage: authService.currentUser?.profileImageUrl != null
-                  ? NetworkImage(authService.currentUser!.profileImageUrl!)
-                  : null,
-              child: authService.currentUser?.profileImageUrl == null
-                  ? Icon(Icons.person, color: colorScheme.onPrimary)
-                  : null,
-            ),
+        // PERBAIKAN: Menggunakan `shape` untuk membuat sudut melengkung.
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
           ),
         ),
-        title: Text('Hai, $userName'),
+        toolbarHeight: 100, // Menambah tinggi AppBar agar lengkungan terlihat bagus
         actions: [
           IconButton(
             onPressed: () => context.push(AppRoutes.notification),
             icon: const Icon(Icons.notifications_outlined),
           ),
-          IconButton(
-            onPressed: () => context.push(AppRoutes.settings),
-            icon: const Icon(Icons.settings_outlined),
-          ),
         ],
       ),
+      drawer: const AppDrawer(),
+      // PERBAIKAN: Menghapus Stack dan Container latar belakang yang tidak perlu.
       body: BlocBuilder<UserHomeBloc, UserHomeState>(
         builder: (context, state) {
           return state.when(
@@ -90,17 +78,16 @@ class _UserHomeViewState extends State<UserHomeView> {
                 onRefresh: () async {
                   context.read<UserHomeBloc>().add(const UserHomeEvent.loadData());
                 },
-                child: Stack( // Gunakan Stack untuk menumpuk FAB di atas ListView
+                child: Stack(
                   children: [
                     ListView(
                       padding: const EdgeInsets.all(16.0),
                       children: [
                         if (latestAnnouncement != null) AnnouncementWidget(latestAnnouncement: latestAnnouncement),
                         if (isTenant)
-                          _buildTenantContent(userRoom, latestBill)
+                          _buildTenantContent(context, userRoom, latestBill)
                         else
                           _buildGuestContent(allRooms),
-                        // Beri ruang di bawah agar tidak tertutup FAB
                         const SizedBox(height: 80),
                       ],
                     ),
@@ -109,10 +96,7 @@ class _UserHomeViewState extends State<UserHomeView> {
                         bottom: 16,
                         right: 16,
                         child: FloatingActionButton.extended(
-                          onPressed: () {
-                            // Saat penghuni chat, lawan bicaranya adalah admin
-                            context.push('${AppRoutes.chat}/admin');
-                          },
+                          onPressed: () => context.push('${AppRoutes.chat}/admin'),
                           label: const Text('Hubungi Admin'),
                           icon: const Icon(Icons.chat_bubble_outline),
                         ),
@@ -127,19 +111,38 @@ class _UserHomeViewState extends State<UserHomeView> {
     );
   }
 
-  // --- KONTEN UNTUK PENGHUNI ---
-  Widget _buildTenantContent(Room? userRoom, Bill? latestBill) {
+  Widget _buildTenantContent(BuildContext context, Room? userRoom, Bill? latestBill) {
     if (userRoom == null) {
       return const Center(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Text('Kamar Anda tidak ditemukan. Hubungi admin.'),
         ),
       );
     }
+    final bool canPay = latestBill != null && latestBill.status == 'Belum Dibayar';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: _buildQuickAction(context, icon: Icons.qr_code_scanner, label: 'Scan Hadir', onTap: () => context.push(AppRoutes.scanActivity)),
+              ),
+              Expanded(
+                child: _buildQuickAction(context, icon: Icons.payment, label: 'Bayar Tagihan', onTap: canPay ? () => context.push(AppRoutes.userBills) : null),
+              ),
+              Expanded(
+                child: _buildQuickAction(context, icon: Icons.report_problem_outlined, label: 'Lapor Masalah', onTap: () => context.push(AppRoutes.reportIssue)),
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: 32),
         const Text('Kamar Anda', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         RoomCard(room: userRoom),
@@ -147,13 +150,38 @@ class _UserHomeViewState extends State<UserHomeView> {
         const Text('Tagihan Terakhir', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         BillSummaryCard(latestBill: latestBill),
-        const SizedBox(height: 24),
-        QuickActionButtons(latestBill: latestBill),
       ],
     ).animate().fade();
   }
 
-  // --- KONTEN UNTUK TAMU (RESPONSIVE) ---
+  Widget _buildQuickAction(BuildContext context, {required IconData icon, required String label, VoidCallback? onTap}) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final bool isEnabled = onTap != null;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Material(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(28),
+          elevation: 4,
+          shadowColor: Colors.black.withOpacity(0.2),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(28),
+            onTap: onTap,
+            child: SizedBox(
+              width: 56,
+              height: 56,
+              child: Icon(icon, color: isEnabled ? colorScheme.primary : Colors.grey, size: 28),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(label, style: Theme.of(context).textTheme.bodySmall, textAlign: TextAlign.center),
+      ],
+    );
+  }
+
   Widget _buildGuestContent(List<Room> allRooms) {
     final filteredRooms = _selectedStatus == 'Semua'
         ? allRooms

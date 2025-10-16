@@ -19,9 +19,11 @@ import 'package:tes/features/billing/user_bill_screen.dart';
 import 'package:tes/features/billing/payment_history_screen.dart';
 import 'package:tes/shared/models/room.dart';
 
-// Konfigurasi GoRouter
+// Konfigurasi utama untuk navigasi aplikasi menggunakan GoRouter.
 final appRouter = GoRouter(
+  // Rute awal yang dibuka saat aplikasi pertama kali dijalankan.
   initialLocation: AppRoutes.splash,
+  // Daftar semua kemungkinan rute/halaman dalam aplikasi.
   routes: [
     GoRoute(
       path: AppRoutes.splash,
@@ -98,6 +100,7 @@ final appRouter = GoRouter(
       path: AppRoutes.scanActivity,
       builder: (context, state) => const ScanScreen(),
     ),
+    // Contoh rute dinamis yang menerima parameter.
     GoRoute(
       path: '${AppRoutes.chat}/:userId',
       builder: (context, state) {

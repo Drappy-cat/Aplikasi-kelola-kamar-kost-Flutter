@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// PERBAIKAN: Konstanta warna yang tidak lagi digunakan dihapus.
 const double cardRadius = 12.0;
 
 class AnimatedLeftPanel extends StatelessWidget {
@@ -15,12 +14,10 @@ class AnimatedLeftPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mengambil warna dari tema aplikasi saat ini untuk konsistensi.
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       decoration: BoxDecoration(
-        // Menggunakan gradasi dari warna primer dan sekunder tema.
         gradient: LinearGradient(
           colors: [colorScheme.primary, colorScheme.secondary],
           begin: Alignment.topLeft,
@@ -47,7 +44,7 @@ class AnimatedLeftPanel extends StatelessWidget {
                 title,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Colors.white, // Teks tetap putih agar kontras
+                      color: Colors.white,
                       fontWeight: FontWeight.w700,
                     ),
               ),
@@ -55,7 +52,7 @@ class AnimatedLeftPanel extends StatelessWidget {
               Text(
                 subtitle,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white70), // Teks tetap putih agar kontras
+                style: const TextStyle(color: Colors.white70),
               ),
             ],
           ),
@@ -79,8 +76,8 @@ class RightForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // PERBAIKAN: Container ini sekarang transparan dan akan mengambil warna dari Card parent-nya.
     return Container(
-      color: Colors.white,
       padding: const EdgeInsets.fromLTRB(36, 40, 36, 40),
       child: LayoutBuilder(
         builder: (context, constraints) {

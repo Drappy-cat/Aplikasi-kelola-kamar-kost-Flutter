@@ -19,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
+    // Inisialisasi controller untuk animasi fade-in pada teks.
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -28,20 +29,27 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       curve: Curves.easeIn,
     );
 
+    // Mulai animasi.
     _controller.forward();
 
+    // Panggil fungsi navigasi setelah animasi selesai.
     _navigateToNextScreen();
   }
 
+  /// Logika untuk navigasi otomatis setelah splash screen.
   Future<void> _navigateToNextScreen() async {
+    // Tunggu selama durasi animasi ditambah sedikit jeda.
     await Future.delayed(_controller.duration! + const Duration(milliseconds: 500));
-    if (!mounted) return;
+    if (!mounted) return; // Pastikan widget masih ada sebelum navigasi.
 
     final authService = getIt<AuthService>();
 
+    // Cek apakah ada pengguna yang sedang login.
     if (authService.currentUser == null) {
+      // Jika tidak ada, arahkan ke halaman login.
       context.go(AppRoutes.login);
     } else {
+      // Jika ada, arahkan ke halaman utama.
       context.go(AppRoutes.home);
     }
   }

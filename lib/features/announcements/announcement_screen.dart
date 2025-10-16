@@ -15,7 +15,6 @@ class AnnouncementScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pengumuman'),
-        // PERBAIKAN: Menggunakan warna primer dari tema
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
       ),

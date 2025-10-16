@@ -14,10 +14,12 @@ part 'admin_panel_event.dart';
 part 'admin_panel_state.dart';
 part 'admin_panel_bloc.freezed.dart';
 
+/// BLoC ini mengelola state untuk seluruh dasbor admin.
 class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
   final DummyService _dummyService = getIt<DummyService>();
 
   AdminPanelBloc() : super(AdminPanelState.initial()) {
+    // Mendaftarkan semua event handler.
     on<LoadAdminData>(_onLoadData);
     on<ChangeAdminTab>(_onChangeTab);
     on<ProcessRequest>(_onProcessRequest);
@@ -27,9 +29,11 @@ class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
     on<UpdateComplaintStatus>(_onUpdateComplaintStatus);
   }
 
+  /// Menangani event untuk memuat semua data yang diperlukan untuk panel admin.
   void _onLoadData(LoadAdminData event, Emitter<AdminPanelState> emit) {
     emit(state.copyWith(isLoading: true));
     try {
+      // Ambil semua data dari service.
       final rooms = _dummyService.rooms;
       final pendingBills = _dummyService.getPendingConfirmationBills();
       final requests = _dummyService.requests;
@@ -37,17 +41,19 @@ class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
       final announcements = _dummyService.getLatestAnnouncements();
       final conversations = _dummyService.conversations;
 
-      // Urutkan percakapan berdasarkan pesan terakhir
+      // Urutkan percakapan agar yang terbaru (pesan terakhir) muncul di atas.
       conversations.sort((a, b) {
         if (a.messages.isEmpty) return 1;
         if (b.messages.isEmpty) return -1;
         return b.messages.first.timestamp.compareTo(a.messages.first.timestamp);
       });
 
+      // Terapkan filter status pengaduan yang sedang aktif.
       final filteredComplaints = state.complaintStatusFilter == 'Semua'
           ? complaints
           : complaints.where((c) => c.status == state.complaintStatusFilter).toList();
 
+      // Kirim state baru dengan semua data yang telah dimuat.
       emit(state.copyWith(
         isLoading: false,
         rooms: rooms,
@@ -63,25 +69,31 @@ class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
     }
   }
 
+  /// Mengubah indeks tab yang aktif di UI.
   void _onChangeTab(ChangeAdminTab event, Emitter<AdminPanelState> emit) {
     emit(state.copyWith(activeTabIndex: event.newIndex));
   }
 
+  /// Memproses permintaan (misalnya, menyetujui atau menolak permintaan sewa).
   Future<void> _onProcessRequest(ProcessRequest event, Emitter<AdminPanelState> emit) async {
-    // ... (logika yang ada tidak berubah)
+    // TODO: Implementasikan logika untuk menyetujui/menolak permintaan di DummyService.
+    // Setelah diproses, muat ulang semua data untuk memperbarui UI.
     add(const AdminPanelEvent.loadData());
   }
 
+  /// Menyetujui pembayaran tagihan.
   Future<void> _onApproveBill(ApproveBill event, Emitter<AdminPanelState> emit) async {
     await _dummyService.approveBill(event.billId);
-    add(const AdminPanelEvent.loadData());
+    add(const AdminPanelEvent.loadData()); // Muat ulang data.
   }
 
+  /// Menolak pembayaran tagihan.
   Future<void> _onRejectBill(RejectBill event, Emitter<AdminPanelState> emit) async {
     await _dummyService.rejectBill(event.billId);
-    add(const AdminPanelEvent.loadData());
+    add(const AdminPanelEvent.loadData()); // Muat ulang data.
   }
 
+  /// Memfilter daftar pengaduan berdasarkan status yang dipilih.
   void _onFilterComplaints(FilterComplaints event, Emitter<AdminPanelState> emit) {
     final filtered = event.status == 'Semua'
         ? state.complaints
@@ -92,9 +104,10 @@ class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
     ));
   }
 
+  /// Memperbarui status sebuah pengaduan.
   Future<void> _onUpdateComplaintStatus(
       UpdateComplaintStatus event, Emitter<AdminPanelState> emit) async {
     await _dummyService.updateComplaintStatus(event.complaintId, event.newStatus);
-    add(const AdminPanelEvent.loadData());
+    add(const AdminPanelEvent.loadData()); // Muat ulang data.
   }
 }

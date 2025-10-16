@@ -14,7 +14,7 @@ import 'package:tes/shared/models/announcement.dart';
 import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/locator.dart';
 
-// Kunci untuk menyimpan data di SharedPreferences
+// Kunci privat yang digunakan untuk menyimpan dan mengambil data dari SharedPreferences.
 const String _kRoomsKey = 'rooms_data';
 const String _kBillsKey = 'bills_data';
 const String _kComplaintsKey = 'complaints_data';
@@ -24,9 +24,13 @@ const String _kNotificationsKey = 'notifications_data';
 const String _kActivityLogsKey = 'activity_logs_data';
 const String _kConversationsKey = 'conversations_data';
 
+/// Service ini bertindak sebagai "otak" dan "database palsu" untuk aplikasi.
+/// Semua data (kamar, tagihan, dll.) dikelola di sini dan disimpan secara lokal
+/// menggunakan SharedPreferences untuk persistensi antar sesi.
 class DummyService {
   final SharedPreferences _prefs;
 
+  // Properti ini menyimpan state data aplikasi saat runtime.
   late List<Room> rooms;
   late List<Bill> bills;
   late List<Complaint> complaints;
@@ -38,10 +42,13 @@ class DummyService {
 
   DummyService(this._prefs);
 
+  /// Metode inisialisasi utama untuk service. Wajib dipanggil saat aplikasi dimulai.
   Future<void> init() async {
     await _loadData();
   }
 
+  /// Memuat semua data dari SharedPreferences. Jika data tidak ada (misal, saat pertama kali
+  /// aplikasi dijalankan), maka akan dibuat data awal dari fungsi `_createInitial...`.
   Future<void> _loadData() async {
     rooms = _loadList(_prefs.getString(_kRoomsKey), (json) => Room.fromJson(json), _createInitialRooms);
     bills = _loadList(_prefs.getString(_kBillsKey), (json) => Bill.fromJson(json), _createInitialBills);
@@ -52,11 +59,13 @@ class DummyService {
     activityLogs = _loadList(_prefs.getString(_kActivityLogsKey), (json) => ActivityLog.fromJson(json), _createInitialActivityLogs);
     conversations = _loadList(_prefs.getString(_kConversationsKey), (json) => ChatConversation.fromJson(json), _createInitialConversations);
 
+    // Jika ini adalah pertama kalinya aplikasi dijalankan, simpan data awal.
     if (_prefs.getString(_kRoomsKey) == null) {
       await _saveData();
     }
   }
 
+  /// Menyimpan semua state data saat ini ke SharedPreferences dengan mengubahnya menjadi string JSON.
   Future<void> _saveData() async {
     await _prefs.setString(_kRoomsKey, jsonEncode(rooms.map((e) => e.toJson()).toList()));
     await _prefs.setString(_kBillsKey, jsonEncode(bills.map((e) => e.toJson()).toList()));
@@ -68,28 +77,28 @@ class DummyService {
     await _prefs.setString(_kConversationsKey, jsonEncode(conversations.map((e) => e.toJson()).toList()));
   }
 
+  /// Helper method generik untuk memuat list data dari string JSON.
   List<T> _loadList<T>(String? jsonString, T Function(Map<String, dynamic>) fromJson, List<T> Function() defaultCreator) {
     if (jsonString != null) {
       try {
         final List<dynamic> decoded = jsonDecode(jsonString);
         return decoded.map((e) => fromJson(e as Map<String, dynamic>)).toList();
       } catch (e) {
+        // Jika terjadi error saat parsing, kembalikan data default.
         return defaultCreator();
       }
     } else {
+      // Jika tidak ada data tersimpan, buat data default.
       return defaultCreator();
     }
   }
 
-  // --- METODE BARU UNTUK LAPORAN ---
+  // --- METODE LAPORAN ---
+  /// Menghitung dan mengembalikan ringkasan data untuk halaman laporan admin.
   Map<String, dynamic> getAdminReportSummary() {
     // Laporan Keuangan
-    final double totalRevenue = bills
-        .where((b) => b.status == 'Lunas')
-        .fold(0.0, (prev, bill) => prev + bill.amount);
-    final double pendingRevenue = bills
-        .where((b) => b.status == 'Belum Lunas')
-        .fold(0.0, (prev, bill) => prev + bill.amount);
+    final double totalRevenue = bills.where((b) => b.status == 'Lunas').fold(0.0, (prev, bill) => prev + bill.amount);
+    final double pendingRevenue = bills.where((b) => b.status == 'Belum Lunas').fold(0.0, (prev, bill) => prev + bill.amount);
 
     // Laporan Okupansi
     final int totalRooms = rooms.length;
@@ -113,17 +122,50 @@ class DummyService {
     };
   }
 
-  // --- Metode untuk Chat ---
+  // --- METODE CRUD (Create, Read, Update, Delete) ---
+
+  /// Membuat tagihan bulanan untuk semua penghuni aktif.
+  /// Mengembalikan jumlah tagihan baru yang berhasil dibuat.
+  Future<int> generateMonthlyBills() async {
+    final authService = getIt<AuthService>();
+    final tenants = authService.allUsers.where((user) => user.role == 'tenant' && user.roomId != null).toList();
+    final currentPeriod = DateFormat('MMMM yyyy', 'id_ID').format(DateTime.now());
+    int newBillsCount = 0;
+
+    for (final tenant in tenants) {
+      // Cek apakah tagihan untuk periode ini sudah ada untuk pengguna ini.
+      final billExists = bills.any((bill) => bill.userId == tenant.id && bill.period == currentPeriod);
+
+      if (!billExists) {
+        final room = findRoom(tenant.roomId!);
+        if (room != null) {
+          final newBill = Bill(
+            id: 'bill-${DateTime.now().millisecondsSinceEpoch}-${tenant.id}',
+            userId: tenant.id,
+            roomId: tenant.roomId!,
+            period: currentPeriod,
+            amount: room.totalPrice.toDouble(),
+            status: 'Belum Lunas',
+            createdAt: DateTime.now(),
+          );
+          bills.add(newBill);
+          newBillsCount++;
+        }
+      }
+    }
+
+    if (newBillsCount > 0) {
+      await _saveData();
+    }
+    return newBillsCount;
+  }
+
+  // Metode untuk Chat
   ChatConversation getConversationForUser(String userId, String userName) {
     try {
       return conversations.firstWhere((c) => c.userId == userId);
     } catch (e) {
-      final newConversation = ChatConversation(
-        id: userId,
-        userId: userId,
-        userName: userName,
-        messages: [],
-      );
+      final newConversation = ChatConversation(id: userId, userId: userId, userName: userName, messages: []);
       conversations.add(newConversation);
       return newConversation;
     }
@@ -137,7 +179,7 @@ class DummyService {
     }
   }
 
-  // --- Metode untuk Request ---
+  // Metode untuk Request
   Future<void> addRequest({
     required String type,
     required String note,
@@ -164,21 +206,14 @@ class DummyService {
     await _saveData();
   }
 
-  // ... (metode-metode lain yang sudah ada)
-
+  // Metode untuk Notifikasi
   Future<void> addNotification({
     required String title,
     required String subtitle,
     required IconData icon,
     required Color iconColor,
   }) async {
-    final newNotification = AppNotification(
-      title: title,
-      subtitle: subtitle,
-      date: DateTime.now(),
-      icon: icon,
-      iconColor: iconColor,
-    );
+    final newNotification = AppNotification(title: title, subtitle: subtitle, date: DateTime.now(), icon: icon, iconColor: iconColor);
     notifications.insert(0, newNotification);
     await _saveData();
   }
@@ -190,18 +225,14 @@ class DummyService {
     }
   }
 
+  // Metode untuk Log Aktivitas
   Future<void> addActivityLog({required String userId, required String userName, required String action}) async {
-    final newLog = ActivityLog(
-      id: 'log-${DateTime.now().millisecondsSinceEpoch}',
-      userId: userId,
-      userName: userName,
-      action: action,
-      timestamp: DateTime.now(),
-    );
+    final newLog = ActivityLog(id: 'log-${DateTime.now().millisecondsSinceEpoch}', userId: userId, userName: userName, action: action, timestamp: DateTime.now());
     activityLogs.insert(0, newLog);
     await _saveData();
   }
 
+  // Metode untuk Tagihan (Bill)
   List<Bill> getBillsForUser(String userId) {
     final userBills = bills.where((b) => b.userId == userId).toList();
     userBills.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -247,6 +278,7 @@ class DummyService {
     }
   }
 
+  // Metode untuk Pengaduan (Complaint)
   Future<void> addComplaint({ required String userId, required String roomId, required String title, required String description, required String category, List<String> imageUrls = const [], }) async {
     final newComplaint = Complaint(id: 'comp-${DateTime.now().millisecondsSinceEpoch}', userId: userId, roomId: roomId, title: title, description: description, category: category, status: 'Pending', imageUrls: imageUrls, createdAt: DateTime.now());
     complaints.insert(0, newComplaint);
@@ -264,6 +296,7 @@ class DummyService {
   List<Complaint> getAllComplaints() => complaints;
   List<Complaint> getComplaintsForUser(String userId) => complaints.where((c) => c.userId == userId).toList();
 
+  // Metode untuk Pengumuman
   List<Announcement> getLatestAnnouncements() {
     announcements.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return announcements.where((a) => a.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30)))).toList();
@@ -275,6 +308,7 @@ class DummyService {
     await _saveData();
   }
 
+  // Metode untuk Kamar (Room)
   Room? findRoom(String code) {
     try {
       return rooms.firstWhere((r) => r.code == code);
@@ -297,7 +331,10 @@ class DummyService {
   }
 }
 
-// Data awal untuk setiap list
+// --- FUNGSI UNTUK MEMBUAT DATA AWAL (INITIAL DATA) ---
+// Fungsi-fungsi ini hanya dijalankan sekali saat aplikasi pertama kali diinstal
+// untuk mengisi aplikasi dengan data contoh.
+
 List<ChatConversation> _createInitialConversations() => [];
 List<ActivityLog> _createInitialActivityLogs() => [];
 List<AppNotification> _createInitialNotifications() => [AppNotification(title: 'Selamat Datang di Ri-Kost!', subtitle: 'Jelajahi semua fitur yang tersedia untuk Anda.', date: DateTime.now().subtract(const Duration(days: 2)), icon: Icons.waving_hand, iconColor: Colors.orange)];

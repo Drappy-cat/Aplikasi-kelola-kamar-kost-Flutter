@@ -19,55 +19,70 @@ class MyApp extends StatelessWidget {
     return AnimatedBuilder(
       animation: Listenable.merge([themeService, languageService]),
       builder: (context, child) {
-        final seed = const Color(0xFF3D9970);
-
+        const seedColor = Color(0xFF3D9970);
         final inputDecorationTheme = InputDecorationTheme(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: true,
         );
 
+        const appBarTheme = AppBarTheme(
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+        );
+
+        // --- TEMA UNTUK MODE TERANG ---
         final lightTheme = ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: seed,
+            seedColor: seedColor,
             brightness: Brightness.light,
+          ),
+          scaffoldBackgroundColor: const Color(0xFFF5F6FA),
+          appBarTheme: appBarTheme.copyWith(
+            foregroundColor: Colors.black87,
           ),
           inputDecorationTheme: inputDecorationTheme,
           filledButtonTheme: FilledButtonThemeData(
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
+          // PERBAIKAN: Menggunakan nama kelas CardThemeData yang benar
           cardTheme: CardThemeData(
-            elevation: 2,
+            elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
+              side: BorderSide(color: Colors.grey.shade300, width: 0.8),
             ),
           ),
         );
 
+        // --- TEMA UNTUK MODE GELAP ---
         final darkTheme = ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: seed,
+            seedColor: seedColor,
             brightness: Brightness.dark,
+          ),
+          scaffoldBackgroundColor: const Color(0xFF121212),
+          appBarTheme: appBarTheme.copyWith(
+            foregroundColor: Colors.white,
           ),
           inputDecorationTheme: inputDecorationTheme,
           filledButtonTheme: FilledButtonThemeData(
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
           cardTheme: CardThemeData(
-            elevation: 2,
+            elevation: 0,
+            color: const Color(0xFF1E1E1E),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
+              side: BorderSide(color: Colors.grey.shade800, width: 0.8),
             ),
           ),
         );
@@ -80,10 +95,10 @@ class MyApp extends StatelessWidget {
               title: 'Aplikasi Kost',
               themeMode: themeService.themeMode,
               theme: lightTheme.copyWith(
-                textTheme: GoogleFonts.poppinsTextTheme(lightTheme.textTheme),
+                textTheme: GoogleFonts.interTextTheme(lightTheme.textTheme),
               ),
               darkTheme: darkTheme.copyWith(
-                textTheme: GoogleFonts.poppinsTextTheme(darkTheme.textTheme),
+                textTheme: GoogleFonts.interTextTheme(darkTheme.textTheme),
               ),
               localizationsDelegates: const [
                 AppLocalizations.delegate,

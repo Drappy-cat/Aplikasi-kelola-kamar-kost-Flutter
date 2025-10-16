@@ -1,36 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Kunci untuk menyimpan kode bahasa di SharedPreferences
+// Kunci privat yang digunakan untuk menyimpan kode bahasa di SharedPreferences.
 const String _kLanguageCodeKey = 'language_code';
 
-class LanguageService extends ChangeNotifier {
+/// Service ini mengelola status bahasa aplikasi (misalnya, 'id' atau 'en').
+/// Menggunakan `ChangeNotifier` agar widget lain (seperti `MyApp`) dapat mendengarkan
+/// perubahan bahasa dan secara otomatis membangun ulang UI.
+class LanguageService with ChangeNotifier {
   final SharedPreferences _prefs;
+
+  // State internal untuk menyimpan locale (bahasa) saat ini.
+  // Default bahasa aplikasi adalah Indonesia ('id').
+  late Locale _locale = const Locale('id');
 
   LanguageService(this._prefs);
 
-  // Locale default adalah Bahasa Indonesia
-  late Locale _locale = const Locale('id');
-
+  // Getter publik untuk mengetahui bahasa yang sedang aktif.
   Locale get locale => _locale;
 
-  // Metode untuk memuat locale yang tersimpan saat aplikasi dimulai
+  /// Memuat preferensi bahasa yang tersimpan dari SharedPreferences saat aplikasi dimulai.
   void loadSavedLocale() {
     final savedLanguageCode = _prefs.getString(_kLanguageCodeKey);
     if (savedLanguageCode != null) {
       _locale = Locale(savedLanguageCode);
     }
-    // Tidak perlu notifyListeners() di sini karena ini dipanggil saat init
+    // Tidak perlu `notifyListeners()` di sini karena ini dipanggil sekali saat inisialisasi,
+    // sebelum UI utama dibangun.
   }
 
-  // Metode untuk mengubah dan menyimpan locale baru
+  /// Mengubah bahasa aplikasi, menyimpannya ke SharedPreferences, dan memperbarui UI.
   Future<void> setLocale(Locale newLocale) async {
-    if (_locale == newLocale) return; // Tidak ada perubahan, jangan lakukan apa-apa
+    // Jika bahasa yang dipilih sama dengan yang sekarang, tidak perlu melakukan apa-apa.
+    if (_locale == newLocale) return;
 
     _locale = newLocale;
+    // Simpan kode bahasa baru (misal, 'en') ke SharedPreferences untuk persistensi.
     await _prefs.setString(_kLanguageCodeKey, newLocale.languageCode);
-    
-    // Beri tahu semua pendengar (seperti MyApp) bahwa locale telah berubah
+    // Beri tahu semua pendengar (listeners) bahwa bahasa telah berubah agar UI diperbarui.
     notifyListeners();
   }
 }

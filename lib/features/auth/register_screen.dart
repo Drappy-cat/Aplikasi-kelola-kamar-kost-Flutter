@@ -38,7 +38,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => _loading = true);
 
     try {
-      // Menggunakan instance AuthService dari GetIt
       await getIt<AuthService>().register(
         username: _u.text.trim(),
         password: _p.text.trim(),
@@ -58,8 +57,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // PERBAIKAN: Hapus backgroundColor yang di-hardcode agar mengikuti tema.
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
       body: SafeArea(
         child: Center(
           child: Padding(

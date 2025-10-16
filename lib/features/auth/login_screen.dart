@@ -58,57 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // --- FITUR PETA DINONAKTIFKAN SEMENTARA ---
-  // Future<void> _launchMaps() async {
-  //   final coords = Coords(-6.2088, 106.8456);
-  //   const title = "Lokasi Ri-Kost";
-
-  //   try {
-  //     final availableMaps = await MapLauncher.getAvailableMaps();
-
-  //     if (availableMaps.isNotEmpty) {
-  //       showModalBottomSheet(
-  //         context: context,
-  //         builder: (BuildContext context) {
-  //           return SafeArea(
-  //             child: SingleChildScrollView(
-  //               child: Wrap(
-  //                 children: <Widget>[
-  //                   for (var map in availableMaps)
-  //                     ListTile(
-  //                       onTap: () => map.showMarker(
-  //                         coords: coords,
-  //                         title: title,
-  //                       ),
-  //                       title: Text(map.mapName),
-  //                       leading: Image.asset(
-  //                         map.icon,
-  //                         height: 30.0,
-  //                         width: 30.0,
-  //                       ),
-  //                     ),
-  //                 ],
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //       );
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text('Tidak ada aplikasi peta yang tersedia.')),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Error: $e')),
-  //     );
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -216,13 +168,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-            // --- TOMBOL PETA DINONAKTIFKAN SEMENTARA ---
-            // const Divider(height: 32),
-            // OutlinedButton.icon(
-            //   icon: const Icon(Icons.map_outlined),
-            //   label: const Text('Lihat Lokasi di Peta'),
-            //   onPressed: _launchMaps,
-            // ),
           ],
         ),
       ),

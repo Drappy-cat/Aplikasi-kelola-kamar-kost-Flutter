@@ -1,5 +1,6 @@
 /// Kelas ini berisi semua konstanta untuk nama rute yang digunakan di aplikasi.
-/// Menggunakan ini mencegah kesalahan ketik (typo) dan memudahkan pengelolaan rute.
+/// Penggunaan kelas ini bertujuan untuk menghindari kesalahan ketik (typo)
+/// dan memusatkan semua definisi rute di satu tempat.
 class AppRoutes {
   // Private constructor untuk mencegah instance dari kelas ini dibuat.
   AppRoutes._();
@@ -11,6 +12,7 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String settings = '/settings';
   static const String terms = '/terms';
+  static const String help = '/help';
   static const String notification = '/notification';
   static const String adminComplaints = '/admin_complaints';
   static const String announcements = '/announcements';
@@ -19,9 +21,5 @@ class AppRoutes {
   static const String reportIssue = '/report_issue';
   static const String roomDetail = '/room_detail';
   static const String scanActivity = '/scan_activity';
-
-  // Rute baru untuk fitur chat
   static const String chat = '/chat';
-  // Rute baru untuk halaman bantuan
-  static const String help = '/help';
 }

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:tes/app/my_app.dart';
-import 'package:tes/shared/services/language_service.dart'; // <-- IMPORT BARU
+import 'package:tes/shared/services/language_service.dart';
 import 'package:tes/shared/services/locator.dart';
 
 Future<void> main() async {
+  // Pastikan semua binding Flutter siap sebelum menjalankan kode.
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inisialisasi service locator Anda
+  // 1. Inisialisasi semua service (seperti DummyService, AuthService, dll.)
+  //    agar siap digunakan di seluruh aplikasi.
   await setupLocator();
 
-  // PERBAIKAN: Muat preferensi bahasa yang tersimpan
+  // 2. Muat preferensi bahasa yang terakhir disimpan oleh pengguna.
   getIt<LanguageService>().loadSavedLocale();
 
-  // Jalankan aplikasi
+  // 3. Jalankan widget utama aplikasi.
   runApp(const MyApp());
 }

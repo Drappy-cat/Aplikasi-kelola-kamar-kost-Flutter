@@ -11,8 +11,8 @@ part 'user_home_event.dart';
 part 'user_home_state.dart';
 part 'user_home_bloc.freezed.dart';
 
+/// BLoC ini mengelola state untuk halaman utama pengguna (baik penghuni maupun tamu).
 class UserHomeBloc extends Bloc<UserHomeEvent, UserHomeState> {
-  // Mengambil instance service dari GetIt
   final AuthService _authService = getIt<AuthService>();
   final DummyService _dummyService = getIt<DummyService>();
 
@@ -20,6 +20,7 @@ class UserHomeBloc extends Bloc<UserHomeEvent, UserHomeState> {
     on<LoadUserHomeData>(_onLoadData);
   }
 
+  /// Menangani event untuk memuat data yang relevan untuk halaman utama pengguna.
   Future<void> _onLoadData(LoadUserHomeData event, Emitter<UserHomeState> emit) async {
     emit(const UserHomeState.loading());
     try {
@@ -29,21 +30,27 @@ class UserHomeBloc extends Bloc<UserHomeEvent, UserHomeState> {
         return;
       }
 
+      // Ambil data umum seperti pengumuman terbaru.
       final announcements = _dummyService.getLatestAnnouncements();
       final latestAnnouncement = announcements.isNotEmpty ? announcements.first : null;
 
+      // Tentukan apakah pengguna adalah seorang penghuni (tenant) atau hanya tamu.
       final bool isTenant = user.roomId != null;
       Room? userRoom;
       Bill? latestBill;
       List<Room> allRooms = [];
 
+      // Muat data yang berbeda berdasarkan peran pengguna.
       if (isTenant) {
+        // Jika penghuni, muat data kamar dan tagihan spesifik mereka.
         userRoom = _dummyService.findRoom(user.roomId!);
         latestBill = _dummyService.getLatestBillForUser(user.id);
       } else {
+        // Jika tamu, muat daftar semua kamar yang tersedia.
         allRooms = _dummyService.rooms;
       }
 
+      // Kirim state `loaded` dengan data yang sesuai.
       emit(UserHomeState.loaded(
         isTenant: isTenant,
         latestAnnouncement: latestAnnouncement,

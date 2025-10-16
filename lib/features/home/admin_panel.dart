@@ -10,12 +10,13 @@ import 'package:tes/features/home/admin_widgets/bills_page.dart';
 import 'package:tes/features/home/admin_widgets/requests_page.dart';
 import 'package:tes/features/home/admin_widgets/rooms_page.dart';
 import 'package:tes/features/home/bloc/admin_panel_bloc.dart';
-import 'package:tes/features/reports/report_screen.dart'; // <-- IMPORT BARU
+import 'package:tes/features/reports/report_screen.dart';
 import 'package:tes/shared/services/dummy_service.dart';
 import 'package:tes/shared/services/locator.dart';
+import 'package:tes/shared/services/notification_service.dart';
 import 'package:tes/shared/services/theme_service.dart';
+import 'package:tes/shared/widgets/app_drawer.dart';
 
-// Wrapper untuk menyediakan BLoC
 class AdminPanel extends StatelessWidget {
   const AdminPanel({super.key});
 
@@ -28,7 +29,6 @@ class AdminPanel extends StatelessWidget {
   }
 }
 
-// Widget utama yang menampilkan UI
 class AdminPanelView extends StatelessWidget {
   const AdminPanelView({super.key});
 
@@ -37,20 +37,20 @@ class AdminPanelView extends StatelessWidget {
     final themeService = getIt<ThemeService>();
     final bloc = context.read<AdminPanelBloc>();
     final state = context.watch<AdminPanelBloc>().state;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: InkWell(
-            onTap: () => context.push(AppRoutes.profile),
-            child: const CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person),
-            ),
+        title: const Text('Admin Panel'),
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+        // PERBAIKAN: Menggunakan `shape` untuk membuat sudut melengkung.
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
           ),
         ),
-        title: const Text('Ri-Kost - Admin Panel'),
+        toolbarHeight: 100, // Menambah tinggi AppBar
         actions: [
           IconButton(
             onPressed: () => context.push(AppRoutes.notification),
@@ -67,6 +67,8 @@ class AdminPanelView extends StatelessWidget {
           ),
         ],
       ),
+      drawer: const AppDrawer(),
+      // PERBAIKAN: Menghapus Stack dan Container latar belakang yang tidak perlu.
       body: state.isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
@@ -76,7 +78,7 @@ class AdminPanelView extends StatelessWidget {
               child: IndexedStack(
                 index: state.activeTabIndex,
                 children: [
-                  const ReportScreen(), // <-- HALAMAN BARU
+                  const ReportScreen(),
                   RoomsPage(rooms: state.rooms),
                   BillsPage(pendingBills: state.pendingBills),
                   RequestsPage(requests: state.requests),
@@ -91,7 +93,7 @@ class AdminPanelView extends StatelessWidget {
         selectedIndex: state.activeTabIndex,
         onDestinationSelected: (index) => bloc.add(AdminPanelEvent.changeTab(index)),
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.bar_chart_outlined), label: 'Laporan'), // <-- TAB BARU
+          NavigationDestination(icon: Icon(Icons.bar_chart_outlined), label: 'Laporan'),
           NavigationDestination(icon: Icon(Icons.bed_outlined), label: 'Kamar'),
           NavigationDestination(icon: Icon(Icons.receipt_long_outlined), label: 'Tagihan'),
           NavigationDestination(icon: Icon(Icons.inbox_outlined), label: 'Pengajuan'),
@@ -107,10 +109,16 @@ class AdminPanelView extends StatelessWidget {
 
   Widget? _getFabForTab(BuildContext context, int index) {
     switch (index) {
-      // PERBAIKAN: Indeks bergeser karena ada tab Laporan di indeks 0
-      case 6: // Pengumuman
+      case 2:
+        return FloatingActionButton(
+          onPressed: () => _showGenerateBillsDialog(context),
+          tooltip: 'Buat Tagihan Bulanan',
+          child: const Icon(Icons.add_card),
+        );
+      case 6:
         return FloatingActionButton(
           onPressed: () => _showAddAnnouncementDialog(context),
+          tooltip: 'Buat Pengumuman Baru',
           child: const Icon(Icons.add_alert),
         );
       default:
@@ -140,13 +148,45 @@ class AdminPanelView extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                getIt<DummyService>().addAnnouncement(title: titleCtrl.text, content: contentCtrl.text).then((_) {
+                final title = titleCtrl.text;
+                final content = contentCtrl.text;
+                getIt<DummyService>().addAnnouncement(title: title, content: content).then((_) {
                   context.read<AdminPanelBloc>().add(const AdminPanelEvent.loadData());
+                  getIt<NotificationService>().showNotification('Pengumuman Baru: $title', content);
                 });
                 Navigator.of(dialogContext).pop();
               }
             },
             child: const Text('Publikasikan'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showGenerateBillsDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Buat Tagihan Bulanan'),
+        content: const Text('Apakah Anda yakin ingin membuat tagihan untuk semua penghuni aktif untuk bulan ini? Aksi ini tidak dapat dibatalkan.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: const Text('Batal')),
+          FilledButton(
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              final newBillsCount = await getIt<DummyService>().generateMonthlyBills();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Berhasil membuat $newBillsCount tagihan baru.'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                context.read<AdminPanelBloc>().add(const AdminPanelEvent.loadData());
+              }
+            },
+            child: const Text('Ya, Buat Tagihan'),
           ),
         ],
       ),
