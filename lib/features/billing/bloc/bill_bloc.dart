@@ -9,7 +9,6 @@ part 'bill_event.dart';
 part 'bill_state.dart';
 part 'bill_bloc.freezed.dart';
 
-/// BLoC ini mengelola state untuk halaman tagihan pengguna.
 class BillBloc extends Bloc<BillEvent, BillState> {
   final AuthService _authService = getIt<AuthService>();
   final DummyService _dummyService = getIt<DummyService>();
@@ -20,7 +19,6 @@ class BillBloc extends Bloc<BillEvent, BillState> {
     on<SubmitTransferProof>(_onSubmitTransferProof);
   }
 
-  /// Menangani event untuk memuat semua tagihan milik pengguna yang sedang login.
   Future<void> _onLoadBills(LoadBills event, Emitter<BillState> emit) async {
     emit(const BillState.loading());
     try {
@@ -36,22 +34,18 @@ class BillBloc extends Bloc<BillEvent, BillState> {
     }
   }
 
-  /// Menangani event saat pengguna mengonfirmasi pembayaran secara tunai.
   Future<void> _onConfirmCashPayment(ConfirmCashPayment event, Emitter<BillState> emit) async {
     try {
       await _dummyService.confirmCashPayment(event.billId);
-      // Setelah berhasil, muat ulang daftar tagihan untuk memperbarui UI.
       add(const BillEvent.loadBills());
     } catch (e) {
       emit(BillState.error('Gagal konfirmasi pembayaran tunai: ${e.toString()}'));
     }
   }
 
-  /// Menangani event saat pengguna mengirimkan bukti transfer.
   Future<void> _onSubmitTransferProof(SubmitTransferProof event, Emitter<BillState> emit) async {
     try {
       await _dummyService.submitPaymentProof(event.billId, event.proofUrl);
-      // Setelah berhasil, muat ulang daftar tagihan untuk memperbarui UI.
       add(const BillEvent.loadBills());
     } catch (e) {
       emit(BillState.error('Gagal mengirim bukti transfer: ${e.toString()}'));

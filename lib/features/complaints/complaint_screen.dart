@@ -6,7 +6,6 @@ import 'package:tes/shared/services/auth_service.dart';
 import 'package:tes/shared/services/locator.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-// Halaman wrapper yang menyediakan BLoC
 class ComplaintScreen extends StatelessWidget {
   const ComplaintScreen({super.key});
 
@@ -19,7 +18,6 @@ class ComplaintScreen extends StatelessWidget {
   }
 }
 
-// Widget yang membangun UI
 class ComplaintView extends StatefulWidget {
   const ComplaintView({super.key});
 
@@ -113,7 +111,7 @@ class _ComplaintViewState extends State<ComplaintView> {
         setState(() {
           _selectedStatusFilter = result == 'All' ? null : result;
         });
-        _onFilterChanged(); // Trigger filter change
+        _onFilterChanged();
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         const PopupMenuItem<String>(value: 'All', child: Text('Semua Status')),
@@ -160,7 +158,6 @@ class _ComplaintViewState extends State<ComplaintView> {
   }
 
   Future<void> _showAddComplaintDialog(BuildContext context) async {
-    // The dialog can be extracted to its own widget for even cleaner code
     final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();

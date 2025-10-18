@@ -19,7 +19,6 @@ class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
   final DummyService _dummyService = getIt<DummyService>();
 
   AdminPanelBloc() : super(AdminPanelState.initial()) {
-    // Mendaftarkan semua event handler.
     on<LoadAdminData>(_onLoadData);
     on<ChangeAdminTab>(_onChangeTab);
     on<ProcessRequest>(_onProcessRequest);
@@ -33,7 +32,6 @@ class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
   void _onLoadData(LoadAdminData event, Emitter<AdminPanelState> emit) {
     emit(state.copyWith(isLoading: true));
     try {
-      // Ambil semua data dari service.
       final rooms = _dummyService.rooms;
       final pendingBills = _dummyService.getPendingConfirmationBills();
       final requests = _dummyService.requests;
@@ -41,19 +39,16 @@ class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
       final announcements = _dummyService.getLatestAnnouncements();
       final conversations = _dummyService.conversations;
 
-      // Urutkan percakapan agar yang terbaru (pesan terakhir) muncul di atas.
       conversations.sort((a, b) {
         if (a.messages.isEmpty) return 1;
         if (b.messages.isEmpty) return -1;
         return b.messages.first.timestamp.compareTo(a.messages.first.timestamp);
       });
 
-      // Terapkan filter status pengaduan yang sedang aktif.
       final filteredComplaints = state.complaintStatusFilter == 'Semua'
           ? complaints
           : complaints.where((c) => c.status == state.complaintStatusFilter).toList();
 
-      // Kirim state baru dengan semua data yang telah dimuat.
       emit(state.copyWith(
         isLoading: false,
         rooms: rooms,
@@ -74,23 +69,21 @@ class AdminPanelBloc extends Bloc<AdminPanelEvent, AdminPanelState> {
     emit(state.copyWith(activeTabIndex: event.newIndex));
   }
 
-  /// Memproses permintaan (misalnya, menyetujui atau menolak permintaan sewa).
   Future<void> _onProcessRequest(ProcessRequest event, Emitter<AdminPanelState> emit) async {
     // TODO: Implementasikan logika untuk menyetujui/menolak permintaan di DummyService.
-    // Setelah diproses, muat ulang semua data untuk memperbarui UI.
     add(const AdminPanelEvent.loadData());
   }
 
   /// Menyetujui pembayaran tagihan.
   Future<void> _onApproveBill(ApproveBill event, Emitter<AdminPanelState> emit) async {
     await _dummyService.approveBill(event.billId);
-    add(const AdminPanelEvent.loadData()); // Muat ulang data.
+    add(const AdminPanelEvent.loadData());
   }
 
   /// Menolak pembayaran tagihan.
   Future<void> _onRejectBill(RejectBill event, Emitter<AdminPanelState> emit) async {
     await _dummyService.rejectBill(event.billId);
-    add(const AdminPanelEvent.loadData()); // Muat ulang data.
+    add(const AdminPanelEvent.loadData());
   }
 
   /// Memfilter daftar pengaduan berdasarkan status yang dipilih.

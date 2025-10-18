@@ -7,9 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tes/app/app_routes.dart';
 import 'package:tes/features/profile/bloc/profile_bloc.dart';
-import 'package:tes/features/settings/settings_page.dart';
 import 'package:tes/shared/models/app_user.dart';
-import 'package:tes/shared/services/locator.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -80,7 +78,6 @@ class ProfileView extends StatelessWidget {
                 onTap: () => _showEditProfileDialog(context, user.fullName),
               ),
               const Divider(height: 1, indent: 16, endIndent: 16),
-              // MENU BARU: Ubah Info Kontak
               _ProfileMenuTile(
                 icon: Icons.contact_page_outlined,
                 title: 'Ubah Info Kontak',
@@ -98,15 +95,24 @@ class ProfileView extends StatelessWidget {
                 title: 'Ubah Password',
                 onTap: () => _showChangePasswordDialog(context),
               ),
-              const Divider(height: 1, indent: 16, endIndent: 16),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
               _ProfileMenuTile(
                 icon: Icons.info_outline,
                 title: 'Tentang Aplikasi',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const SettingsPage()),
-                  );
-                },
+                onTap: () => context.push(AppRoutes.aboutApp), // PERBAIKAN: Menggunakan context.push
+              ),
+              const Divider(height: 1, indent: 16, endIndent: 16),
+              _ProfileMenuTile(
+                icon: Icons.devices_other_outlined,
+                title: 'Informasi Perangkat',
+                onTap: () => context.push(AppRoutes.deviceInfo), // PERBAIKAN: Menggunakan context.push
               ),
             ],
           ),
@@ -144,8 +150,6 @@ class ProfileView extends StatelessWidget {
       ],
     );
   }
-
-  // --- Dialog-dialog untuk mengedit profil ---
 
   Future<void> _showChangePictureDialog(BuildContext context) async {
     await showModalBottomSheet(
@@ -220,7 +224,6 @@ class ProfileView extends StatelessWidget {
     }
   }
 
-  // DIALOG BARU: Untuk mengubah info kontak
   Future<void> _showEditContactDialog(BuildContext context, AppUser user) async {
     final addressController = TextEditingController(text: user.address ?? '');
     final phoneController = TextEditingController(text: user.phoneNumber ?? '');

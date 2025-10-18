@@ -30,7 +30,6 @@ class RoomsPage extends StatelessWidget {
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () async {
-              // Navigasi ke detail, lalu muat ulang data saat kembali
               await context.push(AppRoutes.roomDetail, extra: room);
               if (context.mounted) {
                 context.read<AdminPanelBloc>().add(const AdminPanelEvent.loadData());

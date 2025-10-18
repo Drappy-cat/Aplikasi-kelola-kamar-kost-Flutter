@@ -45,6 +45,8 @@ dependencies:
   webview_flutter_wkwebview: ^3.13.0
   mobile_scanner: ^7.1.2
 
+  # --- DEPENDENSI FIREBASE DIHAPUS ---
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

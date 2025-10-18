@@ -28,14 +28,14 @@ class ActivityLogBloc extends Bloc<ActivityLogEvent, ActivityLogState> {
         throw 'Sesi pengguna tidak valid.';
       }
 
-      // 1. Tambahkan log aktivitas
+      // 1. log aktivitas
       await _dummyService.addActivityLog(
         userId: user.id,
         userName: user.fullName ?? user.username,
         action: event.action,
       );
 
-      // 2. Buat notifikasi untuk admin
+      // 2. notifikasi untuk admin
       await _dummyService.addNotification(
         title: 'Aktivitas Penghuni',
         subtitle: '${user.fullName ?? user.username} telah mencatat aktivitas \'${event.action}\'.',

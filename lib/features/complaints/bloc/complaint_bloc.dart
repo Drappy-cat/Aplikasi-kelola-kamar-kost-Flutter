@@ -32,7 +32,7 @@ class ComplaintBloc extends Bloc<ComplaintEvent, ComplaintState> {
       emit(state.copyWith(
         isLoading: false,
         allComplaints: complaints,
-        filteredComplaints: complaints, // Awalnya, tampilkan semua
+        filteredComplaints: complaints,
       ));
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e.toString()));
@@ -77,7 +77,6 @@ class ComplaintBloc extends Bloc<ComplaintEvent, ComplaintState> {
         isSubmitting: false,
         submissionSuccess: 'Pengaduan berhasil dikirim!',
       ));
-      // Muat ulang data setelah berhasil menambahkan
       add(const LoadComplaints());
     } catch (e) {
       emit(state.copyWith(isSubmitting: false, submissionError: e.toString()));

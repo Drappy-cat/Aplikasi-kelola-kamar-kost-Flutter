@@ -58,7 +58,7 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
           ElevatedButton(
             onPressed: () async {
               await _dummyService.submitPaymentProof(bill.id, 'assets/kamar_kost/bukti_tf.png');
-              _loadBills(); // Reload bills after submitting payment proof
+              _loadBills();
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Bukti pembayaran terkirim, menunggu konfirmasi admin.')),

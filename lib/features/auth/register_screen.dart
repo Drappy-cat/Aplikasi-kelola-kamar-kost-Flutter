@@ -57,7 +57,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // PERBAIKAN: Hapus backgroundColor yang di-hardcode agar mengikuti tema.
     return Scaffold(
       body: SafeArea(
         child: Center(

@@ -10,7 +10,6 @@ class AdminChatListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Menggunakan BlocBuilder untuk mendapatkan state terbaru dari AdminPanelBloc
     return BlocBuilder<AdminPanelBloc, AdminPanelState>(
       builder: (context, state) {
         if (state.isLoading) {
@@ -48,7 +47,6 @@ class AdminChatListScreen extends StatelessWidget {
                 ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  // Navigasi ke halaman chat spesifik untuk pengguna ini
                   context.push('${AppRoutes.chat}/${conversation.userId}');
                 },
               ),

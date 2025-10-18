@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.transparent,
         );
 
-        // --- TEMA UNTUK MODE TERANG ---
         final lightTheme = ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
@@ -49,7 +48,7 @@ class MyApp extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
-          // PERBAIKAN: Menggunakan nama kelas CardThemeData yang benar
+
           cardTheme: CardThemeData(
             elevation: 0,
             shape: RoundedRectangleBorder(
@@ -59,7 +58,6 @@ class MyApp extends StatelessWidget {
           ),
         );
 
-        // --- TEMA UNTUK MODE GELAP ---
         final darkTheme = ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
@@ -77,7 +75,7 @@ class MyApp extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
-          // PERBAIKAN: Menggunakan nama kelas CardThemeData yang benar
+
           cardTheme: CardThemeData(
             elevation: 0,
             color: const Color(0xFF1E1E1E),

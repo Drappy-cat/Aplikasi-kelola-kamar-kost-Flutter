@@ -46,13 +46,12 @@ class _UserHomeViewState extends State<UserHomeView> {
         title: Text('Hai, $userName'),
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
-        // PERBAIKAN: Menggunakan `shape` untuk membuat sudut melengkung.
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(30),
           ),
         ),
-        toolbarHeight: 100, // Menambah tinggi AppBar agar lengkungan terlihat bagus
+        toolbarHeight: 100,
         actions: [
           IconButton(
             onPressed: () => context.push(AppRoutes.notification),
@@ -61,7 +60,6 @@ class _UserHomeViewState extends State<UserHomeView> {
         ],
       ),
       drawer: const AppDrawer(),
-      // PERBAIKAN: Menghapus Stack dan Container latar belakang yang tidak perlu.
       body: BlocBuilder<UserHomeBloc, UserHomeState>(
         builder: (context, state) {
           return state.when(
@@ -96,7 +94,15 @@ class _UserHomeViewState extends State<UserHomeView> {
                         bottom: 16,
                         right: 16,
                         child: FloatingActionButton.extended(
-                          onPressed: () => context.push('${AppRoutes.chat}/admin'),
+                          // NAVIGASI CHAT DIPERBAIKI
+                          onPressed: () {
+                            // GANTI '_THE_ADMIN_UID_' DENGAN UID ADMIN ANDA DARI FIREBASE
+                            const adminId = '_THE_ADMIN_UID_';
+                            context.go(
+                              '${AppRoutes.chat}/$adminId',
+                              extra: {'username': 'Admin'},
+                            );
+                          },
                           label: const Text('Hubungi Admin'),
                           icon: const Icon(Icons.chat_bubble_outline),
                         ),
@@ -115,7 +121,7 @@ class _UserHomeViewState extends State<UserHomeView> {
     if (userRoom == null) {
       return const Center(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Text('Kamar Anda tidak ditemukan. Hubungi admin.'),
         ),
       );

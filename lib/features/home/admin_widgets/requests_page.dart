@@ -26,13 +26,11 @@ class RequestsPage extends StatelessWidget {
   }
 }
 
-// Widget baru untuk menampilkan kartu pengajuan yang lebih detail
 class _RequestCard extends StatelessWidget {
   final Request request;
 
   const _RequestCard({required this.request});
 
-  // Helper untuk mendapatkan ikon berdasarkan tipe dan status
   IconData _getIcon() {
     if (request.status == 'Menunggu Pembayaran') return Icons.hourglass_bottom;
     if (request.status == 'Menunggu Persetujuan') return Icons.pending_actions;
@@ -41,7 +39,6 @@ class _RequestCard extends StatelessWidget {
     return Icons.inbox;
   }
 
-  // Helper untuk mendapatkan warna berdasarkan status
   Color _getColor(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     switch (request.status) {
@@ -101,7 +98,6 @@ class _RequestCard extends StatelessWidget {
               ],
             ),
           ),
-          // Tampilkan tombol aksi hanya jika statusnya memerlukan persetujuan admin
           if (request.status == 'Menunggu Persetujuan')
             Padding(
               padding: const EdgeInsets.all(8.0),

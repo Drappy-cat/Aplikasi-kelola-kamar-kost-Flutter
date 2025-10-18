@@ -16,7 +16,6 @@ class ScanScreen extends StatelessWidget {
   }
 }
 
-// Widget yang membangun UI
 class ScanView extends StatefulWidget {
   const ScanView({super.key});
 

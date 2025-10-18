@@ -15,7 +15,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final AuthService _authService = getIt<AuthService>();
   final DummyService _dummyService = getIt<DummyService>();
 
-  // Menyimpan ID pengguna yang percakapannya sedang dibuka
   String? _currentConversationUserId;
 
   ChatBloc() : super(const ChatState()) {
@@ -48,7 +47,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     await _sendMessage(emit, imageUrl: event.imageUrl);
   }
 
-  // Helper method untuk mengirim pesan (teks atau gambar)
   Future<void> _sendMessage(Emitter<ChatState> emit, {String? text, String? imageUrl}) async {
     final userId = _currentConversationUserId;
     final sender = _authService.currentUser;
@@ -70,7 +68,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     try {
       await _dummyService.addMessage(userId, newMessage);
-      // Muat ulang data untuk menampilkan pesan baru
       add(LoadChat(userId));
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
