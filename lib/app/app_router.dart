@@ -6,7 +6,6 @@ import 'package:tes/features/auth/login_screen.dart';
 import 'package:tes/features/auth/register_screen.dart';
 import 'package:tes/features/auth/splash_screen.dart';
 import 'package:tes/features/chat/chat_screen.dart';
-import 'package:tes/features/device_info/device_info_page.dart';
 import 'package:tes/features/home/home_screen.dart';
 import 'package:tes/features/home/room_detail_screen.dart';
 import 'package:tes/features/notification/notification_screen.dart';
@@ -21,6 +20,7 @@ import 'package:tes/features/billing/user_bill_screen.dart';
 import 'package:tes/features/billing/payment_history_screen.dart';
 import 'package:tes/shared/models/room.dart';
 
+// Konfigurasi utama untuk navigasi aplikasi menggunakan GoRouter.
 final appRouter = GoRouter(
   initialLocation: AppRoutes.splash,
   routes: [
@@ -49,18 +49,12 @@ final appRouter = GoRouter(
       builder: (context, state) => const ProfileScreen(),
     ),
     GoRoute(
-      path: AppRoutes.aboutApp,
-      name: AppRoutes.aboutApp, // PERBAIKAN: Menambahkan nama
-      builder: (context, state) => const AboutAppPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.deviceInfo,
-      name: AppRoutes.deviceInfo, // PERBAIKAN: Menambahkan nama
-      builder: (context, state) => const DeviceInfoPage(),
-    ),
-    GoRoute(
       path: AppRoutes.settings,
       builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.aboutApp,
+      builder: (context, state) => const AboutAppPage(),
     ),
     GoRoute(
       path: AppRoutes.terms,
@@ -111,7 +105,6 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '${AppRoutes.chat}/:userId',
-      name: AppRoutes.chat,
       builder: (context, state) {
         final userId = state.pathParameters['userId']!;
         final username = (state.extra as Map<String, dynamic>?)?['username'] as String? ?? 'Chat';

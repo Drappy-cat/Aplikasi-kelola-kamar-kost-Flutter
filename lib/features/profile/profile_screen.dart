@@ -43,7 +43,7 @@ class ProfileView extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Edit Profil'),
+          title: const Text('Profil'),
         ),
         body: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
@@ -95,24 +95,12 @@ class ProfileView extends StatelessWidget {
                 title: 'Ubah Password',
                 onTap: () => _showChangePasswordDialog(context),
               ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 24),
-        Card(
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            children: [
-              _ProfileMenuTile(
-                icon: Icons.info_outline,
-                title: 'Tentang Aplikasi',
-                onTap: () => context.push(AppRoutes.aboutApp), // PERBAIKAN: Menggunakan context.push
-              ),
               const Divider(height: 1, indent: 16, endIndent: 16),
+              // DIPERBAIKI: Menggunakan rute 'settings' yang benar
               _ProfileMenuTile(
-                icon: Icons.devices_other_outlined,
-                title: 'Informasi Perangkat',
-                onTap: () => context.push(AppRoutes.deviceInfo), // PERBAIKAN: Menggunakan context.push
+                icon: Icons.settings_outlined,
+                title: 'Pengaturan & Info',
+                onTap: () => context.go(AppRoutes.settings),
               ),
             ],
           ),
@@ -150,6 +138,8 @@ class ProfileView extends StatelessWidget {
       ],
     );
   }
+
+  // --- Dialog-dialog (tidak ada perubahan di sini) ---
 
   Future<void> _showChangePictureDialog(BuildContext context) async {
     await showModalBottomSheet(

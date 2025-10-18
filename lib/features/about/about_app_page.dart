@@ -8,8 +8,15 @@ class AboutAppPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tentang Aplikasi'),
-        backgroundColor: Theme.of(context).colorScheme.primary, // DIUBAH: Menggunakan warna tema utama
-        foregroundColor: Theme.of(context).colorScheme.onPrimary, // DIUBAH: Agar teks dan ikon kontras
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.green, Colors.teal],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -40,7 +47,7 @@ class AboutAppPage extends StatelessWidget {
                     'Rizma Indra Pramudya',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.green[800],
+                          color: Colors.teal.shade800,
                         ),
                   ),
                   const SizedBox(height: 30),
@@ -61,7 +68,6 @@ class AboutAppPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // About Application Section
             _buildInfoCard(
               context,
               title: 'Tentang Ri-Kost',
@@ -115,10 +121,10 @@ class AboutAppPage extends StatelessWidget {
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.green[900],
+                      color: Colors.teal.shade800,
                     ),
               ),
-              Divider(color: Colors.green[700], thickness: 1, height: 20),
+              const Divider(color: Colors.tealAccent, thickness: 1, height: 20),
               ...children,
             ],
           ),
@@ -139,7 +145,7 @@ class AboutAppPage extends StatelessWidget {
               label,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.green[800],
+                    color: Colors.teal.shade700,
                   ),
             ),
           ),

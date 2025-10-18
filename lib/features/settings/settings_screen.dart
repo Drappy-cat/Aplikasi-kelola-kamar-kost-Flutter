@@ -64,6 +64,8 @@ class SettingsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.settings),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
@@ -127,7 +129,7 @@ class SettingsView extends StatelessWidget {
                       onTap: () => context.push(AppRoutes.help),
                     ),
                     const Divider(height: 1, indent: 16, endIndent: 16),
-                    // PERBAIKAN: Mengarahkan ke halaman AboutAppScreen yang baru.
+                    // DIKEMBALIKAN: Membuka halaman baru, bukan pop-up
                     ListTile(
                       leading: const Icon(Icons.info_outline),
                       title: Text(l10n.aboutApp),
@@ -153,7 +155,7 @@ class SettingsView extends StatelessWidget {
 
   Widget _buildSectionHeader(BuildContext context, String title) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0, left: 8.0),
+      padding: const EdgeInsets.only(top: 24.0, bottom: 8.0, left: 8.0),
       child: Text(
         title.toUpperCase(),
         style: TextStyle(
@@ -174,6 +176,7 @@ class SettingsView extends StatelessWidget {
 
   Widget _buildInfoTile(String title, String subtitle) {
     return ListTile(
+      dense: true,
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
       subtitle: Text(subtitle, style: TextStyle(color: Colors.grey[600])),
     );
